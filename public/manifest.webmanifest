@@ -1,0 +1,15 @@
+{
+  "name": "Tesbihat — Namaz Sonrası Virdi",
+  "short_name": "Tesbihat",
+  "description": "Beş vakit namazdan sonra okunan Kadirî virdi: namaz vakitleri, ezan sonrası hatırlatma ve adım adım rehberli teşbihat.",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "tr",
+  "theme_color": "#0a2620",
+  "background_color": "#081f18",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

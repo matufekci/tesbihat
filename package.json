@@ -1,0 +1,26 @@
+{
+  "name": "tesbihat",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Tesbihat — Seyyid Muhammed Ruhi el-Kadiri'nin beş vakit namaz sonrası virdi için rehberli uygulama",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "cap:sync": "vite build && cap sync android",
+    "apk:debug": "vite build && cap sync android && cd android && ./gradlew assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/core": "^6.2.0",
+    "@capacitor/local-notifications": "^6.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.2.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11"
+  }
+}
