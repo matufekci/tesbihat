@@ -1,23 +1,25 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { CITIES } from './data/cities.js'
-import { fetchTimes, minutesOf } from './lib/prayer.js'
-import {
-  loadSettings, saveSettings, loadStats, saveStats,
-  completeVird, todayDone, currentStreak,
-} from './lib/store.js'
+import { fetchTimes, offlineTimes, hijriFromIntl, minutesOf } from './lib/prayer.js'
+import { loadSettings, saveSettings } from './lib/store.js'
 import { notificationPermission, scheduleReminders, cancelReminders } from './lib/notify.js'
 import VirdList from './components/VirdList.jsx'
 import Reader from './components/Reader.jsx'
 import Settings from './components/Settings.jsx'
 
-const VAKIT_LABEL = { sabah: 'Sabah', ogle: 'Öğle', ikindi: 'İkindi', aksam: 'Akşam', yatsi: 'Yatsı' }
+function initialTimes(settings) {
+  // Açılışın ilk anında doğru vakti göstermek için çevrimdışı hesap hemen uygulanır;
+  // API varsa anında onunla tazelenir.
+  const loc = settings.custom ?? CITIES.find((c) => c.id === settings.cityId) ?? CITIES.find((c) => c.id === 'diyarbakir')
+  const d = new Date()
+  return { timings: offlineTimes(d, loc.lat, loc.lng), hijri: hijriFromIntl(d), source: 'offline' }
+}
 
 export default function App() {
   const [settings, setSettings] = useState(loadSettings)
   const [tab, setTab] = useState('vird')
   const [now, setNow] = useState(() => new Date())
-  const [timesData, setTimesData] = useState(null)
-  const [stats, setStats] = useState(loadStats)
+  const [timesData, setTimesData] = useState(() => initialTimes(loadSettings()))
   const [toast, setToast] = useState('')
   const toastTimer = useRef(null)
   const deferredInstall = useRef(null)
@@ -32,7 +34,6 @@ export default function App() {
   useEffect(() => { document.documentElement.dataset.theme = settings.theme }, [settings.theme])
   useEffect(() => { saveSettings(settings) }, [settings])
 
-  // Sayaçların vakit sınırlarında tazelenmesi için dakikada bir değil saniyede bir tik
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 1000)
     return () => clearInterval(t)
@@ -109,29 +110,10 @@ export default function App() {
     showToast('Ezan sonrası hatırlatmalar açıldı ✓')
   }, [showToast])
 
-  const handleCompleteVird = useCallback((vakit) => {
-    setStats(completeVird(vakit))
-    showToast(`${VAKIT_LABEL[vakit] ?? ''} virdi tamamlandı ✓`)
-  }, [showToast])
-
-  const doneToday = useMemo(() => todayDone(stats), [stats])
-  const streak = useMemo(() => currentStreak(stats), [stats])
-
   return (
     <div className="app-frame">
       <div className="app">
-        {tab === 'vird' && (
-          <VirdList
-            now={now}
-            timesData={timesData}
-            settings={settings}
-            doneTodaySize={doneToday.size}
-            streak={streak}
-            onCompleteVird={handleCompleteVird}
-            onUpdateSettings={(patch) => setSettings((s) => ({ ...s, ...patch }))}
-            onToast={showToast}
-          />
-        )}
+        {tab === 'vird' && <VirdList now={now} timesData={timesData} />}
         {tab === 'metin' && <Reader />}
         {tab === 'settings' && (
           <Settings
@@ -140,7 +122,6 @@ export default function App() {
             locationName={location.name}
             source={timesData?.source}
             onToggleNotif={toggleNotif}
-            onResetStats={() => { saveStats({ days: {}, total: 0 }); setStats({ days: {}, total: 0 }); showToast('İstatistikler sıfırlandı') }}
             onToast={showToast}
           />
         )}
@@ -155,10 +136,16 @@ export default function App() {
             Metin
           </button>
           <button className={`nav-btn ${tab === 'settings' ? 'active' : ''}`} onClick={() => setTab('settings')}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.56V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.56-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.01a1.7 1.7 0 0 0 1-1.56V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.01a1.7 1.7 0 0 0 1.56 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1Z"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.56V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.56 1.7 1.7 0 0 0-1.87.34l-.06-.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.56-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.01a1.7 1.7 0 0 0 1-1.56V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.01a1.7 1.7 0 0 0 1.56 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1Z"/></svg>
             Ayarlar
           </button>
         </nav>
+
+        {installReady && (
+          <button className="notify-nudge install" style={{ position: 'absolute', bottom: 96, left: 22, right: 22, zIndex: 35, background: 'var(--card-solid)' }} onClick={installApp}>
+            Ana ekrana ekle — uygulama gibi aç
+          </button>
+        )}
 
         <div className={`toast ${toast ? 'show' : ''}`} role="status">{toast}</div>
       </div>

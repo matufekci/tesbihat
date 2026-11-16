@@ -3,9 +3,8 @@ import { CITIES } from '../data/cities.js'
 import { notifyNow } from '../lib/notify.js'
 
 const REMINDER_OPTIONS = [5, 10, 15, 20, 30, 45, 60]
-const LA_OPTIONS = [20, 100, 200]
 
-export default function Settings({ settings, setSettings, locationName, source, onToggleNotif, onResetStats, onToast }) {
+export default function Settings({ settings, setSettings, locationName, source, onToggleNotif, onToast }) {
   const [gpsError, setGpsError] = useState('')
   const [gpsBusy, setGpsBusy] = useState(false)
 
@@ -32,10 +31,6 @@ export default function Settings({ settings, setSettings, locationName, source, 
     )
   }
 
-  const confirmReset = () => {
-    if (window.confirm('Tüm istatistikleriniz silinsin mi?')) onResetStats?.()
-  }
-
   return (
     <main className="screen">
       <header className="topbar" style={{ padding: '12px 4px 4px' }}>
@@ -49,7 +44,7 @@ export default function Settings({ settings, setSettings, locationName, source, 
         <div className="set-row">
           <div className="grow">
             <label htmlFor="city">İl / Şehir</label>
-            <small>Bulunduğunuz vakti belirlemek için kullanılır; vakit değişince sayaçlar otomatik sıfırlanır.</small>
+            <small>Açılışta hangi vaktin ekranının gösterileceğini belirler.</small>
             <div style={{ marginTop: 8 }}>
               <select id="city" value={settings.custom ? 'custom' : settings.cityId} onChange={(e) => e.target.value !== 'custom' && pickCity(e.target.value)}>
                 {settings.custom && <option value="custom">{settings.custom.name}</option>}
@@ -98,24 +93,8 @@ export default function Settings({ settings, setSettings, locationName, source, 
         )}
         <p className="hint">
           Web sürümünde bildirimler yalnızca uygulama açıkken zamanlanır. APK sürümünde
-          (GitHub Actions ile) ezan vaktinde gerçek alarm olarak kurulur ve uygulama kapalıyken de çalışır.
+          ezan vaktinde gerçek alarm olarak kurulur ve uygulama kapalıyken de çalışır.
         </p>
-      </section>
-
-      {/* Tesbihat tercihleri */}
-      <section className="settings-group">
-        <h3>Tesbihat</h3>
-        <div className="set-row">
-          <div className="grow">
-            <label>Lâ ilâhe illallâh hedefi</label>
-            <small>Belgeye göre en az 20; vaktin varsa 200.</small>
-            <div className="target-chips" style={{ marginTop: 10 }}>
-              {LA_OPTIONS.map((t) => (
-                <button key={t} className={`chip ${settings.laIlaheTarget === t ? 'active' : ''}`} onClick={() => set({ laIlaheTarget: t })}>{t}×</button>
-              ))}
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* Görünüm */}
@@ -132,21 +111,9 @@ export default function Settings({ settings, setSettings, locationName, source, 
         </div>
       </section>
 
-      {/* Veri */}
-      <section className="settings-group">
-        <h3>Veri</h3>
-        <div className="set-row">
-          <div className="grow">
-            <label>İstatistikleri sıfırla</label>
-            <small>“Bugün”, “seri” ve “toplam seans” sayaçları silinir.</small>
-          </div>
-          <button className="btn-ghost" style={{ borderColor: 'rgba(255,120,120,.4)', color: '#ff9b9b' }} onClick={confirmReset}>Sıfırla</button>
-        </div>
-      </section>
-
       <p className="source-line" style={{ marginTop: 20 }}>
-        Tesbihat · Sürüm 1.1.0<br />
-        Vakitler Aladhan (Diyanet metodu) veya çevrimdışı hesap ile belirlenir.
+        Tesbihat · Sürüm 1.2.0<br />
+        Vakitler çevrimdışı hesap ile anlık belirlenir, internet varsa güncellenir.
       </p>
     </main>
   )

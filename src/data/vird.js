@@ -94,10 +94,10 @@ export const COMMON_STEPS = [
     note: 'Dilediğin dille, dilediğin kadar dua edebilirsin.',
   },
   {
-    id: 'la-ilahe', title: 'Lâ ilâhe illallâh', type: 'counter', target: 20, targetOptions: [20, 100, 200],
+    id: 'la-ilahe', title: 'Lâ ilâhe illallâh', type: 'counter', target: 20,
     arabic: 'لَا إِلَهَ إِلَّا اللّٰهُ', latin: 'Lâ ilâhe illallâh',
     meaning: 'Allah’tan başka ilâh yoktur.',
-    note: 'En az 20 defa okunur; vaktin varsa 200 defa. Hedefi aşağıdaki düğmelerden değiştirebilirsin.',
+    note: 'En az 20 defa okunur; vaktin varsa 200 defa.',
   },
   {
     id: 'salavat', title: 'Salâvat-ı Şerîfe (4 Yüce Sıfatla)', type: 'read',
