@@ -5,10 +5,10 @@ Beş vaktin ardından okunan zikir, salavât, dua ve sureler için sayaçlı, an
 ## Özellikler
 
 - 🕌 Açılışta içinde bulunulan vaktin zikir ekranı doğrudan açılır (çevrimdışı anında, online tazelemeli)
-- 📿 Arapça metin + okunuş + Türkçe anlam; her vakit için ortak bölüm + vakte özel katman + kapanış
+- 📖 Sırayla ilerleyen adımlar; sayaçlar anlık sayar; vakte özel katman + kapanış
+- 🔤 Arapça metin + okunuş (yerel yazılar)
 - 📍 Vakitler: çevrimdışı astronomik hesap (anında) + internet varsa Diyanet metoduyla güncelleme
 - 🔔 Ezan sonrası hatırlatma bildirimi (web: uygulama açıkken; APK: gerçek alarm)
-- 📖 Metinler sekmesi: Arapça metin + okunuş + Türkçe anlam
 - 🌙 Koyu / açık tema · PWA kurulabilir · Android APK hazır
 
 ## Geliştirme

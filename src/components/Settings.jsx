@@ -112,7 +112,7 @@ export default function Settings({ settings, setSettings, locationName, source, 
       </section>
 
       <p className="source-line" style={{ marginTop: 20 }}>
-        Tesbihat · Sürüm 1.2.0<br />
+        Tesbihat · Sürüm 1.3.0<br />
         Vakitler çevrimdışı hesap ile anlık belirlenir, internet varsa güncellenir.
       </p>
     </main>

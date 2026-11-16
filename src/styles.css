@@ -327,3 +327,11 @@ select:focus, input:focus { border-color: var(--gold); }
 .krow-tag { color:var(--gold); font-size:10px; font-weight:700; margin-left:9px; letter-spacing:.1em; text-transform:uppercase; }
 .vakit-ornament { animation: ornamentPulse 3.6s ease-in-out infinite; }
 @keyframes ornamentPulse { 0%,100% { opacity:.85; transform:scale(1); } 50% { opacity:1; transform:scale(1.06); } }
+
+/* ── sıralı akış (ana ekran) ── */
+.vird-screen { display: flex; flex-direction: column; overflow: hidden; padding: 4px 14px 88px; }
+.flow { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.guided-top.inflow { padding: 10px 2px 6px; }
+.guided-body.inflow { padding: 4px 2px 12px; }
+.icon-btn:disabled { opacity: .35; }
+.flow .counter-zone { margin-top: auto; padding-bottom: 6px; }

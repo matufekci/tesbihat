@@ -1,5 +1,4 @@
 // Namaz vakitleri: önce Aladhan API (Diyanet hesabı, method=13), düşerse çevrimdışı astronomik hesap.
-import { VAKITLAR } from '../data/vird.js'
 
 const toRad = (d) => (d * Math.PI) / 180
 const toDeg = (r) => (r * 180) / Math.PI
@@ -148,4 +147,3 @@ export function prayerState(timings, date = new Date()) {
   return { current, next, nextInMin }
 }
 
-export { VAKITLAR }
