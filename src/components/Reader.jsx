@@ -11,7 +11,7 @@ function StepCard({ step }) {
         {step.optional ? <span className="r-count"> · isteğe bağlı</span> : null}
       </h4>
       {step.arabic && (
-        <div className={`arabic ${arabicLong ? 'small' : ''}`} lang="ar">
+        <div className={`arabic ${arabicLong ? 'small' : ''}`} lang="ar" dir="rtl">
           {Array.isArray(step.arabic)
             ? step.arabic.map((line, i) => <div key={i} style={{ marginBottom: 6 }}>{line}</div>)
             : step.arabic}
@@ -28,13 +28,12 @@ export default function Reader() {
   return (
     <main className="screen">
       <header className="topbar" style={{ padding: '12px 4px 4px' }}>
-        <div className="greet">Kaynak Metin<strong>Tesbihat-ı Kadiriye</strong></div>
+        <div className="greet">Okuma Modu<strong>Metinler</strong></div>
       </header>
 
       <p className="note" style={{ maxWidth: 'none' }}>
-        <b>Seyyid Muhammed Ruhi el-Kadiri — Namaz Sonrası Tesbihatı.</b><br />
-        Bu liste, “Seyyid Muhammed Ruhi El-Kadiri Hz. Namaz Sonrası Tesbihatı DİKEY” başlıklı
-        kaynağın birebir dökümüdür. Dinî hüküm değildir; uygulamadan önce ilim ehline danışın.
+        Her namazdan sonra okunan zikir, salavât, dua ve sureler — her vakit için
+        ortak bölüm, vakte özel katman ve kapanış sırasıyla. Arapça metin, okunuş ve Türkçe anlamıyla.
       </p>
 
       <section className="reader-section">
@@ -43,7 +42,7 @@ export default function Reader() {
       </section>
 
       <section className="reader-section">
-        <h3><span aria-hidden="true">✦</span> Namazlara Özel Katman</h3>
+        <h3><span aria-hidden="true">✦</span> Vakitlere Özel Katman</h3>
         {NAMAZ_IDS.map((id) => {
           const layer = getStepsFor(id).slice(COMMON_STEPS.length, -1)
           return (
@@ -61,10 +60,6 @@ export default function Reader() {
         <h3><span aria-hidden="true">✦</span> Kapanış — Her Namaz Sonrası</h3>
         <StepCard step={CLOSING_STEP} />
       </section>
-
-      <p className="source-line" style={{ marginTop: 18 }}>
-        Sesli tilavet ve hâfız hattı yakında eklenecektir inşallah.
-      </p>
     </main>
   )
 }

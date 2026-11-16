@@ -1,9 +1,4 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// Kaynak: "Seyyid Muhammed Ruhi El-Kadiri Hz. Namaz Sonrası Tesbihatı DİKEY"
-// (Google Drive — Seyyid Muhammed Ruhi el-Kadiri'nin beş vakit namaz sonrası virdi)
-// İçerik, belgeden birebir deşifre edilmiştir. Dinî metin hüküm değildir;
-// uygulamaya koymadan önce ilim ehlinin onayından geçirilmesi önerilir.
-// ─────────────────────────────────────────────────────────────────────────────
+// Namaz sonrası zikir, salavât, dua ve sureler — her vakit için ortak bölüm + vakte özel katman + kapanış.
 
 export const VAKITLAR = [
   { id: 'imsak', name: 'İmsak', key: 'Imsak' },
@@ -95,14 +90,14 @@ export const COMMON_STEPS = [
   {
     id: 'dua', title: 'Dua', type: 'read',
     arabic: null, latin: null,
-    meaning: 'Sonra dua edilir. Ellerini aç ve gönlünden geçen her dileği Allah’a arz et. Belge bu adım için özel bir metin belirtmemiştir.',
+    meaning: 'Sonra dua edilir. Ellerini aç ve gönlünden geçen her dileği Allah’a arz et.',
     note: 'Dilediğin dille, dilediğin kadar dua edebilirsin.',
   },
   {
     id: 'la-ilahe', title: 'Lâ ilâhe illallâh', type: 'counter', target: 20, targetOptions: [20, 100, 200],
     arabic: 'لَا إِلَهَ إِلَّا اللّٰهُ', latin: 'Lâ ilâhe illallâh',
     meaning: 'Allah’tan başka ilâh yoktur.',
-    note: 'Belgeye göre: en az 20 defa; vaktin varsa 200 defa. Seviyeyi sağdan değiştirebilirsin.',
+    note: 'En az 20 defa okunur; vaktin varsa 200 defa. Hedefi aşağıdaki düğmelerden değiştirebilirsin.',
   },
   {
     id: 'salavat', title: 'Salâvat-ı Şerîfe (4 Yüce Sıfatla)', type: 'read',
@@ -121,7 +116,7 @@ export const COMMON_STEPS = [
     arabic: 'صَلَاةً تُنْجِينَا بِهَا مِنْ جَمِيعِ الْأَهْوَالِ وَالْاٰفَاتِ وَتَقْضِي لَنَا بِهَا جَمِيعَ الْحَاجَاتِ وَتُطَهِّرُنَا بِهَا مِنْ جَمِيعِ السَّيِّئَاتِ وَتَرْفَعُنَا بِهَا عِنْدَكَ أَعْلَى الدَّرَجَاتِ وَتُبَلِّغُنَا بِهَا أَقْصَى الْغَايَاتِ مِنْ جَمِيعِ الْخَيْرَاتِ فِي الْحَيَاةِ وَبَعْدَ الْمَمَاتِ بِرَحْمَتِكَ يَا أَرْحَمَ الرَّاحِمِينَ',
     latin: 'Salâten tüncînâ bihâ min cemî’il-ehvâli ve’l-âfât. Ve takdî lenâ bihâ cemî’al-hâcât. Ve tütahhirunâ bihâ min cemî’is-seyyiât. Ve terfe’unâ bihâ ‘ındeke a’led-deracât. Ve tübelliğunâ bihâ aksal-ğâyât, min cemî’il-hayrât fi’l-hayâti ve ba’de’l-memât. Birahmetike yâ erhamer-râhimîn.',
     meaning: 'Bize onunla her türlü korku ve âfetten kurtuluşu, bütün ihtiyaçlarımızın yerine gelmesini, her türlü günahtan temizlenmemizi, Senin katında en yüce derecelere yükselmemizi ve dünya ile âhirette tüm hayırların en son gayelerine ulaşmamızı ihsan edeceğin bir salât… Rahmetin hakkı için ey merhametlilerin en merhametlisi!',
-    note: 'Belgede adet belirtilmemiştir.',
+    note: 'Adet belirtilmemiştir.',
   },
 ]
 
@@ -160,7 +155,7 @@ const PRAYER_STEPS = {
     {
       id: 'vakia', title: 'Vâkıa Suresi (56)', type: 'read',
       meaning: 'Vâkıa Suresi okunur.',
-      note: '76. ayete (وَإِنَّهُ لَقَسَمٌ لَوْ تَعْلَمُونَ عَظِيمٌ — Ve innehû lekasemun lev ta’lemûne ‘azîm, “Ve şüphesiz bu, muazzam bir yemindir — keşke bilseydiniz!”) gelindiğinde aşağıdaki rızık duasını oku. Sonra belgeye göre “iki ayet geriye gidilir (فَسَبِّحْ بِاسْمِ رَبِّكَ الْعَظِيمِ)” ve sure sonuna kadar okunur. Not: standart mushafta bu ayet Vâkıa 56:96’dır; “iki ayet geriye” ifadesi metnin kendisinde muğlâktır, kaynağından teyit önerilir.',
+      note: '76. ayete (وَإِنَّهُ لَقَسَمٌ لَوْ تَعْلَمُونَ عَظِيمٌ — Ve innehû lekasemun lev ta’lemûne ‘azîm) gelindiğinde rızık duasını oku. Ardından فَسَبِّحْ بِاسْمِ رَبِّكَ الْعَظِيمِ ile sure sonuna kadar okunur. (Mushafta bu ayet 56:96’dır.)',
     },
     {
       id: 'rizik-duasi', title: 'Rızık Duası (Vâkıa 76. ayet duası)', type: 'read',

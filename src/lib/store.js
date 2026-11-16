@@ -1,14 +1,16 @@
-// Kalıcı depolama (localStorage) — ayarlar, istatistikler, bildirilenler
+// Kalıcı depolama (localStorage) — ayarlar, istatistikler
+// Vird sayaçları: (tarih, vakit) anahtarına bağlı; gün/vakit değişince sıfırdan başlar.
 const SETTINGS_KEY = 'tesbihat.settings'
 const STATS_KEY = 'tesbihat.stats'
 const NOTIFIED_KEY = 'tesbihat.notified'
+const DAY_KEY = 'tesbihat.day'
 
 export const DEFAULT_SETTINGS = {
   cityId: 'diyarbakir',
-  custom: null, // { name, lat, lng } — GPS kullanıldığında
-  theme: 'dark', // 'dark' | 'light'
+  custom: null,
+  theme: 'dark',
   notifEnabled: false,
-  reminderMin: 15, // ezandan kaç dakika sonra hatırlat
+  reminderMin: 15,
   laIlaheTarget: 20,
 }
 
@@ -21,9 +23,10 @@ export function saveSettings(s) {
   try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)) } catch { /* kota */ }
 }
 
-const todayKey = (d = new Date()) =>
+export const todayKey = (d = new Date()) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 
+// ── İstatistikler (seri / toplam) ───────────────────────────────────────────
 export function loadStats() {
   try {
     const raw = JSON.parse(localStorage.getItem(STATS_KEY) || '{}')
@@ -40,7 +43,6 @@ export function completeVird(prayerId) {
   arr.add(prayerId)
   s.days[k] = [...arr]
   s.total = (s.total ?? 0) + 1
-  // son 60 günü sakla
   const keys = Object.keys(s.days).sort()
   while (keys.length > 60) delete s.days[keys.shift()]
   saveStats(s)
@@ -60,6 +62,31 @@ export function currentStreak(stats) {
   return streak
 }
 
+// ── Vird sayaçları: (bugün, vakit) başına ───────────────────────────────────
+function freshDay() { return { date: todayKey(), counts: {}, completed: {} } }
+
+export function loadDay() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(DAY_KEY) || 'null')
+    if (!raw || raw.date !== todayKey()) return freshDay() // gün değişti → her şey sıfır
+    return { date: raw.date, counts: raw.counts ?? {}, completed: raw.completed ?? {} }
+  } catch { return freshDay() }
+}
+export function saveDay(day) {
+  try { localStorage.setItem(DAY_KEY, JSON.stringify(day)) } catch { /* kota */ }
+}
+/** Bir vaktin sayaçlarını sıfırlar (completed kaydını da siler). */
+export function resetVakit(day, vakit) {
+  const counts = { ...day.counts }
+  delete counts[vakit]
+  const completed = { ...day.completed }
+  delete completed[vakit]
+  const nd = { ...day, counts, completed }
+  saveDay(nd)
+  return nd
+}
+
+// ── Bildirim gönderim kayıtları ──────────────────────────────────────────────
 export function wasNotified(key) {
   try { return (JSON.parse(localStorage.getItem(NOTIFIED_KEY) || '[]')).includes(key) } catch { return false }
 }

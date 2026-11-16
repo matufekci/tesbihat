@@ -40,7 +40,7 @@ export default function Settings({ settings, setSettings, locationName, source, 
     <main className="screen">
       <header className="topbar" style={{ padding: '12px 4px 4px' }}>
         <div className="greet">Tercihler<strong>Ayarlar</strong></div>
-        <span className="badge-source">{source === 'offline' ? 'Çevrimdışı hesap' : 'Aladhan · Diyanet'}</span>
+        <span className="badge-source">{source === 'offline' ? 'Çevrimdışı hesap' : 'Vakitler · Diyanet metodu'}</span>
       </header>
 
       {/* Konum */}
@@ -49,7 +49,7 @@ export default function Settings({ settings, setSettings, locationName, source, 
         <div className="set-row">
           <div className="grow">
             <label htmlFor="city">İl / Şehir</label>
-            <small>Diyanet metoduna göre vakitler seçilen merkeze göre hesaplanır.</small>
+            <small>Bulunduğunuz vakti belirlemek için kullanılır; vakit değişince sayaçlar otomatik sıfırlanır.</small>
             <div style={{ marginTop: 8 }}>
               <select id="city" value={settings.custom ? 'custom' : settings.cityId} onChange={(e) => e.target.value !== 'custom' && pickCity(e.target.value)}>
                 {settings.custom && <option value="custom">{settings.custom.name}</option>}
@@ -145,9 +145,8 @@ export default function Settings({ settings, setSettings, locationName, source, 
       </section>
 
       <p className="source-line" style={{ marginTop: 20 }}>
-        Tesbihat · Sürüm 1.0.0<br />
-        İçerik: <em>Seyyid Muhammed Ruhi el-Kadiri — Namaz Sonrası Tesbihatı</em>.<br />
-        Dinî kaynak için ilim ehline danışınız.
+        Tesbihat · Sürüm 1.1.0<br />
+        Vakitler Aladhan (Diyanet metodu) veya çevrimdışı hesap ile belirlenir.
       </p>
     </main>
   )

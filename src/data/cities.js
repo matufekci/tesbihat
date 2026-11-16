@@ -1,4 +1,4 @@
-// 81 il merkezi — namaz vakti hesabı için yaklaşık koordinatlar (Diyanet ilçe bazlı hassasiyet gerektiğinde GPS/ilçe seçimi kullanılabilir)
+// 81 il merkezi — vakit hesabı için yaklaşık koordinatlar
 export const CITIES = [
   { id: 'adana', name: 'Adana', lat: 36.99, lng: 35.33 },
   { id: 'adiyaman', name: 'Adıyaman', lat: 37.76, lng: 38.28 },

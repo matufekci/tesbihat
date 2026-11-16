@@ -1,29 +1,23 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { CITIES } from './data/cities.js'
-import { fetchTimes, prayerState, minutesOf } from './lib/prayer.js'
+import { fetchTimes, minutesOf } from './lib/prayer.js'
 import {
-  DEFAULT_SETTINGS, loadSettings, saveSettings, loadStats, saveStats,
+  loadSettings, saveSettings, loadStats, saveStats,
   completeVird, todayDone, currentStreak,
 } from './lib/store.js'
 import { notificationPermission, scheduleReminders, cancelReminders } from './lib/notify.js'
-import Home from './components/Home.jsx'
-import Guided from './components/Guided.jsx'
+import VirdList from './components/VirdList.jsx'
 import Reader from './components/Reader.jsx'
 import Settings from './components/Settings.jsx'
 
-const pad = (n) => String(n).padStart(2, '0')
-export const fmtClock = (mins) => {
-  const m = ((Math.round(mins) % 1440) + 1440) % 1440
-  return `${pad(Math.floor(m / 60))}:${pad(m % 60)}`
-}
+const VAKIT_LABEL = { sabah: 'Sabah', ogle: 'Öğle', ikindi: 'İkindi', aksam: 'Akşam', yatsi: 'Yatsı' }
 
 export default function App() {
   const [settings, setSettings] = useState(loadSettings)
-  const [tab, setTab] = useState('home')
+  const [tab, setTab] = useState('vird')
   const [now, setNow] = useState(() => new Date())
-  const [timesData, setTimesData] = useState(null) // { timings, hijri, source }
+  const [timesData, setTimesData] = useState(null)
   const [stats, setStats] = useState(loadStats)
-  const [guidedPrayer, setGuidedPrayer] = useState(null)
   const [toast, setToast] = useState('')
   const toastTimer = useRef(null)
   const deferredInstall = useRef(null)
@@ -32,26 +26,23 @@ export default function App() {
   const showToast = useCallback((msg) => {
     setToast(msg)
     clearTimeout(toastTimer.current)
-    toastTimer.current = setTimeout(() => setToast(''), 2800)
+    toastTimer.current = setTimeout(() => setToast(''), 2600)
   }, [])
 
-  // tema
   useEffect(() => { document.documentElement.dataset.theme = settings.theme }, [settings.theme])
   useEffect(() => { saveSettings(settings) }, [settings])
 
-  // saat tiklemesi
+  // Sayaçların vakit sınırlarında tazelenmesi için dakikada bir değil saniyede bir tik
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 1000)
     return () => clearInterval(t)
   }, [])
 
-  // seçili konum
   const location = useMemo(() => {
     if (settings.custom) return settings.custom
     return CITIES.find((c) => c.id === settings.cityId) ?? CITIES.find((c) => c.id === 'diyarbakir')
   }, [settings.custom, settings.cityId])
 
-  // vakitleri çek (konum / gün değişince)
   const dayKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`
   useEffect(() => {
     let alive = true
@@ -62,7 +53,7 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.lat, location.lng, dayKey])
 
-  // bildirimleri zamanla
+  // Ezan sonrası hatırlatmalar
   useEffect(() => {
     if (!timesData?.timings || !settings.notifEnabled) return
     const today = new Date()
@@ -80,17 +71,13 @@ export default function App() {
       const adhan = new Date(today); adhan.setHours(Math.floor(m / 60), m % 60, 0, 0)
       const remind = new Date(adhan.getTime() + settings.reminderMin * 60000)
       if (remind.getTime() > Date.now()) {
-        events.push({ when: remind, prayerId: p.prayerId, body: `${p.name} namazı sonrası virdini yapma zamanı.` })
+        events.push({ when: remind, prayerId: p.prayerId, body: `${p.name} namazı sonrası zikrini hatırla.` })
       }
     }
-    scheduleReminders(events, {
-      title: 'Tesbihat hatırlatması',
-      body: (e) => e.body,
-    }).catch(() => {})
+    scheduleReminders(events, { title: 'Tesbihat hatırlatması', body: (e) => e.body }).catch(() => {})
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timesData, settings.notifEnabled, settings.reminderMin])
 
-  // PWA kurulum olayı
   useEffect(() => {
     const h = (e) => { e.preventDefault(); deferredInstall.current = e; setInstallReady(true) }
     window.addEventListener('beforeinstallprompt', h)
@@ -110,7 +97,7 @@ export default function App() {
     if (!on) {
       setSettings((s) => ({ ...s, notifEnabled: false }))
       cancelReminders()
-      showToast('Bildirimler kapatıldı')
+      showToast('Hatırlatmalar kapatıldı')
       return
     }
     const perm = await notificationPermission()
@@ -122,41 +109,30 @@ export default function App() {
     showToast('Ezan sonrası hatırlatmalar açıldı ✓')
   }, [showToast])
 
-  const finishGuided = useCallback((prayerId) => {
-    setStats(completeVird(prayerId))
-  }, [])
-
-  const resetStats = useCallback(() => {
-    saveStats({ days: {}, total: 0 })
-    setStats({ days: {}, total: 0 })
-    showToast('İstatistikler sıfırlandı')
+  const handleCompleteVird = useCallback((vakit) => {
+    setStats(completeVird(vakit))
+    showToast(`${VAKIT_LABEL[vakit] ?? ''} virdi tamamlandı ✓`)
   }, [showToast])
 
   const doneToday = useMemo(() => todayDone(stats), [stats])
   const streak = useMemo(() => currentStreak(stats), [stats])
-  const state = useMemo(() => (timesData ? prayerState(timesData.timings, now) : null), [timesData, now])
 
   return (
     <div className="app-frame">
       <div className="app">
-        {tab === 'home' && (
-          <Home
+        {tab === 'vird' && (
+          <VirdList
             now={now}
             timesData={timesData}
-            state={state}
-            locationName={location.name}
-            doneToday={doneToday}
+            settings={settings}
+            doneTodaySize={doneToday.size}
             streak={streak}
-            totalVird={stats.total}
-            notifEnabled={settings.notifEnabled}
-            installReady={installReady}
-            onInstall={installApp}
-            onEnableNotif={() => toggleNotif(true)}
-            onStart={(prayerId) => setGuidedPrayer(prayerId)}
-            onGoSettings={() => setTab('settings')}
+            onCompleteVird={handleCompleteVird}
+            onUpdateSettings={(patch) => setSettings((s) => ({ ...s, ...patch }))}
+            onToast={showToast}
           />
         )}
-        {tab === 'reader' && <Reader />}
+        {tab === 'metin' && <Reader />}
         {tab === 'settings' && (
           <Settings
             settings={settings}
@@ -164,18 +140,17 @@ export default function App() {
             locationName={location.name}
             source={timesData?.source}
             onToggleNotif={toggleNotif}
-            onResetStats={resetStats}
+            onResetStats={() => { saveStats({ days: {}, total: 0 }); setStats({ days: {}, total: 0 }); showToast('İstatistikler sıfırlandı') }}
             onToast={showToast}
           />
         )}
 
-        {/* alt navigasyon */}
         <nav className="navbar" aria-label="Ana gezinme">
-          <button className={`nav-btn ${tab === 'home' ? 'active' : ''}`} onClick={() => setTab('home')}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/><path d="M9.5 21v-6h5v6"/></svg>
-            Bugün
+          <button className={`nav-btn ${tab === 'vird' ? 'active' : ''}`} onClick={() => setTab('vird')}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="0.6" fill="currentColor"/></svg>
+            Tesbihat
           </button>
-          <button className={`nav-btn ${tab === 'reader' ? 'active' : ''}`} onClick={() => setTab('reader')}>
+          <button className={`nav-btn ${tab === 'metin' ? 'active' : ''}`} onClick={() => setTab('metin')}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 5.5v15"/><path d="M9 7.5h7M9 11h7"/></svg>
             Metin
           </button>
@@ -184,15 +159,6 @@ export default function App() {
             Ayarlar
           </button>
         </nav>
-
-        {/* rehberli mod kaplama */}
-        {guidedPrayer && (
-          <Guided
-            prayerId={guidedPrayer}
-            onClose={() => setGuidedPrayer(null)}
-            onComplete={finishGuided}
-          />
-        )}
 
         <div className={`toast ${toast ? 'show' : ''}`} role="status">{toast}</div>
       </div>

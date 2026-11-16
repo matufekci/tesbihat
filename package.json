@@ -1,9 +1,9 @@
 {
   "name": "tesbihat",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
-  "description": "Tesbihat — Seyyid Muhammed Ruhi el-Kadiri'nin beş vakit namaz sonrası virdi için rehberli uygulama",
+  "description": "Tesbihat — beş vaktin ardından okunan zikir, salavât, dua ve sureler; her vakit için sayaçlı rehber",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
