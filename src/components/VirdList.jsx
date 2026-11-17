@@ -6,6 +6,23 @@ import QuranBlock from './QuranBlock.jsx'
 import MeaningDisclosure from './MeaningDisclosure.jsx'
 import { QURAN } from '../data/quran.js'
 
+function ayahText(sura, n) {
+  return (QURAN[String(sura)] ?? []).find(([m]) => m === n)?.[1] ?? ''
+}
+
+function EndNote({ note }) {
+  if (!note) return null
+  return (
+    <div className="rizik-endnote" role="note">
+      <p className="ren-line">{note.text}</p>
+      {note.ayahs?.map((n) => (
+        <p key={n} className="ren-ayah" lang="ar" dir="rtl"><span className="ren-num">{n}</span> {ayahText(56, n)}</p>
+      ))}
+      <p className="ren-line">{note.tail}</p>
+    </div>
+  )
+}
+
 const VAKIT_ORDER = ['sabah', 'ogle', 'ikindi', 'aksam', 'yatsi']
 const VAKIT_LABEL = { sabah: 'Sabah', ogle: 'Öğle', ikindi: 'İkindi', aksam: 'Akşam', yatsi: 'Yatsı' }
 const LA_ILAHE_OPTIONS = [20, 100, 200]
@@ -113,6 +130,7 @@ function VirdFlow({ vakit, onClose }) {
   const steps = useMemo(() => getStepsFor(vakit), [vakit])
   const [state, setState] = useState(() => loadVakitProgress(vakit))
   const [laTarget, setLaTarget] = useState(20)
+  const [extraWindow, setExtraWindow] = useState(null)
   const [fontScale, setFontScale] = useState(() => {
     try { const v = parseFloat(localStorage.getItem('tesbihat.fontScale')); return Number.isFinite(v) ? v : 1 } catch { return 1 }
   })
@@ -224,8 +242,18 @@ function VirdFlow({ vakit, onClose }) {
               : step.arabic}
           </div>
         )}
-        {step.quran && <QuranBlock {...step.quran} />}
-        {step.latin && <p className="latin">{step.latin}</p>}
+        {step.quran && (
+          <QuranBlock
+            {...step.quran}
+            hotAyat={step.hotAyat}
+            hotLabel={step.hotStep ? 'Rızık Duasını Oku' : undefined}
+            highlightAyat={step.highlightAyat}
+            onHotAyat={step.hotStep ? () => setExtraWindow(step.hotStep) : undefined}
+          />
+        )}
+        {step.latin && (Array.isArray(step.latin)
+          ? step.latin.map((l, i) => <p key={i} className="latin">{l}</p>)
+          : <p className="latin">{step.latin}</p>)}
         {step.quran
           ? (step.quran.sura !== 36 && step.quran.sura !== 56 && (
               <MeaningDisclosure>
@@ -235,6 +263,7 @@ function VirdFlow({ vakit, onClose }) {
           : (step.meaning && (
               <MeaningDisclosure><p>{step.meaning}</p></MeaningDisclosure>
             ))}
+        {step.endNote && <EndNote note={step.endNote} />}
 
         {isCounter && (
           <div className="counter-zone">
@@ -259,6 +288,37 @@ function VirdFlow({ vakit, onClose }) {
           </div>
         )}
       </div>
+
+      {extraWindow && (() => {
+        const w = steps.find((x) => x.id === extraWindow)
+        if (!w) return null
+        return (
+          <div className="extra-window" role="dialog" aria-modal="true" aria-label={w.title}>
+            <div className="extra-top">
+              <div className="g-section">Yeni Pencere</div>
+              <button className="icon-btn" onClick={() => setExtraWindow(null)} aria-label="Kapat" title="Kapat">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+              </button>
+            </div>
+            <div className="extra-body" style={{ '--qs': fontScale }}>
+              <h2 className="g-title">{w.title}</h2>
+              {w.arabic && (
+                <div className="arabic small" lang="ar" dir="rtl">
+                  {Array.isArray(w.arabic) ? w.arabic.map((line, i) => <div key={i} style={{ marginBottom: 8 }}>{line}</div>) : w.arabic}
+                </div>
+              )}
+              {w.latin && (Array.isArray(w.latin) ? w.latin.map((l, i) => <p key={i} className="latin">{l}</p>) : <p className="latin">{w.latin}</p>)}
+              {w.meaning && <MeaningDisclosure><p>{w.meaning}</p></MeaningDisclosure>}
+              {w.endNote && <EndNote note={w.endNote} />}
+            </div>
+            <div className="flow-bottom">
+              <div className="g-actions">
+                <button className="btn-gold" onClick={() => setExtraWindow(null)}>Kapat — 74. ayetten devam et ✓</button>
+              </div>
+            </div>
+          </div>
+        )
+      })()}
 
       {/* Alt bar: her zaman sabit, kompakt */}
       <div className="flow-bottom">
