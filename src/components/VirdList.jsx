@@ -236,7 +236,7 @@ function VirdFlow({ vakit, onClose }) {
               <MeaningDisclosure><p>{step.meaning}</p></MeaningDisclosure>
             ))}
 
-        {isCounter ? (
+        {isCounter && (
           <div className="counter-zone">
             <button className="counter-ring" onClick={tapCounter} aria-label="Say">
               <svg width="148" height="148" viewBox="0 0 148 148">
@@ -256,26 +256,23 @@ function VirdFlow({ vakit, onClose }) {
                 <span>/ {target}</span>
               </span>
             </button>
-            {step.id === 'la-ilahe' && (
-              <div className="target-chips" role="group" aria-label="Hedef adet">
-                {LA_ILAHE_OPTIONS.map((t) => (
-                  <button key={t} className={`chip ${laTarget === t ? 'active' : ''}`} onClick={() => { setLaTarget(t); setState((s) => ({ ...s, counts: { ...s.counts, [step.id]: 0 } })) }}>{t}×</button>
-                ))}
-              </div>
-            )}
-            <div className="g-actions">
-              <button className="btn-secondary" onClick={goNext}>Atla</button>
-              <button className="btn-gold" onClick={goNext}>{isLast ? 'Bitir ✓' : 'Tamam ✓'}</button>
-            </div>
-          </div>
-        ) : (
-          <div className="counter-zone">
-            <div className="g-actions" style={{ marginTop: 8 }}>
-              <button className="btn-secondary" onClick={goNext}>Atla</button>
-              <button className="btn-gold" onClick={goNext} autoFocus>{isLast ? 'Bitir ✓' : 'Okudum ✓ Devam'}</button>
-            </div>
           </div>
         )}
+      </div>
+
+      {/* Alt bar: her zaman sabit, kompakt */}
+      <div className="flow-bottom">
+        {isCounter && step.id === 'la-ilahe' && (
+          <div className="target-chips" role="group" aria-label="Hedef adet">
+            {LA_ILAHE_OPTIONS.map((t) => (
+              <button key={t} className={`chip ${laTarget === t ? 'active' : ''}`} onClick={() => { setLaTarget(t); setState((s) => ({ ...s, counts: { ...s.counts, [step.id]: 0 } })) }}>{t}×</button>
+            ))}
+          </div>
+        )}
+        <div className="g-actions">
+          <button className="btn-secondary" onClick={goNext}>Atla</button>
+          <button className="btn-gold" onClick={goNext} autoFocus>{isLast ? 'Bitir ✓' : (isCounter ? 'Tamam ✓' : 'Okudum ✓ Devam')}</button>
+        </div>
       </div>
     </div>
   )
