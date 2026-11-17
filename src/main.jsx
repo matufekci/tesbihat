@@ -1,5 +1,8 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
+import '@fontsource/scheherazade-new/arabic-400.css'
+import '@fontsource/scheherazade-new/arabic-600.css'
+import '@fontsource/scheherazade-new/arabic-700.css'
 import './styles.css'
 import App from './App.jsx'
 

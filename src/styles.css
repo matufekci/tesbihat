@@ -16,7 +16,7 @@
   --ok: #57c98a;
   --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
   --radius: 22px;
-  --font-ar: 'Amiri', 'Noto Naskh Arabic', serif;
+  --font-ar: 'Scheherazade New', 'Amiri', 'Noto Naskh Arabic', serif;
   --font-display: 'Marcellus', serif;
   --font-ui: 'Inter', system-ui, sans-serif;
 }
@@ -542,3 +542,7 @@ select:focus, input:focus { border-color: var(--gold); }
 .extra-top { justify-content: flex-end; gap: 8px; }
 .extra-body .latin { text-align: center; margin-left: auto; margin-right: auto; }
 .extra-body .arabic { text-align: center; }
+
+/* v1.16 — Scheherazade New: Kur'ân ve zikir metinlerinde okunabilirlik */
+.quran-text, .quran-basmala, .arabic { font-weight: 600; }
+.ayah-cta, .ren-ayah { font-weight: inherit; }
