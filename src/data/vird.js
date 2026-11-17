@@ -43,14 +43,14 @@ export const COMMON_STEPS = [
     meaning: 'Allah’ım! Seni zikretmeme, Sana şükretmeme ve Sana en güzel şekilde kulluk etmeme bana yardım et; beni gafillerden eyleme.',
   },
   {
-    id: 'euzu-besmele', title: 'Eûzü-Besmele', type: 'read',
-    arabic: 'أَعُوذُ بِاللّٰهِ مِنَ الشَّيْطَانِ الرَّجِيمِ بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ',
-    latin: 'E’ûzü billâhi mine’ş-şeytâni’r-racîm. Bismillâhir-rahmânir-rahîm.',
-    meaning: 'Kovulmuş şeytandan Allah’a sığınırım. Rahmân ve Rahîm olan Allah’ın adıyla.',
-  },
-  {
-    id: 'ayetul-kursi', title: 'Âyetü’l-Kürsî', type: 'read',
-    ...AYETUL_KURSI,
+    id: 'euzu-besmele-kursi', title: 'Eûzü-Besmele ve Âyetü’l-Kürsî', type: 'read',
+    arabic: [
+      'أَعُوذُ بِاللّٰهِ مِنَ الشَّيْطَانِ الرَّجِيمِ بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ',
+      AYETUL_KURSI.arabic,
+    ],
+    latin: 'E’ûzü billâhi mine’ş-şeytâni’r-racîm. Bismillâhir-rahmânir-rahîm. ' + AYETUL_KURSI.latin,
+    meaning: 'Kovulmuş şeytandan Allah’a sığınırım. Rahmân ve Rahîm olan Allah’ın adıyla. Sonra Âyetü’l-Kürsî: Allah — O’ndan başka ilâh yoktur; diridir, kayyûmdur. O’nu ne bir uyuklama tutar ne de uyku. Göklerde ve yerde ne varsa O’nundur. O’nun izni olmaksızın katında kim şefaat edebilir? O, önlerindekini ve arkalarındakini bilir. O’nun ilminden — dilediği kadarı hariç — hiçbir şey kavrayamazlar. Kürsüsü gökleri ve yeri kaplamıştır; onların korunması O’na ağır gelmez. O yücedir, büyüktür. (Bakara 2:255)',
+    note: 'Bakara Suresi’nin 255. ayeti.',
   },
   {
     id: 'tesbih', title: 'Sübhânallâh', type: 'counter', target: 33,
