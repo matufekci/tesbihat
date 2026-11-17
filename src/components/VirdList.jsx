@@ -64,25 +64,13 @@ export default function VirdList({ now, timesData }) {
         <span style={{ textTransform: 'capitalize' }}>{greg}</span>
       </div>
 
-      {/* Açılışta doğrudan içinde bulunulan vaktin virdi gelir */}
-      <section className="vakit-hero" aria-label="İçinde bulunulan vakit">
-        <div className="vakit-hero-l">
-          <div className="vh-kicker">{auto ? 'ŞİMDİ' : 'SEÇİLEN'}</div>
-          <h1 className="vh-name">{VAKIT_LABEL[vakit]}</h1>
-          <div className="vh-sub">{NAMAZ_META[vakit]?.sonrasi}</div>
-        </div>
-        <svg className="vakit-ornament" width="72" height="72" viewBox="0 0 72 72" fill="none" aria-hidden="true">
-          <path d="M36 6 66 36 36 66 6 36Z" stroke="url(#og)" strokeWidth="1.6" opacity=".9"/>
-          <path d="M36 16 56 36 36 56 16 36Z" stroke="url(#og)" strokeWidth="1.1" opacity=".6"/>
-          <circle cx="36" cy="36" r="7.5" fill="url(#og)" opacity=".95"/>
-          <circle cx="36" cy="36" r="3" fill="var(--bg-1)"/>
-          <defs>
-            <linearGradient id="og" x1="10" y1="10" x2="62" y2="62">
-              <stop offset="0" stopColor="#ecc97e"/><stop offset=".55" stopColor="#d9b36c"/><stop offset="1" stopColor="#a87f3d"/>
-            </linearGradient>
-          </defs>
-        </svg>
-      </section>
+      {/* Kompakt vakit satırı */}
+      <div className="vakit-line" aria-label="İçinde bulunulan vakit">
+        <span className="vl-name">{VAKIT_LABEL[vakit]}</span>
+        <span className="vl-sep">·</span>
+        <span className="vl-sub">{NAMAZ_META[vakit]?.sonrasi}</span>
+        {!auto && <span className="vl-picked">seçildi</span>}
+      </div>
 
       <div className="vakit-chips" role="group" aria-label="Vakit seç">
         {!auto && (
