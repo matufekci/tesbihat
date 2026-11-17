@@ -181,8 +181,22 @@ export const COMMON_STEPS = [
 
 export const RIZIK_DUASI = {
       id: 'rizik-duasi', title: 'Rızık Duası', type: 'read',
-      arabic: 'اللَّهُمَّ يَا مَنْ هُوَ هَكَذَا وَلَا يَزَالُ، أَسْأَلُكَ بِأَزَلِيَّتِكَ فِي دَيْمُومِيَّةِ وَحْدَانِيَّتِكَ، وَبِكُلِّ آلَائِكَ، وَبِقِدَمِ ذَاتِكَ الْكَرِيمَةِ، بِجَلَالِ الْجَلَالِ، بِكَمَالِ الْكَمَالِ، بِقَهْرِ قَهْرِ مَيْمُونِ وَحْدَانِيَّتِكَ، بِحَقِّ صَمَدَانِيَّتِكَ، يَا أَوَّلُ يَا آخِرُ، بِالْحَوْلِ وَالطَّوْلِ، وَالْهَيْبَةِ وَالْعَظَمَةِ وَالْعَرْشِ وَالْكُرْسِيِّ، وَبِجَاهِ سَيِّدِنَا مُحَمَّدٍ الْقُرَشِيِّ (صلى الله عليه وسلم)؛ أَنْ تُيَسِّرَ لِي رِزْقِي بِلَا تَعَبٍ وَلَا مَنٍّ مِنْ أَحَدٍ، وَاجْعَلْهُ سَبَبًا لِعُبُودِيَّتِكَ، وَمُشَاهَدَةً لِأَحْكَامِ الرُّبُوبِيَّةِ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ وَلَا أَقَلَّ مِنْ ذَلِكَ أَلَا إِلَى اللهِ تَصِيرُ الْأُمُورُ',
-      latin: 'Allâhümme yâ men hüve hâkezâ ve lâ yezâl, es’elüke bi-ezeliyyetike fî deymûmiyyeti vahdâniyyetike ve bi-külli âlâike ve bi-kıdemi zâtike’l-kerîmeti bi-celâli’l-celâli, bi-kemâli’l-kemâli, bi-kahri kahri meymûni vahdâniyyetike bi-hakkı samedâniyyetike, yâ Evvelü yâ Âhiru, bi’l-havli ve’t-tavli ve’l-heybeti ve’l-‘azameti ve’l-‘arşi ve’l-kürsiyyi, ve bi-câhi seyyidinâ Muhammedini’l-Kuraşiyyi (sallallâhu aleyhi ve sellem) en tüyessira lî rızkî bilâ te’abin ve lâ mennin min ehadin vec’alhü sebeben li-‘ubûdiyyetike ve müşâhedeten li-ahkâmi’r-rubûbiyyeti ve lâ tekilnî ilâ nefsî tarfete ‘aynin ve lâ ekalle min zâlik. Elâ ilallâhi tesîru’l-umûr.',
+      arabic: [
+        'اللَّهُمَّ يَا مَنْ هُوَ هَكَذَا وَلَا يَزَالُ، أَسْأَلُكَ بِأَزَلِيَّتِكَ فِي دَيْمُومِيَّةِ وَحْدَانِيَّتِكَ، وَبِكُلِّ آلَائِكَ، وَبِقِدَمِ ذَاتِكَ الْكَرِيمَةِ،',
+        'بِجَلَالِ الْجَلَالِ، بِكَمَالِ الْكَمَالِ، بِقَهْرِ قَهْرِ مَيْمُونِ وَحْدَانِيَّتِكَ، بِحَقِّ صَمَدَانِيَّتِكَ، يَا أَوَّلُ يَا آخِرُ،',
+        'بِالْحَوْلِ وَالطَّوْلِ، وَالْهَيْبَةِ وَالْعَظَمَةِ وَالْعَرْشِ وَالْكُرْسِيِّ، وَبِجَاهِ سَيِّدِنَا مُحَمَّدٍ الْقُرَشِيِّ (صلى الله عليه وسلم)؛',
+        'أَنْ تُيَسِّرَ لِي رِزْقِي بِلَا تَعَبٍ وَلَا مَنٍّ مِنْ أَحَدٍ،',
+        'وَاجْعَلْهُ سَبَبًا لِعُبُودِيَّتِكَ، وَمُشَاهَدَةً لِأَحْكَامِ الرُّبُوبِيَّةِ،',
+        'وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ وَلَا أَقَلَّ مِنْ ذَلِكَ أَلَا إِلَى اللهِ تَصِيرُ الْأُمُورُ',
+      ],
+      latin: [
+        'Allâhümme yâ men hüve hâkezâ ve lâ yezâl, es’elüke bi-ezeliyyetike fî deymûmiyyeti vahdâniyyetike ve bi-külli âlâike ve bi-kıdemi zâtike’l-kerîmeti,',
+        'bi-celâli’l-celâli, bi-kemâli’l-kemâli, bi-kahri kahri meymûni vahdâniyyetike bi-hakkı samedâniyyetike, yâ Evvelü yâ Âhiru,',
+        'bi’l-havli ve’t-tavli ve’l-heybeti ve’l-‘azameti ve’l-‘arşi ve’l-kürsiyyi, ve bi-câhi seyyidinâ Muhammedini’l-Kuraşiyyi (sallallâhu aleyhi ve sellem);',
+        'en tüyessira lî rızkî bilâ te’abin ve lâ mennin min ehadin,',
+        'vec’alhü sebeben li-‘ubûdiyyetike ve müşâhedeten li-ahkâmi’r-rubûbiyyeti,',
+        've lâ tekilnî ilâ nefsî tarfete ‘aynin ve lâ ekalle min zâlik. Elâ ilallâhi tesîru’l-umûr.',
+      ],
       meaning: 'Allah’ım! Ezelîliğinle, birliğinin devamlılığıyla, bütün nimetlerinle; celâlinin celâli, kemâlinin kemâli hürmetine; Samedâniyetinin hakkı için; yâ Evvel, yâ Âhir; kudret, kuvvet, heybet, azamet, Arş ve Kürsî hürmetine; Efendimiz Muhammed el-Kuraşî’nin (s.a.v.) câhı hakkına: rızkımı hiçbir yorgunluk çekmeden, hiç kimsenin minneti olmaksızın kolaylaştırmanı; onu kulluğuma ve rubûbiyet hükümlerini müşahede etmeme vesile kılmanı; beni bir göz kırpması — hatta ondan daha azı — kadar bile nefsime bırakmamanı Senden dilerim. Bilesiniz ki bütün işler Allah’a döner.',
       endNote: { text: 'Dua bittikten sonra İKİ ÂYET geriden başla:', ayahs: [74, 75], tail: 'âyetlerinden itibaren Vâkıa sûresini sonuna kadar oku.' },
     }

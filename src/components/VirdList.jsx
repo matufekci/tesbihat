@@ -295,7 +295,8 @@ function VirdFlow({ vakit, onClose }) {
         return (
           <div className="extra-window" role="dialog" aria-modal="true" aria-label={w.title}>
             <div className="extra-top">
-              <div className="g-section">Yeni Pencere</div>
+              <button className="font-btn" onClick={() => bumpFont(-0.15)} aria-label="Yazıyı küçült" title="Yazıyı küçült">A−</button>
+              <button className="font-btn" onClick={() => bumpFont(0.15)} aria-label="Yazıyı büyüt" title="Yazıyı büyüt">A+</button>
               <button className="icon-btn" onClick={() => setExtraWindow(null)} aria-label="Kapat" title="Kapat">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
               </button>

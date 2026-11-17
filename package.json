@@ -1,7 +1,7 @@
 {
   "name": "tesbihat",
   "private": true,
-  "version": "1.13.0",
+  "version": "1.14.0",
   "type": "module",
   "description": "Tesbihat — beş vaktin ardından okunan zikir, salavât, dua ve sureler; her vakit için sayaçlı rehber",
   "scripts": {
