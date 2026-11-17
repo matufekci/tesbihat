@@ -20,8 +20,6 @@ const AYETUL_KURSI = {
 // İmam en-Nevevî'ye nisbet edilen Hıfz (korunma) Hizbi — yalnız sabah ve akşam namazlarından sonra okunur.
 // Metin, kullanıcının Drive'a yüklediği kaynak baskıdan (WhatsApp Image 2026-10-29) aynen aktarılmıştır; ayet dışı kısımlar kaynaktır.
 const HIZB_AL_HIFZ = {
-  id: 'hizb-al-hifz', title: 'Hıfz Hizbi (İmam en-Nevevî)', type: 'read',
-  note: 'İmam en-Nevevî’ye nisbet edilen bu korunma hizbi, sabah ve akşam namazlarından sonra birer defa okunur. Köşeli parantez içindeki (٣) ve (٧) sayıları o kısmın kaç defa tekrar edileceğini gösterir. Kaynak baskıda «جَلَّ جَلَالُهُ» tuğra-i kaligrafik olarak geçmektedir.',
   arabic: [
     'بِسْمِ اللهِ الرَّحْمَٰنِ الرَّحِيمِ',
     '«بِسْمِ اللهِ، [اللهُ أَكْبَرُ (٣)]» أَقُولُ عَلَىٰ نَفْسِي وَعَلَىٰ دِينِي وَعَلَىٰ أَهْلِي وَعَلَىٰ أَوْلَادِي وَعَلَىٰ مَالِي وَعَلَىٰ أَصْحَابِي وَعَلَىٰ أَدْيَانِهِمْ وَعَلَىٰ أَمْوَالِهِمْ أَلْفَ «بِسْمِ اللهِ، [اللهُ أَكْبَرُ (٣)]»',
@@ -181,6 +179,14 @@ export const COMMON_STEPS = [
   },
 ]
 
+export const RIZIK_DUASI = {
+      id: 'rizik-duasi', title: 'Rızık Duası', type: 'read',
+      arabic: 'اللَّهُمَّ يَا مَنْ هُوَ هَكَذَا وَلَا يَزَالُ، أَسْأَلُكَ بِأَزَلِيَّتِكَ فِي دَيْمُومِيَّةِ وَحْدَانِيَّتِكَ، وَبِكُلِّ آلَائِكَ، وَبِقِدَمِ ذَاتِكَ الْكَرِيمَةِ، بِجَلَالِ الْجَلَالِ، بِكَمَالِ الْكَمَالِ، بِقَهْرِ قَهْرِ مَيْمُونِ وَحْدَانِيَّتِكَ، بِحَقِّ صَمَدَانِيَّتِكَ، يَا أَوَّلُ يَا آخِرُ، بِالْحَوْلِ وَالطَّوْلِ، وَالْهَيْبَةِ وَالْعَظَمَةِ وَالْعَرْشِ وَالْكُرْسِيِّ، وَبِجَاهِ سَيِّدِنَا مُحَمَّدٍ الْقُرَشِيِّ (صلى الله عليه وسلم)؛ أَنْ تُيَسِّرَ لِي رِزْقِي بِلَا تَعَبٍ وَلَا مَنٍّ مِنْ أَحَدٍ، وَاجْعَلْهُ سَبَبًا لِعُبُودِيَّتِكَ، وَمُشَاهَدَةً لِأَحْكَامِ الرُّبُوبِيَّةِ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ وَلَا أَقَلَّ مِنْ ذَلِكَ أَلَا إِلَى اللهِ تَصِيرُ الْأُمُورُ',
+      latin: 'Allâhümme yâ men hüve hâkezâ ve lâ yezâl, es’elüke bi-ezeliyyetike fî deymûmiyyeti vahdâniyyetike ve bi-külli âlâike ve bi-kıdemi zâtike’l-kerîmeti bi-celâli’l-celâli, bi-kemâli’l-kemâli, bi-kahri kahri meymûni vahdâniyyetike bi-hakkı samedâniyyetike, yâ Evvelü yâ Âhiru, bi’l-havli ve’t-tavli ve’l-heybeti ve’l-‘azameti ve’l-‘arşi ve’l-kürsiyyi, ve bi-câhi seyyidinâ Muhammedini’l-Kuraşiyyi (sallallâhu aleyhi ve sellem) en tüyessira lî rızkî bilâ te’abin ve lâ mennin min ehadin vec’alhü sebeben li-‘ubûdiyyetike ve müşâhedeten li-ahkâmi’r-rubûbiyyeti ve lâ tekilnî ilâ nefsî tarfete ‘aynin ve lâ ekalle min zâlik. Elâ ilallâhi tesîru’l-umûr.',
+      meaning: 'Allah’ım! Ezelîliğinle, birliğinin devamlılığıyla, bütün nimetlerinle; celâlinin celâli, kemâlinin kemâli hürmetine; Samedâniyetinin hakkı için; yâ Evvel, yâ Âhir; kudret, kuvvet, heybet, azamet, Arş ve Kürsî hürmetine; Efendimiz Muhammed el-Kuraşî’nin (s.a.v.) câhı hakkına: rızkımı hiçbir yorgunluk çekmeden, hiç kimsenin minneti olmaksızın kolaylaştırmanı; onu kulluğuma ve rubûbiyet hükümlerini müşahede etmeme vesile kılmanı; beni bir göz kırpması — hatta ondan daha azı — kadar bile nefsime bırakmamanı Senden dilerim. Bilesiniz ki bütün işler Allah’a döner.',
+      endNote: { text: 'Dua bittikten sonra İKİ ÂYET geriden başla:', ayahs: [74, 75], tail: 'âyetlerinden itibaren Vâkıa sûresini sonuna kadar oku.' },
+    }
+
 const HASR5_STEP = (id) => ({ id, title: 'Haşr Suresi’nin Son 5 Ayeti', type: 'read', ...HASR5 })
 
 // Namaza özel katman
@@ -198,7 +204,6 @@ const PRAYER_STEPS = {
       note: '58. ayetine gelindiğinde bu ayet 12 defa tekrar edilir: سَلَامٌ قَوْلًا مِنْ رَبٍّ رَحِيمٍ — Selâmün kavlen min rabbin rahîm.',
     },
     HASR5_STEP('hasr-sabah'),
-    HIZB_AL_HIFZ,
   ],
   ogle: [
     {
@@ -218,20 +223,12 @@ const PRAYER_STEPS = {
       note: '76. ayete gelindiğinde ayetin altındaki “Rızık Duasını Oku” düğmesine dokun — dua yeni pencerede açılır. Dua bittikten sonra iki ayet geriden (74. ayet: فَسَبِّحۡ بِٱسۡمِ رَبِّكَ ٱلۡعَظِيمِ) devam et ve sûre sonuna kadar oku.',
     },
     {
-      id: 'rizik-duasi', title: 'Rızık Duası', type: 'read',
-      arabic: 'اللَّهُمَّ يَا مَنْ هُوَ هَكَذَا وَلَا يَزَالُ، أَسْأَلُكَ بِأَزَلِيَّتِكَ فِي دَيْمُومِيَّةِ وَحْدَانِيَّتِكَ، وَبِكُلِّ آلَائِكَ، وَبِقِدَمِ ذَاتِكَ الْكَرِيمَةِ، بِجَلَالِ الْجَلَالِ، بِكَمَالِ الْكَمَالِ، بِقَهْرِ قَهْرِ مَيْمُونِ وَحْدَانِيَّتِكَ، بِحَقِّ صَمَدَانِيَّتِكَ، يَا أَوَّلُ يَا آخِرُ، بِالْحَوْلِ وَالطَّوْلِ، وَالْهَيْبَةِ وَالْعَظَمَةِ وَالْعَرْشِ وَالْكُرْسِيِّ، وَبِجَاهِ سَيِّدِنَا مُحَمَّدٍ الْقُرَشِيِّ (صلى الله عليه وسلم)؛ أَنْ تُيَسِّرَ لِي رِزْقِي بِلَا تَعَبٍ وَلَا مَنٍّ مِنْ أَحَدٍ، وَاجْعَلْهُ سَبَبًا لِعُبُودِيَّتِكَ، وَمُشَاهَدَةً لِأَحْكَامِ الرُّبُوبِيَّةِ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ وَلَا أَقَلَّ مِنْ ذَلِكَ أَلَا إِلَى اللهِ تَصِيرُ الْأُمُورُ',
-      latin: 'Allâhümme yâ men hüve hâkezâ ve lâ yezâl, es’elüke bi-ezeliyyetike fî deymûmiyyeti vahdâniyyetike ve bi-külli âlâike ve bi-kıdemi zâtike’l-kerîmeti bi-celâli’l-celâli, bi-kemâli’l-kemâli, bi-kahri kahri meymûni vahdâniyyetike bi-hakkı samedâniyyetike, yâ Evvelü yâ Âhiru, bi’l-havli ve’t-tavli ve’l-heybeti ve’l-‘azameti ve’l-‘arşi ve’l-kürsiyyi, ve bi-câhi seyyidinâ Muhammedini’l-Kuraşiyyi (sallallâhu aleyhi ve sellem) en tüyessira lî rızkî bilâ te’abin ve lâ mennin min ehadin vec’alhü sebeben li-‘ubûdiyyetike ve müşâhedeten li-ahkâmi’r-rubûbiyyeti ve lâ tekilnî ilâ nefsî tarfete ‘aynin ve lâ ekalle min zâlik. Elâ ilallâhi tesîru’l-umûr.',
-      meaning: 'Allah’ım! Ezelîliğinle, birliğinin devamlılığıyla, bütün nimetlerinle; celâlinin celâli, kemâlinin kemâli hürmetine; Samedâniyetinin hakkı için; yâ Evvel, yâ Âhir; kudret, kuvvet, heybet, azamet, Arş ve Kürsî hürmetine; Efendimiz Muhammed el-Kuraşî’nin (s.a.v.) câhı hakkına: rızkımı hiçbir yorgunluk çekmeden, hiç kimsenin minneti olmaksızın kolaylaştırmanı; onu kulluğuma ve rubûbiyet hükümlerini müşahede etmeme vesile kılmanı; beni bir göz kırpması — hatta ondan daha azı — kadar bile nefsime bırakmamanı Senden dilerim. Bilesiniz ki bütün işler Allah’a döner.',
-      endNote: { text: 'Dua bittikten sonra İKİ ÂYET geriden başla:', ayahs: [74, 75], tail: 'âyetlerinden itibaren Vâkıa sûresini sonuna kadar oku.' },
-    },
-    {
       id: 'esma-7', title: 'Esmâ-i Hüsnâ (7)', type: 'counter', target: 4,
       arabic: 'كَرِيمٌ، بَاسِطٌ، فَتَّاحٌ، رَزَّاقٌ، غَنِيٌّ، مُغْنِي، مُتَفَضِّلٌ',
       latin: 'Kerîmün, Bâsitun, Fettâhun, Rezzâkun, Ganiyyun, Muğnî, Mütefaddılun',
       meaning: 'Kerîm (Cömert), Bâsit (Genişleten/Açan), Fettâh (Fetheden), Rezzâk (Rızık veren), Ganiyy (Zengin), Muğnî (Zenginleştiren), Mütefaddıl (Lütfeden).',
     },
     HASR5_STEP('hasr-aksam'),
-    HIZB_AL_HIFZ,
   ],
   yatsi: [
     { id: 'mulk', title: 'Mülk Suresi (67)', type: 'read', quran: { sura: 67 } },
@@ -245,8 +242,24 @@ export const CLOSING_STEP = {
   note: 'Efendimiz ﷺ’in ruhuna, Ehl-i Beyt’e, Sahabe’ye, Kadiri silsilesine, Şeyh Abdülkadir Geylânî (k.s.) Hz.’nin ve tüm mümin ve müminatın ruhlarına okunur.',
 }
 
+const DUA_NOTE_EMPTY = 'Sonra dua edilir.'
+const DUA_NOTE_SABAH_AKSAM = 'Sabah ve akşam namazları sonrası: İmam en-Nevevî’ye nisbet edilen Hıfz (korunma) Hizbi okunur. Köşeli parantez içindeki (٣) ve (٧) sayıları o kısmın kaç defa tekrar edileceğini gösterir. Diğer namazlarda bu bölüm boştur; dilediğin duayı oku.'
+
+function duaStepFor(prayerId) {
+  if (prayerId === 'sabah' || prayerId === 'aksam') {
+    return {
+      id: 'dua', title: 'Dua', type: 'read',
+      arabic: HIZB_AL_HIFZ.arabic,
+      latin: HIZB_AL_HIFZ.latin,
+      note: DUA_NOTE_SABAH_AKSAM,
+    }
+  }
+  return { id: 'dua', title: 'Dua', type: 'read', note: DUA_NOTE_EMPTY }
+}
+
 export function getStepsFor(prayerId) {
-  return [...COMMON_STEPS, ...(PRAYER_STEPS[prayerId] ?? []), CLOSING_STEP]
+  const common = COMMON_STEPS.map((s) => (s.id === 'dua' ? duaStepFor(prayerId) : s))
+  return [...common, ...(PRAYER_STEPS[prayerId] ?? []), CLOSING_STEP]
 }
 
 export const TOTAL_COMMON = COMMON_STEPS.length

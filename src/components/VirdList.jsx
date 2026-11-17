@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { getStepsFor, COMMON_STEPS, NAMAZ_META } from '../data/vird.js'
+import { getStepsFor, COMMON_STEPS, NAMAZ_META, RIZIK_DUASI } from '../data/vird.js'
 import { minutesOf, nowMinutes } from '../lib/prayer.js'
 import { todayKey, loadVakitProgress, saveVakitProgress, resetVakitProgress } from '../lib/store.js'
 import QuranBlock from './QuranBlock.jsx'
@@ -290,7 +290,7 @@ function VirdFlow({ vakit, onClose }) {
       </div>
 
       {extraWindow && (() => {
-        const w = steps.find((x) => x.id === extraWindow)
+        const w = extraWindow === 'rizik-duasi' ? RIZIK_DUASI : steps.find((x) => x.id === extraWindow)
         if (!w) return null
         return (
           <div className="extra-window" role="dialog" aria-modal="true" aria-label={w.title}>
