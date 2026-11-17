@@ -23,6 +23,15 @@ function EndNote({ note }) {
   )
 }
 
+function MeaningBlock({ meaning }) {
+  if (!meaning) return null
+  return (
+    <MeaningDisclosure>
+      {Array.isArray(meaning) ? meaning.map((l, i) => <p key={i}>{l}</p>) : <p>{meaning}</p>}
+    </MeaningDisclosure>
+  )
+}
+
 const VAKIT_ORDER = ['sabah', 'ogle', 'ikindi', 'aksam', 'yatsi']
 const VAKIT_LABEL = { sabah: 'Sabah', ogle: 'Öğle', ikindi: 'İkindi', aksam: 'Akşam', yatsi: 'Yatsı' }
 const LA_ILAHE_OPTIONS = [20, 100, 200]
@@ -260,9 +269,7 @@ function VirdFlow({ vakit, onClose }) {
                 {quranMeanings(step.quran).map(([n, tr]) => <p key={n}><b>{n}.</b> {tr}</p>)}
               </MeaningDisclosure>
             ))
-          : (step.meaning && (
-              <MeaningDisclosure><p>{step.meaning}</p></MeaningDisclosure>
-            ))}
+          : <MeaningBlock meaning={step.meaning} />}
         {step.endNote && <EndNote note={step.endNote} />}
 
         {isCounter && (
@@ -309,7 +316,7 @@ function VirdFlow({ vakit, onClose }) {
                 </div>
               )}
               {w.latin && (Array.isArray(w.latin) ? w.latin.map((l, i) => <p key={i} className="latin">{l}</p>) : <p className="latin">{w.latin}</p>)}
-              {w.meaning && <MeaningDisclosure><p>{w.meaning}</p></MeaningDisclosure>}
+              <MeaningBlock meaning={w.meaning} />
               {w.endNote && <EndNote note={w.endNote} />}
             </div>
             <div className="flow-bottom">

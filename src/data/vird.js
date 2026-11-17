@@ -256,6 +256,44 @@ export const CLOSING_STEP = {
   note: 'Efendimiz ﷺ’in ruhuna, Ehl-i Beyt’e, Sahabe’ye, Kadiri silsilesine, Şeyh Abdülkadir Geylânî (k.s.) Hz.’nin ve tüm mümin ve müminatın ruhlarına okunur.',
 }
 
+const HIZB_MEANING = [
+  'İmam en-Nevevî’ye nisbet edilen Hıfz Hizbi’nin serbest Türkçe anlamı: âyet ve hadis kısımları meal/hadis mânâsına göredir.',
+  'Rahmân ve Rahîm olan Allah’ın adıyla.',
+  '“Bismillah, Allahü ekber (3 kere)” diyerek: kendime, dinime, âileme, evlâdıma, malıma, arkadaşlarıma ve onların dinleri ve malları için — bin defa “Bismillah, Allahü ekber (3)” derim.',
+  'Aynısını milyon defa: kendime, dinime, âileme, evlâdıma, malıma, arkadaşlarıma ve onların dinleri ve malları için — milyon defa “Bismillah, Allahü ekber (3)” derim.',
+  'Aynısını milyar defa: kendime, dinime, âileme, evlâdıma, malıma, arkadaşlarıma ve onların dinleri ve malları için — milyar defa “Bismillah, Allahü ekber (3)” derim.',
+  'Güç ve kuvvet ancak yüce ve ulu Allah’ındır; O’ndan başka yardım yoktur.',
+  'Allah’ın adıyla, Allah’la, Allah’tan, Allah’a, Allah üzerine ve Allah’ta; ve güç ve kuvvet ancak yüce ve ulu Allah’ındır.',
+  'Allah’ın adıyla dinim üzerine, canım üzerine ve evlâtlarım üzerine; Allah’ın adıyla malım üzerine ve âilem üzerine; Allah’ın adıyla bana verdiği her şey üzerine; Allah’ın adıyla, yedi kat göğün ve yedi kat yerin Rabbi ve yüce Arş’ın Rabbi olan Allah’ın adıyla.',
+  'Azamet sahibi Allah’ın adıyla: “İsminin zikriyle beraber, yerde ve gökte hiçbir şey insana zarar vermez; O hakkıyla işiten ve bilendir” (3 defa). (Hadis-i Şerif)',
+  'Allah’ın adıyla ki, yerde ve gökte isimlerin en hayırlısı O’nundur.',
+  'Allah’ın adıyla başlarım ve O’nunla bitiririm. “Allah — celle celâlüh — (3)”; Rabbimdir, O’na hiçbir şeyi ortak koşmam. “Allah — celle celâlüh — (3)”; Rabbimdir; Allah’tan başka ilâh yoktur. Allah, korktuğum ve çekindiğim her şeyden daha aziz, daha celil ve daha büyüktür.',
+  'Allah’ım! Senden; nefsimin şerrinden, başkasının şerrinden ve Rabbimin yarattığı ve yayıp saçtığı şeylerin şerrinden Sana sığınırım.',
+  'Allah’ım! Yine Senin yardımınla onlardan korunurum.',
+  'Allah’ım! Onların şerlerinden Sana sığınırım.',
+  'Allah’ım! Senin yardımınla onların göğüslerini (üstüme atılmalarını) geri defederim; ellerimle onların elleri arasına girerim: [Rahmân ve Rahîm olan Allah’ın adıyla. De ki: O Allah birdir. Allah sameddir — her şey O’na muhtaçtır, O hiçbir şeye muhtaç değildir. O doğurmamış ve doğurulmamıştır. Hiçbir şey O’na denk değildir. (3 defa İhlâs Suresi)]',
+  'Aynısını sağ tarafıma ve sağ tarafımdakiler için; aynısını sol tarafıma ve sol tarafımdakiler için; aynısını önüme ve önümdakilere; aynısını arkama ve arkamdakilere; aynısını üstüme ve üstümdekilere; aynısını altıma ve altımdakilere; aynısı benim ve onların etrafını kuşatmıştır.',
+  'Allah’ım! Bana ve onlara, Senin hakkındaki hayrından — Sen’den başka kimsenin tasarruf edemeyeceği hayrdan — ihsan et.',
+  'Allah’ım! Beni ve onları: kulların, himâye ettiklerin (ıyâdike), âile halkın (ıyâlike), komşuluğun (civârike), emânetin (emânetike), güvenliğin (hızr), hizbin ve koruman (kenef) içine al; her türlü şeytandan, insî ve cinnî şerrinden, azgın ve hasetçi güçlerden, yırtıcı hayvan, yılan ve akrepten; ve nâsiyesini (perçemini) elinde tuttuğun her canlıdan koru — “Şüphesiz Rabbim doğru yol üzeredir” (Hûd 11:56’dan bölüm).',
+  'Merbûblar arasında (onlara yeten) Rabbim bana yeter.',
+  'Yaratılmışlar arasında Yaratan bana yeter.',
+  'Rızık verilenler arasında Rızık Veren bana yeter.',
+  '(Sıra) gizli kalanlar arasında Örten bana yeter.',
+  'Yardıma erişenler arasında Yardım Eden bana yeter.',
+  'Kahredilenler arasında Kahreden (ezici güç sahibi) bana yeter.',
+  'Kendisi bana yeten tek Yeter bana yeter.',
+  'Durmadan bana yeten; Allah bana yeter, O ne güzel Vekil’dir.',
+  'Allah, bütün yaratıklarına karşı bana yeter: “Şüphesiz benim velim, Kitab’ı indiren Allah’tır; O, salih kullarının velisidir” (A’râf 7:196).',
+  '“Kur’ân’ı okuduğun zaman, seninle âhirete inanmayanlar arasına görünmez (kapalı) bir perde koyarız” (İsrâ 17:45).',
+  '“Onların kalpleri üzerine Kur’ân’ı anlamamaları için örtüler, kulakları üzerine ağırlık koyarız. (Kâfirler) sen Kur’ân’da sadece Rabbini zikrettiğin zaman arkalarına dönüp kaçarlar” (İsrâ 17:46).',
+  '“Allah bana yeter; O’ndan başka ilâh yoktur; O’na tevekkül ettim; O, büyük Arş’ın Rabbidir” (Tevbe 9:129).',
+  'Ve güç ve kuvvet ancak yüce ve ulu Allah’ındır (3 defa).',
+  'Canımı Rahmân ve Rahîm olan Allah’ın hazinelerine gizledim; onların kilitleri Allah’a olan güvenimdir, anahtarları güç ve kuvvet yalnız Allah’ındır.',
+  'Allah’ım! Senin yardımınla nefsimi; gücümün yettiğine ve yetmediğine karşı savunurum. Hiçbir yaratığın, Yaratan’ın kudreti yanında tâkatı yoktur.',
+  '“Allah bana yeter, O ne güzel Vekil’dir (7 defa)”; ve güç ve kuvvet ancak yüce ve ulu Allah’ındır.',
+  'Allah salât etsin Efendimiz Muhammed’e ve âli temiz ve pâk olanlarına ve sahabilerine — kerîm ve berr (ihsanı bol) olanların cümlesine — ve selâm etsin.',
+]
+
 const DUA_NOTE_EMPTY = 'Sonra dua edilir.'
 const DUA_NOTE_SABAH_AKSAM = 'Sabah ve akşam namazları sonrası: İmam en-Nevevî’ye nisbet edilen Hıfz (korunma) Hizbi okunur. Köşeli parantez içindeki (٣) ve (٧) sayıları o kısmın kaç defa tekrar edileceğini gösterir. Diğer namazlarda bu bölüm boştur; dilediğin duayı oku.'
 
@@ -265,6 +303,7 @@ function duaStepFor(prayerId) {
       id: 'dua', title: 'Dua', type: 'read',
       arabic: HIZB_AL_HIFZ.arabic,
       latin: HIZB_AL_HIFZ.latin,
+      meaning: HIZB_MEANING,
       note: DUA_NOTE_SABAH_AKSAM,
     }
   }
