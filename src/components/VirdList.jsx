@@ -215,6 +215,7 @@ function VirdFlow({ vakit, onClose }) {
         <div className="g-section">{sectionOf(idx)}</div>
         <h2 className="g-title">{step.title}</h2>
         {step.optional && <div className="g-optional">İsteğe bağlı</div>}
+        {step.note && <div className="note">{step.note}</div>}
 
         {step.arabic && (
           <div className={`arabic ${arabicLong ? 'small' : ''}`} lang="ar" dir="rtl">
@@ -225,7 +226,6 @@ function VirdFlow({ vakit, onClose }) {
         )}
         {step.quran && <QuranBlock {...step.quran} />}
         {step.latin && <p className="latin">{step.latin}</p>}
-        {step.note && <div className="note">{step.note}</div>}
         {step.quran
           ? (step.quran.sura !== 36 && step.quran.sura !== 56 && (
               <MeaningDisclosure>
