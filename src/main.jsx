@@ -10,6 +10,7 @@ import '@fontsource/scheherazade-new/arabic-600.css'
 import '@fontsource/scheherazade-new/arabic-700.css'
 import './styles.css'
 import App from './App.jsx'
+import { LanguageProvider } from './lib/i18n.js'
 
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => {
@@ -19,6 +20,8 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <LanguageProvider>
+      <App />
+    </LanguageProvider>
   </React.StrictMode>
 )

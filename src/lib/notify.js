@@ -1,3 +1,4 @@
+import { tStatic } from './i18n.js'
 // Bildirim adaptörü: Android (Capacitor) → gerçek alarmla zamanlanmış yerel bildirim;
 // Web → uygulama açıkken setTimeout + Notification API.
 const isNative = () =>
@@ -44,8 +45,8 @@ export async function scheduleReminders(events, { title = 'Tesbihat', body } = {
     try {
       await LocalNotifications.createChannel({
         id: 'namaz-hatirlatma',
-        name: 'Namaz Sonrası Tesbihat',
-        description: 'Ezan sonrası tesbihat hatırlatmaları',
+        name: tStatic('notifChannelName'),
+        description: tStatic('notifChannelDesc'),
         importance: 5,
         visibility: 1,
         sound: 'default',

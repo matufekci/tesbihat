@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
+import { useLang } from '../lib/i18n.js'
 
 // Ultra profesyonel animasyonlu açılış — 2.2s sonra kaybolur, dokununca atlanır
 export default function Splash({ onDone }) {
+  const { t } = useLang()
   const [leaving, setLeaving] = useState(false)
 
   useEffect(() => {
@@ -37,8 +39,8 @@ export default function Splash({ onDone }) {
         </g>
         <text x="100" y="126" textAnchor="middle" fontFamily="'Scheherazade New', serif" fontSize="50" fontWeight="700" fill="url(#spGold)">ت</text>
       </svg>
-      <div className="splash-eyebrow">Seyyid Muhammed Ruhi El-Kadiri Hz.</div>
-      <h1 className="splash-title">Namaz Sonrası<br />Tesbihatı</h1>
+      <div className="splash-eyebrow">{t('eyebrow')}</div>
+      <h1 className="splash-title">{t('appTitle')}</h1>
       <div className="splash-divider"><span /><i>◆</i><span /></div>
       <div className="splash-ar" lang="ar" dir="rtl">أذكار السيد محمد روحي القادري</div>
       <div className="splash-bar"><span /></div>

@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { getStepsFor, COMMON_STEPS, NAMAZ_META, RIZIK_DUASI } from '../data/vird.js'
+import { getStepsFor, COMMON_STEPS, getRizikDuasi } from '../data/vird.js'
 import { minutesOf, nowMinutes } from '../lib/prayer.js'
 import { todayKey, loadVakitProgress, saveVakitProgress, resetVakitProgress } from '../lib/store.js'
 import QuranBlock from './QuranBlock.jsx'
 import MeaningDisclosure from './MeaningDisclosure.jsx'
 import { QURAN } from '../data/quran.js'
+import { useLang } from '../lib/i18n.js'
+import { mealsOf } from '../data/meals.js'
 
 function ayahText(sura, n) {
   return (QURAN[String(sura)] ?? []).find(([m]) => m === n)?.[1] ?? ''
@@ -24,16 +26,16 @@ function EndNote({ note }) {
 }
 
 function MeaningBlock({ meaning }) {
+  const { t } = useLang()
   if (!meaning) return null
   return (
-    <MeaningDisclosure>
+    <MeaningDisclosure label={t('meaningToggle')}>
       {Array.isArray(meaning) ? meaning.map((l, i) => <p key={i}>{l}</p>) : <p>{meaning}</p>}
     </MeaningDisclosure>
   )
 }
 
 const VAKIT_ORDER = ['sabah', 'ogle', 'ikindi', 'aksam', 'yatsi']
-const VAKIT_LABEL = { sabah: 'Sabah', ogle: 'Öğle', ikindi: 'İkindi', aksam: 'Akşam', yatsi: 'Yatsı' }
 const LA_ILAHE_OPTIONS = [20, 100, 200]
 
 function detectVakit(timings, nowMin) {
@@ -74,6 +76,8 @@ function chime() {
 const vibrate = (p) => { try { navigator.vibrate?.(p) } catch { /* yoksay */ } }
 
 export default function VirdList({ now, timesData }) {
+  const { t, lang } = useLang()
+  const vlabel = (id) => t('vakit' + id.charAt(0).toUpperCase() + id.slice(1))
   const minuteStamp = Math.floor(nowMinutes(now))
   const detected = useMemo(() => detectVakit(timesData?.timings, minuteStamp), [timesData, minuteStamp])
   const [pinned, setPinned] = useState(null)
@@ -86,19 +90,19 @@ export default function VirdList({ now, timesData }) {
     <main className="screen vird-screen start-screen">
       {/* Kompakt vakit satırı */}
       <div className="vakit-line" aria-label="İçinde bulunulan vakit">
-        <span className="vl-name">{VAKIT_LABEL[vakit]}</span>
+        <span className="vl-name">{vlabel(vakit)}</span>
         <span className="vl-sep">·</span>
-        <span className="vl-sub">{NAMAZ_META[vakit]?.sonrasi}</span>
-        {!auto && <span className="vl-picked">seçildi</span>}
+        <span className="vl-sub">{t('vakitLine', { vakit: vlabel(vakit) })}</span>
+        {!auto && <span className="vl-picked">{t('picked')}</span>}
       </div>
 
-      <div className="vakit-chips" role="group" aria-label="Vakit seç">
+      <div className="vakit-chips" role="group" aria-label={t('vakitPick')}>
         {!auto && (
-          <button className="chip chip-auto" onClick={() => setPinned(null)}>Otomatik</button>
+          <button className="chip chip-auto" onClick={() => setPinned(null)}>{t('autoChip')}</button>
         )}
         {VAKIT_ORDER.map((v) => (
           <button key={v} className={`chip ${v === vakit ? 'active' : ''}`} onClick={() => setPinned(v)}>
-            {VAKIT_LABEL[v]}
+            {vlabel(v)}
           </button>
         ))}
       </div>
@@ -106,14 +110,14 @@ export default function VirdList({ now, timesData }) {
       <div className="start-wrap">
         <div className="start-orn" aria-hidden="true"><span /><i>◆</i><span /></div>
         <p className="start-verse" lang="ar" dir="rtl">فَإِذَا قَضَيْتُمُ الصَّلَاةَ فَاذْكُرُوا اللَّهَ</p>
-        <p className="start-verse-tr">Namazı bitirdiğinizde — ayakta, otururken ve yanınız üzere — Allah’ı zikredin. (Nisa 4/103)</p>
-        <button className="start-cta" onClick={() => setStarted(true)}>Tesbihata Başla</button>
-        <p className="start-hint">{VAKIT_LABEL[vakit]} namazı sonrası vird</p>
+        <p className="start-verse-tr">{t('startVerseTr')}</p>
+        <button className="start-cta" onClick={() => setStarted(true)}>{t('startCta')}</button>
+        <p className="start-hint">{t('startHint', { vakit: vlabel(vakit) })}</p>
       </div>
     </main>
 
     {started && (
-      <div className="flow-overlay" role="dialog" aria-modal="true" aria-label="Tesbihat">
+      <div className="flow-overlay" role="dialog" aria-modal="true" aria-label={t('appTitle')}>
         <VirdFlow key={`${todayKey()}-${vakit}`} vakit={vakit} onClose={() => setStarted(false)} />
       </div>
     )}
@@ -121,17 +125,20 @@ export default function VirdList({ now, timesData }) {
   )
 }
 
-function quranMeanings({ sura, from, to }) {
+function quranMeanings({ sura, from, to }, lang) {
   const all = QURAN[String(sura)] ?? []
   if (!all.length) return []
   const last = all[all.length - 1][0]
   const lo = from ?? 1
   const hi = to ?? last
-  return all.filter(([n]) => n >= lo && n <= hi).map(([n, , tr]) => [n, tr])
+  const override = (mealsOf(lang, sura)) ?? {}
+  return all.filter(([n]) => n >= lo && n <= hi).map(([n, , tr]) => [n, override[n] ?? tr])
 }
 
 function VirdFlow({ vakit, onClose }) {
-  const steps = useMemo(() => getStepsFor(vakit), [vakit])
+  const { t, lang } = useLang()
+  const vlabel = (id) => t('vakit' + id.charAt(0).toUpperCase() + id.slice(1))
+  const steps = useMemo(() => getStepsFor(vakit, lang), [vakit, lang])
   const [state, setState] = useState(() => loadVakitProgress(vakit))
   const [laTarget, setLaTarget] = useState(20)
   const [extraWindow, setExtraWindow] = useState(null)
@@ -157,7 +164,7 @@ function VirdFlow({ vakit, onClose }) {
   const target = step ? effectiveTarget(step) : 1
   const pct = state.done ? 100 : Math.round((idx / steps.length) * 100)
 
-  const sectionOf = (i) => (i < COMMON_STEPS.length ? 'Ortak' : i === steps.length - 1 ? 'Kapanış' : `${VAKIT_LABEL[vakit]}’a Özel`)
+  const sectionOf = (i) => (i < COMMON_STEPS.length ? t('sectionCommon') : i === steps.length - 1 ? t('sectionClosing') : t('specialSection', { vakit: vlabel(vakit) }))
 
   const goNext = () => {
     if (advancing.current) return
@@ -207,11 +214,11 @@ function VirdFlow({ vakit, onClose }) {
           <svg className="done-star" width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinejoin="round" aria-hidden="true">
             <path d="M12 2l2.6 6.2 6.7.3-5.2 4.3 1.8 6.4L12 16l-5.9 3.2 1.8-6.4-5.2-4.3 6.7-.3L12 2Z" fill="rgba(236,201,126,.18)"/>
           </svg>
-          <h1 className="done-title">Vird Tamamlandı</h1>
-          <p className="done-sub">Allah kabul eylesin.</p>
+          <h1 className="done-title">{t('doneTitle')}</h1>
+          <p className="done-sub">{t('doneSub')}</p>
           <div style={{ display: 'flex', gap: 10 }}>
-            <button className="btn-secondary" style={{ maxWidth: 160 }} onClick={onClose}>Kapat</button>
-            <button className="btn btn-primary" style={{ maxWidth: 200 }} onClick={reset}>Baştan Başla</button>
+            <button className="btn-secondary" style={{ maxWidth: 160 }} onClick={onClose}>{t('close')}</button>
+            <button className="btn btn-primary" style={{ maxWidth: 200 }} onClick={reset}>{t('restart')}</button>
           </div>
         </div>
       </div>
@@ -221,14 +228,14 @@ function VirdFlow({ vakit, onClose }) {
   return (
     <div className="flow">
       <div className="guided-top inflow">
-        <button className="icon-btn" onClick={goBack} aria-label="Geri" disabled={idx === 0}>
+        <button className="icon-btn" onClick={goBack} aria-label={t('back')} disabled={idx === 0}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
         </button>
         <div className="g-progress" aria-hidden="true"><div style={{ width: `${pct}%` }} /></div>
         <div className="g-step-label">{idx + 1}/{steps.length}</div>
-        <button className="font-btn" onClick={() => bumpFont(-0.15)} aria-label="Yazıyı küçült" title="Yazıyı küçült">A−</button>
-        <button className="font-btn" onClick={() => bumpFont(0.15)} aria-label="Yazıyı büyüt" title="Yazıyı büyüt">A+</button>
-        <button className="icon-btn" onClick={onClose} aria-label="Kapat" title="Kapat">
+        <button className="font-btn" onClick={() => bumpFont(-0.15)} aria-label={t('fontSmall')} title={t('fontSmall')}>A−</button>
+        <button className="font-btn" onClick={() => bumpFont(0.15)} aria-label={t('fontLarge')} title={t('fontLarge')}>A+</button>
+        <button className="icon-btn" onClick={onClose} aria-label={t('close')} title={t('close')}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </button>
       </div>
@@ -236,7 +243,7 @@ function VirdFlow({ vakit, onClose }) {
       <div className="guided-body inflow" key={idx} style={{ '--qs': fontScale }}>
         <div className="g-section">{sectionOf(idx)}</div>
         <h2 className="g-title">{step.title}</h2>
-        {step.optional && <div className="g-optional">İsteğe bağlı</div>}
+        {step.optional && <div className="g-optional">{t('optionalBadge')}</div>}
         {step.note && <div className="note">{step.note}</div>}
 
         {step.arabic && (
@@ -250,7 +257,7 @@ function VirdFlow({ vakit, onClose }) {
           <QuranBlock
             {...step.quran}
             hotAyat={step.hotAyat}
-            hotLabel={step.hotStep ? 'Rızık Duasını Oku' : undefined}
+            hotLabel={step.hotStep ? t('rizikCta') : undefined}
             highlightAyat={step.highlightAyat}
             onHotAyat={step.hotStep ? () => setExtraWindow(step.hotStep) : undefined}
           />
@@ -260,15 +267,15 @@ function VirdFlow({ vakit, onClose }) {
           : <p className="latin">{step.latin}</p>)}
         {step.quran
           ? (step.quran.sura !== 36 && step.quran.sura !== 56 && (
-              <MeaningDisclosure>
-                {quranMeanings(step.quran).map(([n, tr]) => <p key={n}><b>{n}.</b> {tr}</p>)}
+              <MeaningDisclosure label={t('meaningToggle')}>
+                {quranMeanings(step.quran, lang).map(([n, tr]) => <p key={n}><b>{n}.</b> {tr}</p>)}
               </MeaningDisclosure>
             ))
           : <MeaningBlock meaning={step.meaning} />}
         {step.endNote && <EndNote note={step.endNote} />}
 
         {isCounter && step.id === 'la-ilahe' && (
-          <div className="target-chips in-body" role="group" aria-label="Hedef adet">
+          <div className="target-chips in-body" role="group" aria-label={t('laTarget')}>
             {LA_ILAHE_OPTIONS.map((t) => (
               <button key={t} className={`chip ${laTarget === t ? 'active' : ''}`} onClick={() => { setLaTarget(t); setState((s) => ({ ...s, counts: { ...s.counts, [step.id]: 0 } })) }}>{t}×</button>
             ))}
@@ -277,14 +284,14 @@ function VirdFlow({ vakit, onClose }) {
       </div>
 
       {extraWindow && (() => {
-        const w = extraWindow === 'rizik-duasi' ? RIZIK_DUASI : steps.find((x) => x.id === extraWindow)
+        const w = extraWindow === 'rizik-duasi' ? getRizikDuasi(lang) : steps.find((x) => x.id === extraWindow)
         if (!w) return null
         return (
           <div className="extra-window" role="dialog" aria-modal="true" aria-label={w.title}>
             <div className="extra-top">
-              <button className="font-btn" onClick={() => bumpFont(-0.15)} aria-label="Yazıyı küçült" title="Yazıyı küçült">A−</button>
-              <button className="font-btn" onClick={() => bumpFont(0.15)} aria-label="Yazıyı büyüt" title="Yazıyı büyüt">A+</button>
-              <button className="icon-btn" onClick={() => setExtraWindow(null)} aria-label="Kapat" title="Kapat">
+              <button className="font-btn" onClick={() => bumpFont(-0.15)} aria-label={t('fontSmall')} title={t('fontSmall')}>A−</button>
+              <button className="font-btn" onClick={() => bumpFont(0.15)} aria-label={t('fontLarge')} title={t('fontLarge')}>A+</button>
+              <button className="icon-btn" onClick={() => setExtraWindow(null)} aria-label={t('close')} title={t('close')}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
               </button>
             </div>
@@ -300,7 +307,7 @@ function VirdFlow({ vakit, onClose }) {
               {w.endNote && <EndNote note={w.endNote} />}
             </div>
             <div className="flow-dock">
-              <button className="done-ring" onClick={() => setExtraWindow(null)} aria-label="Kapat — Vâkıa 74. ayetten devam et">
+              <button className="done-ring" onClick={() => setExtraWindow(null)} aria-label={t('rizikContinueAria')}>
                 <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>
               </button>
             </div>
@@ -311,7 +318,7 @@ function VirdFlow({ vakit, onClose }) {
       {/* Alt sabit alan: yalnız yuvarlak halka */}
       <div className="flow-dock">
         {isCounter ? (
-          <button className="counter-ring" onClick={tapCounter} aria-label="Say" autoFocus>
+          <button className="counter-ring" onClick={tapCounter} aria-label={t('count')} autoFocus>
             <svg width="148" height="148" viewBox="0 0 148 148">
               <defs>
                 <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
@@ -330,7 +337,7 @@ function VirdFlow({ vakit, onClose }) {
             </span>
           </button>
         ) : (
-          <button className="done-ring" onClick={goNext} autoFocus aria-label={isLast ? 'Bitir' : 'Okudum — Devam'}>
+          <button className="done-ring" onClick={goNext} autoFocus aria-label={isLast ? t('doneLastAria') : t('readDoneAria')}>
             <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>
           </button>
         )}

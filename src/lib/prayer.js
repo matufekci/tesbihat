@@ -61,15 +61,24 @@ export function offlineTimes(date, lat, lng) {
   return out
 }
 
-const HIJRI_TR = ['Muharrem','Safer','Rebîülevvel','Rebîülâhir','Cemâziyelevvel','Cemâziyelâhir','Recep','Şaban','Ramazan','Şevval','Zilkade','Zilhicce']
+const HIJRI_MONTHS = {
+  tr: ['Muharrem','Safer','Rebîülevvel','Rebîülâhir','Cemâziyelevvel','Cemâziyelâhir','Recep','Şaban','Ramazan','Şevval','Zilkade','Zilhicce'],
+  en: ['Muharram','Safar','Rabiʻ al-Awwal','Rabiʻ al-Thani','Jumada al-Ula','Jumada al-Akhira','Rajab','Shaʻban','Ramadan','Shawwal','Dhu al-Qaʻda','Dhu al-Hijja'],
+  de: ['Muharram','Safar','Rabīʿ al-awwal','Rabīʿ ath-thānī','Dschumādā al-ūlā','Dschumādā ath-thāniya','Radschab','Schaʿbān','Ramadan','Schawwāl','Dhu l-Qaʿda','Dhu l-Hiddscha'],
+  fr: ['Muharram','Safar','Rabîʿ al-awwal','Rabîʿ ath-thānī','Jumada al-oula','Jumada ath-thāniya','Rajab','Chaʿbāne','Ramadan','Chawwāl','Dhu l-Qaʿda','Dhu l-hijja'],
+  ar: ['مُحَرَّم','صَفَر','رَبِيع الأَوَّل','رَبِيع الآخِر','جُمَادَى الأُولَى','جُمَادَى الآخِرَة','رَجَب','شَعْبَان','رَمَضَان','شَوَّال','ذُو الْقَعْدَة','ذُو الْحِجَّة'],
+}
+const HIJRI_INTL = { tr: 'tr-TR-u-ca-islamic', en: 'en-GB-u-ca-islamic', de: 'de-DE-u-ca-islamic', fr: 'fr-FR-u-ca-islamic', ar: 'ar-SA-u-ca-islamic-nu-latn' }
+export function hijriMonthName(lang, idx) { return (HIJRI_MONTHS[lang] ?? HIJRI_MONTHS.tr)[idx] }
 
-export function hijriFromIntl(date) {
+export function hijriFromIntl(date, lang = 'tr') {
   try {
-    const fmt = new Intl.DateTimeFormat('tr-TR-u-ca-islamic', { day: 'numeric', month: 'numeric', year: 'numeric' })
+    const LOCALE = HIJRI_INTL[lang] ?? HIJRI_INTL.tr
+    const fmt = new Intl.DateTimeFormat(LOCALE, { day: 'numeric', month: 'numeric', year: 'numeric' })
     const parts = fmt.formatToParts(date)
     const get = (t) => parts.find((p) => p.type === t)?.value
     const month = parseInt(get('month'), 10)
-    return `${get('day')} ${HIJRI_TR[(month - 1) % 12]} ${get('year')}`
+    return `${get('day')} ${hijriMonthName(lang, (month - 1) % 12)} ${get('year')}`
   } catch {
     return ''
   }
@@ -81,7 +90,7 @@ function cleanTime(s) {
 }
 
 /** Bugünün vakitlerini döner: { timings:{Imsak,Sunrise,Dhuhr,Asr,Maghrib,Isha}, hijri, source } */
-export async function fetchTimes({ lat, lng, date = new Date() }) {
+export async function fetchTimes({ lat, lng, date = new Date(), lang = 'tr' }) {
   const dd = pad(date.getDate())
   const mm = pad(date.getMonth() + 1)
   const url = `https://api.aladhan.com/v1/timings/${dd}-${mm}-${date.getFullYear()}?latitude=${lat}&longitude=${lng}&method=13`
@@ -102,10 +111,10 @@ export async function fetchTimes({ lat, lng, date = new Date() }) {
     }
     if (Object.values(timings).some((v) => !v)) throw new Error('Eksik veri')
     const h = json?.data?.date?.hijri
-    const hijri = h ? `${h.day} ${HIJRI_TR[(parseInt(h.month?.number, 10) || 1) - 1]} ${h.year}` : hijriFromIntl(date)
+    const hijri = h ? `${h.day} ${hijriMonthName(lang, (parseInt(h.month?.number, 10) || 1) - 1)} ${h.year}` : hijriFromIntl(date, lang)
     return { timings, hijri, source: 'aladhan' }
   } catch (e) {
-    return { timings: offlineTimes(date, lat, lng), hijri: hijriFromIntl(date), source: 'offline' }
+    return { timings: offlineTimes(date, lat, lng), hijri: hijriFromIntl(date, lang), source: 'offline' }
   } finally {
     clearTimeout(timer)
   }

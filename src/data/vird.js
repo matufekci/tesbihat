@@ -1,4 +1,5 @@
 // Namaz sonrası zikir, salavât, dua ve sureler — her vakit için ortak bölüm + vakte özel katman + kapanış.
+import { localizeStep, localizedHizbMeaning, localizedDuaNotes, localizedRizik } from './vird-i18n.js'
 
 export const NAMAZ_IDS = ['sabah', 'ogle', 'ikindi', 'aksam', 'yatsi']
 
@@ -297,22 +298,27 @@ const HIZB_MEANING = [
 const DUA_NOTE_EMPTY = 'Sonra dua edilir.'
 const DUA_NOTE_SABAH_AKSAM = 'Sabah ve akşam namazları sonrası: İmam en-Nevevî’ye nisbet edilen Hıfz (korunma) Hizbi okunur. Köşeli parantez içindeki (٣) ve (٧) sayıları o kısmın kaç defa tekrar edileceğini gösterir. Diğer namazlarda bu bölüm boştur; dilediğin duayı oku.'
 
-function duaStepFor(prayerId) {
+function duaStepFor(prayerId, lang = 'tr') {
+  const notes = localizedDuaNotes(lang)
   if (prayerId === 'sabah' || prayerId === 'aksam') {
-    return {
+    return localizeStep({
       id: 'dua', title: 'Dua', type: 'read',
       arabic: HIZB_AL_HIFZ.arabic,
       latin: HIZB_AL_HIFZ.latin,
-      meaning: HIZB_MEANING,
-      note: DUA_NOTE_SABAH_AKSAM,
-    }
+      meaning: localizedHizbMeaning(lang) ?? HIZB_MEANING,
+      note: notes?.sabahAksam ?? DUA_NOTE_SABAH_AKSAM,
+    }, lang)
   }
-  return { id: 'dua', title: 'Dua', type: 'read', note: DUA_NOTE_EMPTY }
+  return localizeStep({ id: 'dua', title: 'Dua', type: 'read', note: notes?.empty ?? DUA_NOTE_EMPTY }, lang)
 }
 
-export function getStepsFor(prayerId) {
-  const common = COMMON_STEPS.map((s) => (s.id === 'dua' ? duaStepFor(prayerId) : s))
-  return [...common, ...(PRAYER_STEPS[prayerId] ?? []), CLOSING_STEP]
+export function getStepsFor(prayerId, lang = 'tr') {
+  const common = COMMON_STEPS.map((s) => (s.id === 'dua' ? duaStepFor(prayerId, lang) : localizeStep(s, lang)))
+  return [...common, ...(PRAYER_STEPS[prayerId] ?? []).map((s) => localizeStep(s, lang)), localizeStep(CLOSING_STEP, lang)]
+}
+
+export function getRizikDuasi(lang = 'tr') {
+  return localizedRizik(RIZIK_DUASI, lang)
 }
 
 export const TOTAL_COMMON = COMMON_STEPS.length

@@ -1,10 +1,14 @@
 import React, { useState } from 'react'
 import { CITIES } from '../data/cities.js'
 import { notifyNow } from '../lib/notify.js'
+import { useLang } from '../lib/i18n.js'
+import LangChips from './LangChips.jsx'
 
 const REMINDER_OPTIONS = [5, 10, 15, 20, 30, 45, 60]
+const APP_VERSION = '1.18.0'
 
 export default function Settings({ settings, setSettings, locationName, source, onToggleNotif, onToast }) {
+  const { t } = useLang()
   const [gpsError, setGpsError] = useState('')
   const [gpsBusy, setGpsBusy] = useState(false)
 
@@ -14,18 +18,18 @@ export default function Settings({ settings, setSettings, locationName, source, 
 
   const useGps = () => {
     setGpsError('')
-    if (!('geolocation' in navigator)) { setGpsError('Bu cihaz/tarayıcı konum izni desteklemiyor.'); return }
+    if (!('geolocation' in navigator)) { setGpsError(t('gpsUnsupported')); return }
     setGpsBusy(true)
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords
-        set({ custom: { id: 'custom', name: `Mevcut Konum (${latitude.toFixed(2)}, ${longitude.toFixed(2)})`, lat: latitude, lng: longitude } })
+        set({ custom: { id: 'custom', name: `${t('currentLocation')} (${latitude.toFixed(2)}, ${longitude.toFixed(2)})`, lat: latitude, lng: longitude } })
         setGpsBusy(false)
-        onToast?.('Konumunuz alındı ✓')
+        onToast?.(t('gpsOk'))
       },
       (err) => {
         setGpsBusy(false)
-        setGpsError(err?.code === 1 ? 'Konum izni reddedildi. Tarayıcı/cihaz ayarlarından izin verin.' : 'Konum alınamadı. İlçe listesinden seçebilirsiniz.')
+        setGpsError(err?.code === 1 ? t('gpsDenied') : t('gpsFailed'))
       },
       { enableHighAccuracy: false, timeout: 9000, maximumAge: 300000 }
     )
@@ -34,17 +38,28 @@ export default function Settings({ settings, setSettings, locationName, source, 
   return (
     <main className="screen">
       <header className="topbar" style={{ padding: '12px 4px 4px' }}>
-        <div className="greet">Tercihler<strong>Ayarlar</strong></div>
-        <span className="badge-source">{source === 'offline' ? 'Çevrimdışı hesap' : 'Vakitler · Diyanet metodu'}</span>
+        <div className="greet">{t('preferences')}<strong>{t('settingsHeading')}</strong></div>
+        <span className="badge-source">{source === 'offline' ? t('sourceOffline') : t('sourceOnline')}</span>
       </header>
+
+      {/* Dil */}
+      <section className="settings-group">
+        <h3>{t('languageGroup')}</h3>
+        <div className="set-row">
+          <div className="grow">
+            <small style={{ display: 'block', marginBottom: 10 }}>{t('languageSmall')}</small>
+            <LangChips large />
+          </div>
+        </div>
+      </section>
 
       {/* Konum */}
       <section className="settings-group">
-        <h3>Konum</h3>
+        <h3>{t('locationGroup')}</h3>
         <div className="set-row">
           <div className="grow">
-            <label htmlFor="city">İl / Şehir</label>
-            <small>Açılışta hangi vaktin ekranının gösterileceğini belirler.</small>
+            <label htmlFor="city">{t('cityLabel')}</label>
+            <small>{t('cityHint')}</small>
             <div style={{ marginTop: 8 }}>
               <select id="city" value={settings.custom ? 'custom' : settings.cityId} onChange={(e) => e.target.value !== 'custom' && pickCity(e.target.value)}>
                 {settings.custom && <option value="custom">{settings.custom.name}</option>}
@@ -53,7 +68,7 @@ export default function Settings({ settings, setSettings, locationName, source, 
             </div>
             <button className="gps-btn" onClick={useGps} disabled={gpsBusy}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7.5"/></svg>
-              {gpsBusy ? 'Konum alınıyor…' : 'GPS ile konumumu kullan'}
+              {gpsBusy ? t('gpsBusy') : t('gpsButton')}
             </button>
             {gpsError && <div className="gps-error">{gpsError}</div>}
           </div>
@@ -62,58 +77,55 @@ export default function Settings({ settings, setSettings, locationName, source, 
 
       {/* Hatırlatmalar */}
       <section className="settings-group">
-        <h3>Ezan Sonrası Hatırlatma</h3>
+        <h3>{t('notifGroup')}</h3>
         <div className="set-row">
           <div className="grow">
-            <label htmlFor="notif-switch">Hatırlatma bildirimi</label>
-            <small>Ezan vaktinden seçtiğiniz dakika sonra “Tesbihat zamanı” bildirimi gönderilir.</small>
+            <label htmlFor="notif-switch">{t('notifLabel')}</label>
+            <small>{t('notifSmall')}</small>
           </div>
-          <button id="notif-switch" className="switch" role="switch" aria-checked={settings.notifEnabled} aria-label="Bildirimleri aç/kapat" onClick={() => onToggleNotif(!settings.notifEnabled)} />
+          <button id="notif-switch" className="switch" role="switch" aria-checked={settings.notifEnabled} aria-label={t('notifSwitchAria')} onClick={() => onToggleNotif(!settings.notifEnabled)} />
         </div>
         {settings.notifEnabled && (
           <>
             <div className="set-row">
               <div className="grow">
-                <label htmlFor="reminder">Kaç dakika sonra hatırlat?</label>
+                <label htmlFor="reminder">{t('reminderLabel')}</label>
                 <div style={{ marginTop: 8 }}>
                   <select id="reminder" value={settings.reminderMin} onChange={(e) => set({ reminderMin: parseInt(e.target.value, 10) })}>
-                    {REMINDER_OPTIONS.map((m) => <option key={m} value={m}>Ezan + {m} dakika</option>)}
+                    {REMINDER_OPTIONS.map((m) => <option key={m} value={m}>{t('reminderOption', { m })}</option>)}
                   </select>
                 </div>
               </div>
             </div>
             <div className="set-row">
               <div className="grow">
-                <label>Test</label>
-                <small>Bildirimin gerçekten düştüğünü görün.</small>
+                <label>{t('testLabel')}</label>
+                <small>{t('testSmall')}</small>
               </div>
-              <button className="btn-ghost" onClick={() => notifyNow('Tesbihat', 'Test bildirimi — her şey çalışıyor ✓')}>Test et</button>
+              <button className="btn-ghost" onClick={() => notifyNow(t('testNotifTitle'), t('testNotifBody'))}>{t('testButton')}</button>
             </div>
           </>
         )}
-        <p className="hint">
-          Web sürümünde bildirimler yalnızca uygulama açıkken zamanlanır. APK sürümünde
-          ezan vaktinde gerçek alarm olarak kurulur ve uygulama kapalıyken de çalışır.
-        </p>
+        <p className="hint">{t('notifHint')}</p>
       </section>
 
       {/* Görünüm */}
       <section className="settings-group">
-        <h3>Görünüm</h3>
+        <h3>{t('appearanceGroup')}</h3>
         <div className="set-row">
           <div className="grow">
-            <label>Tema</label>
+            <label>{t('themeLabel')}</label>
             <div className="target-chips" style={{ marginTop: 8 }}>
-              <button className={`chip ${settings.theme === 'dark' ? 'active' : ''}`} onClick={() => set({ theme: 'dark' })}>Koyu</button>
-              <button className={`chip ${settings.theme === 'light' ? 'active' : ''}`} onClick={() => set({ theme: 'light' })}>Açık</button>
+              <button className={`chip ${settings.theme === 'dark' ? 'active' : ''}`} onClick={() => set({ theme: 'dark' })}>{t('themeDark')}</button>
+              <button className={`chip ${settings.theme === 'light' ? 'active' : ''}`} onClick={() => set({ theme: 'light' })}>{t('themeLight')}</button>
             </div>
           </div>
         </div>
       </section>
 
       <p className="source-line" style={{ marginTop: 20 }}>
-        Tesbihat · Sürüm 1.17.0<br />
-        Vakitler çevrimdışı hesap ile anlık belirlenir, internet varsa güncellenir.
+        {t('versionLine', { v: APP_VERSION })}<br />
+        {t('sourceLine')}
       </p>
     </main>
   )

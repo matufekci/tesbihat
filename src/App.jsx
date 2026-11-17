@@ -5,6 +5,8 @@ import { loadSettings, saveSettings } from './lib/store.js'
 import { notificationPermission, scheduleReminders, cancelReminders } from './lib/notify.js'
 import VirdList from './components/VirdList.jsx'
 import Splash from './components/Splash.jsx'
+import LangChips from './components/LangChips.jsx'
+import { useLang, langById } from './lib/i18n.js'
 import Settings from './components/Settings.jsx'
 
 function initialTimes(settings) {
@@ -12,10 +14,11 @@ function initialTimes(settings) {
   // API varsa anında onunla tazelenir.
   const loc = settings.custom ?? CITIES.find((c) => c.id === settings.cityId) ?? CITIES.find((c) => c.id === 'diyarbakir')
   const d = new Date()
-  return { timings: offlineTimes(d, loc.lat, loc.lng), hijri: hijriFromIntl(d), source: 'offline' }
+  return { timings: offlineTimes(d, loc.lat, loc.lng), hijri: '', source: 'offline' }
 }
 
 export default function App() {
+  const { t, lang } = useLang()
   const [settings, setSettings] = useState(loadSettings)
   const [tab, setTab] = useState('vird')
   const [now, setNow] = useState(() => new Date())
@@ -40,8 +43,8 @@ export default function App() {
     return () => clearInterval(t)
   }, [])
 
-  const greg = new Intl.DateTimeFormat('tr-TR', { weekday: 'long', day: 'numeric', month: 'long' }).format(now)
-  const hijri = timesData?.hijri || ''
+  const greg = new Intl.DateTimeFormat(langById(lang).intl, { weekday: 'long', day: 'numeric', month: 'long' }).format(now)
+  const hijri = useMemo(() => hijriFromIntl(now, lang), [lang, now.toDateString()])
 
   const location = useMemo(() => {
     if (settings.custom) return settings.custom
@@ -51,12 +54,12 @@ export default function App() {
   const dayKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`
   useEffect(() => {
     let alive = true
-    fetchTimes({ lat: location.lat, lng: location.lng, date: new Date() }).then((d) => {
+    fetchTimes({ lat: location.lat, lng: location.lng, date: new Date(), lang }).then((d) => {
       if (alive) setTimesData(d)
     })
     return () => { alive = false }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.lat, location.lng, dayKey])
+  }, [location.lat, location.lng, dayKey, lang])
 
   // Ezan sonrası hatırlatmalar
   useEffect(() => {
@@ -64,11 +67,11 @@ export default function App() {
     const today = new Date()
     const events = []
     const plan = [
-      { prayerId: 'sabah', at: timesData.timings.Imsak, name: 'Sabah' },
-      { prayerId: 'ogle', at: timesData.timings.Dhuhr, name: 'Öğle' },
-      { prayerId: 'ikindi', at: timesData.timings.Asr, name: 'İkindi' },
-      { prayerId: 'aksam', at: timesData.timings.Maghrib, name: 'Akşam' },
-      { prayerId: 'yatsi', at: timesData.timings.Isha, name: 'Yatsı' },
+      { prayerId: 'sabah', at: timesData.timings.Imsak, vakitKey: 'vakitSabah' },
+      { prayerId: 'ogle', at: timesData.timings.Dhuhr, vakitKey: 'vakitOgle' },
+      { prayerId: 'ikindi', at: timesData.timings.Asr, vakitKey: 'vakitIkindi' },
+      { prayerId: 'aksam', at: timesData.timings.Maghrib, vakitKey: 'vakitAksam' },
+      { prayerId: 'yatsi', at: timesData.timings.Isha, vakitKey: 'vakitYatsi' },
     ]
     for (const p of plan) {
       const m = minutesOf(p.at)
@@ -76,12 +79,13 @@ export default function App() {
       const adhan = new Date(today); adhan.setHours(Math.floor(m / 60), m % 60, 0, 0)
       const remind = new Date(adhan.getTime() + settings.reminderMin * 60000)
       if (remind.getTime() > Date.now()) {
-        events.push({ when: remind, prayerId: p.prayerId, body: `${p.name} namazı sonrası zikrini hatırla.` })
+        events.push({ when: remind, prayerId: p.prayerId, body: t('notifBody', { vakit: t(p.vakitKey) }) })
       }
     }
-    scheduleReminders(events, { title: 'Tesbihat hatırlatması', body: (e) => e.body }).catch(() => {})
+    scheduleReminders(events, { title: t('notifTitle'), body: (e) => e.body }).catch(() => {})
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timesData, settings.notifEnabled, settings.reminderMin])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timesData, settings.notifEnabled, settings.reminderMin, lang])
 
   useEffect(() => {
     const h = (e) => { e.preventDefault(); deferredInstall.current = e; setInstallReady(true) }
@@ -102,30 +106,33 @@ export default function App() {
     if (!on) {
       setSettings((s) => ({ ...s, notifEnabled: false }))
       cancelReminders()
-      showToast('Hatırlatmalar kapatıldı')
+      showToast(t('notifOffToast'))
       return
     }
     const perm = await notificationPermission()
     if (!perm.granted) {
-      showToast('Bildirim izni verilmedi. Cihaz/tarayıcı ayarlarından izin verin.')
+      showToast(t('notifDeniedToast'))
       return
     }
     setSettings((s) => ({ ...s, notifEnabled: true }))
-    showToast('Ezan sonrası hatırlatmalar açıldı ✓')
-  }, [showToast])
+    showToast(t('notifOnToast'))
+  }, [showToast, t])
 
   return (
     <div className="app-frame">
       <div className="app">
         {splash && <Splash onDone={() => setSplash(false)} />}
         {tab === 'vird' && (
-          <div className="date-row"><b>{hijri}</b><span style={{ textTransform: 'capitalize' }}>{greg}</span></div>
+          <>
+            <div className="date-row"><b>{hijri}</b><span style={{ textTransform: 'capitalize' }}>{greg}</span></div>
+            <LangChips />
+          </>
         )}
-        <div className="app-title" aria-label="Uygulama başlığı">
-          <div className="app-title-eyebrow">Seyyid Muhammed Ruhi El-Kadiri Hz.</div>
-          <h1 className="app-title-main">Namaz Sonrası Tesbihatı</h1>
+        <div className="app-title">
+          <div className="app-title-eyebrow">{t('eyebrow')}</div>
+          <h1 className="app-title-main">{t('appTitle')}</h1>
           <div className="app-title-ar" lang="ar" dir="rtl">أذكار السيد محمد روحي القادري بعد الصلوات الخمس</div>
-          <button className="gear-btn" onClick={() => setTab(tab === 'settings' ? 'vird' : 'settings')} aria-label={tab === 'settings' ? 'Ayarları kapat' : 'Ayarlar'} title={tab === 'settings' ? 'Geri' : 'Ayarlar'}>
+          <button className="gear-btn" onClick={() => setTab(tab === 'settings' ? 'vird' : 'settings')} aria-label={tab === 'settings' ? t('back') : t('settingsHeading')} title={tab === 'settings' ? t('back') : t('settingsHeading')}>
             {tab === 'settings' ? (
               <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
             ) : (
@@ -148,7 +155,7 @@ export default function App() {
 
         {installReady && (
           <button className="notify-nudge install" style={{ position: 'absolute', bottom: 14, left: 22, right: 22, zIndex: 35, background: 'var(--card-solid)' }} onClick={installApp}>
-            Ana ekrana ekle — uygulama gibi aç
+            {t('installBanner')}
           </button>
         )}
 

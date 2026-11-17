@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
-// Katlanabilir Türkçe anlam bölümü — altta durur, dileyen açar
-export default function MeaningDisclosure({ label = 'Türkçe Anlamı', children }) {
+// Katlanabilir meal/anlam bölümü — altta durur, dileyen açar
+export default function MeaningDisclosure({ label = 'Meaning', children }) {
   const [open, setOpen] = useState(false)
   return (
     <div className="meaning-wrap">
