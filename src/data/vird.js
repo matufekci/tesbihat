@@ -76,7 +76,6 @@ export const COMMON_STEPS = [
   {
     id: 'dua', title: 'Dua', type: 'read',
     note: 'Sonra dua edilir.',
-    meaning: 'Ellerini aç ve gönlünden geçen her dileği Allah’a arz et.',
   },
   {
     id: 'la-ilahe', title: 'Lâ ilâhe illallâh', type: 'counter', target: 20,
