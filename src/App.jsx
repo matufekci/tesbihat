@@ -4,6 +4,7 @@ import { fetchTimes, offlineTimes, hijriFromIntl, minutesOf } from './lib/prayer
 import { loadSettings, saveSettings } from './lib/store.js'
 import { notificationPermission, scheduleReminders, cancelReminders } from './lib/notify.js'
 import VirdList from './components/VirdList.jsx'
+import Splash from './components/Splash.jsx'
 import Settings from './components/Settings.jsx'
 
 function initialTimes(settings) {
@@ -23,6 +24,7 @@ export default function App() {
   const toastTimer = useRef(null)
   const deferredInstall = useRef(null)
   const [installReady, setInstallReady] = useState(false)
+  const [splash, setSplash] = useState(true)
 
   const showToast = useCallback((msg) => {
     setToast(msg)
@@ -37,6 +39,9 @@ export default function App() {
     const t = setInterval(() => setNow(new Date()), 1000)
     return () => clearInterval(t)
   }, [])
+
+  const greg = new Intl.DateTimeFormat('tr-TR', { weekday: 'long', day: 'numeric', month: 'long' }).format(now)
+  const hijri = timesData?.hijri || ''
 
   const location = useMemo(() => {
     if (settings.custom) return settings.custom
@@ -112,6 +117,10 @@ export default function App() {
   return (
     <div className="app-frame">
       <div className="app">
+        {splash && <Splash onDone={() => setSplash(false)} />}
+        {tab === 'vird' && (
+          <div className="date-row"><b>{hijri}</b><span style={{ textTransform: 'capitalize' }}>{greg}</span></div>
+        )}
         <div className="app-title" aria-label="Uygulama başlığı">
           <div className="app-title-eyebrow">Seyyid Muhammed Ruhi El-Kadiri Hz.</div>
           <h1 className="app-title-main">Namaz Sonrası Tesbihatı</h1>

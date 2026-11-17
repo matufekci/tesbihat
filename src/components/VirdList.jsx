@@ -81,17 +81,9 @@ export default function VirdList({ now, timesData }) {
   const vakit = pinned ?? detected ?? 'aksam'
   const auto = pinned == null
 
-  const greg = new Intl.DateTimeFormat('tr-TR', { weekday: 'long', day: 'numeric', month: 'long' }).format(now)
-  const hijri = timesData?.hijri || ''
-
   return (
     <>
     <main className="screen vird-screen start-screen">
-      <div className="date-row">
-        <b>{hijri}</b>
-        <span style={{ textTransform: 'capitalize' }}>{greg}</span>
-      </div>
-
       {/* Kompakt vakit satırı */}
       <div className="vakit-line" aria-label="İçinde bulunulan vakit">
         <span className="vl-name">{VAKIT_LABEL[vakit]}</span>
@@ -112,6 +104,9 @@ export default function VirdList({ now, timesData }) {
       </div>
 
       <div className="start-wrap">
+        <div className="start-orn" aria-hidden="true"><span /><i>◆</i><span /></div>
+        <p className="start-verse" lang="ar" dir="rtl">فَإِذَا قَضَيْتُمُ الصَّلَاةَ فَاذْكُرُوا اللَّهَ</p>
+        <p className="start-verse-tr">Namazı bitirdiğinizde — ayakta, otururken ve yanınız üzere — Allah’ı zikredin. (Nisa 4/103)</p>
         <button className="start-cta" onClick={() => setStarted(true)}>Tesbihata Başla</button>
         <p className="start-hint">{VAKIT_LABEL[vakit]} namazı sonrası vird</p>
       </div>
@@ -272,26 +267,11 @@ function VirdFlow({ vakit, onClose }) {
           : <MeaningBlock meaning={step.meaning} />}
         {step.endNote && <EndNote note={step.endNote} />}
 
-        {isCounter && (
-          <div className="counter-zone">
-            <button className="counter-ring" onClick={tapCounter} aria-label="Say">
-              <svg width="148" height="148" viewBox="0 0 148 148">
-                <defs>
-                  <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#ecc97e" />
-                    <stop offset="55%" stopColor="#d9b36c" />
-                    <stop offset="100%" stopColor="#a87f3d" />
-                  </linearGradient>
-                </defs>
-                <circle className="ring-bg" cx="74" cy="74" r="62" strokeWidth="10" fill="none" />
-                <circle className="ring-fg" cx="74" cy="74" r="62" strokeWidth="10" fill="none"
-                        stroke="url(#goldGrad)" strokeDasharray={ring} strokeDashoffset={offset} />
-              </svg>
-              <span className="counter-num">
-                <b>{count}</b>
-                <span>/ {target}</span>
-              </span>
-            </button>
+        {isCounter && step.id === 'la-ilahe' && (
+          <div className="target-chips in-body" role="group" aria-label="Hedef adet">
+            {LA_ILAHE_OPTIONS.map((t) => (
+              <button key={t} className={`chip ${laTarget === t ? 'active' : ''}`} onClick={() => { setLaTarget(t); setState((s) => ({ ...s, counts: { ...s.counts, [step.id]: 0 } })) }}>{t}×</button>
+            ))}
           </div>
         )}
       </div>
@@ -319,28 +299,41 @@ function VirdFlow({ vakit, onClose }) {
               <MeaningBlock meaning={w.meaning} />
               {w.endNote && <EndNote note={w.endNote} />}
             </div>
-            <div className="flow-bottom">
-              <div className="g-actions">
-                <button className="btn-gold" onClick={() => setExtraWindow(null)}>Kapat — 74. ayetten devam et ✓</button>
-              </div>
+            <div className="flow-dock">
+              <button className="done-ring" onClick={() => setExtraWindow(null)} aria-label="Kapat — Vâkıa 74. ayetten devam et">
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>
+              </button>
             </div>
           </div>
         )
       })()}
 
-      {/* Alt bar: her zaman sabit, kompakt */}
-      <div className="flow-bottom">
-        {isCounter && step.id === 'la-ilahe' && (
-          <div className="target-chips" role="group" aria-label="Hedef adet">
-            {LA_ILAHE_OPTIONS.map((t) => (
-              <button key={t} className={`chip ${laTarget === t ? 'active' : ''}`} onClick={() => { setLaTarget(t); setState((s) => ({ ...s, counts: { ...s.counts, [step.id]: 0 } })) }}>{t}×</button>
-            ))}
-          </div>
+      {/* Alt sabit alan: yalnız yuvarlak halka */}
+      <div className="flow-dock">
+        {isCounter ? (
+          <button className="counter-ring" onClick={tapCounter} aria-label="Say" autoFocus>
+            <svg width="148" height="148" viewBox="0 0 148 148">
+              <defs>
+                <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#ecc97e" />
+                  <stop offset="55%" stopColor="#d9b36c" />
+                  <stop offset="100%" stopColor="#a87f3d" />
+                </linearGradient>
+              </defs>
+              <circle className="ring-bg" cx="74" cy="74" r="62" strokeWidth="10" fill="none" />
+              <circle className="ring-fg" cx="74" cy="74" r="62" strokeWidth="10" fill="none"
+                      stroke="url(#goldGrad)" strokeDasharray={ring} strokeDashoffset={offset} />
+            </svg>
+            <span className="counter-num">
+              <b>{count}</b>
+              <span>/ {target}</span>
+            </span>
+          </button>
+        ) : (
+          <button className="done-ring" onClick={goNext} autoFocus aria-label={isLast ? 'Bitir' : 'Okudum — Devam'}>
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>
+          </button>
         )}
-        <div className="g-actions">
-          <button className="btn-secondary" onClick={goNext}>Atla</button>
-          <button className="btn-gold" onClick={goNext} autoFocus>{isLast ? 'Bitir ✓' : (isCounter ? 'Tamam ✓' : 'Okudum ✓ Devam')}</button>
-        </div>
       </div>
     </div>
   )
