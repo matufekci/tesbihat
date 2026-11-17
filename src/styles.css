@@ -343,3 +343,40 @@ select:focus, input:focus { border-color: var(--gold); }
 .quran-block.sm .quran-text { font-size: 17.5px; line-height: 2.2; }
 .quran-block.xs .quran-text { font-size: 15.5px; line-height: 2.05; }
 .ayah-mark { font-size: .62em; color: var(--gold-bright); padding: 0 .12em; white-space: nowrap; }
+
+/* ── uygulama başlığı (en üst) ── */
+.app-title { text-align: center; padding: 14px 14px 12px; border-bottom: 1px solid var(--line);
+  background: radial-gradient(520px 120px at 50% -30%, rgba(217,179,108,.16), transparent 70%); }
+.app-title-eyebrow { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); font-weight: 700; }
+.app-title-main { font-family: var(--font-display); font-size: 21px; color: var(--cream); margin: 4px 0 3px; letter-spacing: .01em; }
+.app-title-ar { font-family: var(--font-ar); font-size: 13px; color: var(--cream-dim); }
+.date-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 6px 0; font-size: 11px; color: var(--cream-dim); }
+.date-row b { color: var(--gold); font-weight: 600; }
+
+/* ── yazı boyu düğmeleri ── */
+.guided-top.inflow { gap: 8px; }
+.font-btn { width: 36px; height: 40px; border-radius: 11px; border: 1px solid var(--line-strong); background: transparent; color: var(--gold); font-size: 14px; font-weight: 700; font-family: var(--font-display); }
+.font-btn:active { transform: scale(.92); background: rgba(217,179,108,.12); }
+
+/* ── yazı boyu ölçeği (--qs) ── */
+.quran-basmala { font-size: calc(21px * var(--qs, 1)); }
+.quran-text { font-size: calc(20px * var(--qs, 1)); }
+.quran-block.sm .quran-text { font-size: calc(17.5px * var(--qs, 1)); }
+.quran-block.xs .quran-text { font-size: calc(15.5px * var(--qs, 1)); }
+.arabic { font-size: calc(26px * var(--qs, 1)); }
+.arabic.small { font-size: calc(20px * var(--qs, 1)); }
+.latin { font-size: calc(13.5px * var(--qs, 1)); }
+
+/* ── katlanabilir Türkçe anlam ── */
+.meaning-wrap { width: 100%; margin-top: 14px; }
+.meaning-toggle { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  padding: 11px 15px; border-radius: 13px; border: 1px solid var(--line);
+  background: rgba(217,179,108,.05); color: var(--gold); font-size: 10.5px;
+  letter-spacing: .18em; text-transform: uppercase; font-weight: 700; }
+.meaning-toggle svg { transition: transform .25s ease; }
+.meaning-toggle svg.open { transform: rotate(180deg); }
+.meaning-panel { padding: 13px 15px; border: 1px solid var(--line); border-top: 0; border-radius: 0 0 13px 13px;
+  background: rgba(0,0,0,.14); font-size: 13px; line-height: 1.78; color: var(--cream-dim); }
+.meaning-panel p { margin: 0 0 6px; }
+.meaning-panel p:last-child { margin-bottom: 0; }
+.meaning-panel b { color: var(--gold); margin-right: 7px; font-variant-numeric: tabular-nums; }

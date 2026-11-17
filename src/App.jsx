@@ -112,6 +112,11 @@ export default function App() {
   return (
     <div className="app-frame">
       <div className="app">
+        <div className="app-title" aria-label="Uygulama başlığı">
+          <div className="app-title-eyebrow">Seyyid Muhammed Ruhi El-Kadiri Hz.</div>
+          <h1 className="app-title-main">Namaz Sonrası Tesbihatı</h1>
+          <div className="app-title-ar" lang="ar" dir="rtl">أذكار السيد محمد روحي القادري بعد الصلوات الخمس</div>
+        </div>
         {tab === 'vird' && <VirdList now={now} timesData={timesData} />}
         {tab === 'settings' && (
           <Settings

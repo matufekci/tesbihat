@@ -3,6 +3,8 @@ import { getStepsFor, COMMON_STEPS, NAMAZ_META } from '../data/vird.js'
 import { minutesOf, nowMinutes } from '../lib/prayer.js'
 import { todayKey, loadVakitProgress, saveVakitProgress, resetVakitProgress } from '../lib/store.js'
 import QuranBlock from './QuranBlock.jsx'
+import MeaningDisclosure from './MeaningDisclosure.jsx'
+import { QURAN } from '../data/quran.js'
 
 const VAKIT_ORDER = ['sabah', 'ogle', 'ikindi', 'aksam', 'yatsi']
 const VAKIT_LABEL = { sabah: 'Sabah', ogle: 'Öğle', ikindi: 'İkindi', aksam: 'Akşam', yatsi: 'Yatsı' }
@@ -57,13 +59,10 @@ export default function VirdList({ now, timesData }) {
 
   return (
     <main className="screen vird-screen">
-      <header className="topbar">
-        <div className="greet">Tesbihat<strong>Namaz Sonrası Zikir</strong></div>
-        <div className="hijri">
-          <b>{hijri}</b>
-          <span style={{ display: 'block', textTransform: 'capitalize' }}>{greg}</span>
-        </div>
-      </header>
+      <div className="date-row">
+        <b>{hijri}</b>
+        <span style={{ textTransform: 'capitalize' }}>{greg}</span>
+      </div>
 
       {/* Açılışta doğrudan içinde bulunulan vaktin virdi gelir */}
       <section className="vakit-hero" aria-label="İçinde bulunulan vakit">
@@ -101,11 +100,29 @@ export default function VirdList({ now, timesData }) {
   )
 }
 
+function quranMeanings({ sura, from, to }) {
+  const all = QURAN[String(sura)] ?? []
+  if (!all.length) return []
+  const last = all[all.length - 1][0]
+  const lo = from ?? 1
+  const hi = to ?? last
+  return all.filter(([n]) => n >= lo && n <= hi).map(([n, , tr]) => [n, tr])
+}
+
 function VirdFlow({ vakit }) {
   const steps = useMemo(() => getStepsFor(vakit), [vakit])
   const [state, setState] = useState(() => loadVakitProgress(vakit))
   const [laTarget, setLaTarget] = useState(20)
+  const [fontScale, setFontScale] = useState(() => {
+    try { const v = parseFloat(localStorage.getItem('tesbihat.fontScale')); return Number.isFinite(v) ? v : 1 } catch { return 1 }
+  })
   const advancing = useRef(false)
+
+  const bumpFont = (delta) => setFontScale((s) => {
+    const next = Math.min(1.6, Math.max(0.75, Math.round((s + delta) * 20) / 20))
+    try { localStorage.setItem('tesbihat.fontScale', String(next)) } catch { /* yoksay */ }
+    return next
+  })
 
   useEffect(() => { saveVakitProgress(vakit, state) }, [vakit, state])
 
@@ -184,9 +201,11 @@ function VirdFlow({ vakit }) {
         </button>
         <div className="g-progress" aria-hidden="true"><div style={{ width: `${pct}%` }} /></div>
         <div className="g-step-label">{idx + 1}/{steps.length}</div>
+        <button className="font-btn" onClick={() => bumpFont(-0.15)} aria-label="Yazıyı küçült" title="Yazıyı küçült">A−</button>
+        <button className="font-btn" onClick={() => bumpFont(0.15)} aria-label="Yazıyı büyüt" title="Yazıyı büyüt">A+</button>
       </div>
 
-      <div className="guided-body inflow" key={idx}>
+      <div className="guided-body inflow" key={idx} style={{ '--qs': fontScale }}>
         <div className="g-section">{sectionOf(idx)}</div>
         <h2 className="g-title">{step.title}</h2>
         {step.optional && <div className="g-optional">İsteğe bağlı</div>}
@@ -201,6 +220,15 @@ function VirdFlow({ vakit }) {
         {step.quran && <QuranBlock {...step.quran} />}
         {step.latin && <p className="latin">{step.latin}</p>}
         {step.note && <div className="note">{step.note}</div>}
+        {step.quran
+          ? (step.quran.sura !== 36 && step.quran.sura !== 56 && (
+              <MeaningDisclosure>
+                {quranMeanings(step.quran).map(([n, tr]) => <p key={n}><b>{n}.</b> {tr}</p>)}
+              </MeaningDisclosure>
+            ))
+          : (step.meaning && (
+              <MeaningDisclosure><p>{step.meaning}</p></MeaningDisclosure>
+            ))}
 
         {isCounter ? (
           <div className="counter-zone">
