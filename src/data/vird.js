@@ -17,7 +17,7 @@ const AYETUL_KURSI = {
 }
 
 const HASR5 = {
-  latin: 'Lâ yestevî…',
+  quran: { sura: 59, from: 20, to: 24 },
   note: 'Okumadan ÖNCE 3 defa şu istiâze çekilir: أَعُوذُ بِاللَّهِ السَّمِيعِ الْعَلِيمِ مِنَ الشَّيْطَانِ الرَّجِيمِ — E’ûzü billâhi’s-semî’ıl-‘alîmi mine’ş-şeytâni’r-racîm. Sure bitene kadar SAĞ EL BAŞA KONULUR.',
 }
 
@@ -102,6 +102,7 @@ const PRAYER_STEPS = {
     },
     {
       id: 'yasin', title: 'Yâsîn Suresi (36)', type: 'read',
+      quran: { sura: 36 },
       note: '58. ayetine gelindiğinde bu ayet 12 defa tekrar edilir: سَلَامٌ قَوْلًا مِنْ رَبٍّ رَحِيمٍ — Selâmün kavlen min rabbin rahîm.',
     },
     HASR5_STEP('hasr-sabah'),
@@ -109,15 +110,17 @@ const PRAYER_STEPS = {
   ogle: [
     {
       id: 'nuh', title: 'Nuh Suresi (71)', type: 'read', optional: true,
+      quran: { sura: 71 },
       note: 'Öğle namazı sonrası okunacak özel bir sure yoktur, ancak isteyen Nuh Suresi’ni okuyabilir.',
     },
   ],
   ikindi: [
-    { id: 'nebe', title: 'Nebe Suresi (78)', type: 'read' },
+    { id: 'nebe', title: 'Nebe Suresi (78)', type: 'read', quran: { sura: 78 } },
   ],
   aksam: [
     {
       id: 'vakia', title: 'Vâkıa Suresi (56)', type: 'read',
+      quran: { sura: 56 },
       note: '76. ayete (Ve innehû lekasemun lev ta’lemûne ‘azîm) gelindiğinde rızık duasını oku. Dua bittikten sonra iki ayet geriye gidilir (Fe-sebbih bismi rabbike-l’azîm) ve sure sonuna kadar okunur.',
     },
     {
@@ -133,13 +136,14 @@ const PRAYER_STEPS = {
     HASR5_STEP('hasr-aksam'),
   ],
   yatsi: [
-    { id: 'mulk', title: 'Mülk Suresi (67)', type: 'read' },
-    { id: 'amenerrasulu', title: 'Âmenerrasûlü (Bakara 2:285–286)', type: 'read' },
+    { id: 'mulk', title: 'Mülk Suresi (67)', type: 'read', quran: { sura: 67 } },
+    { id: 'amenerrasulu', title: 'Âmenerrasûlü (Bakara 2:285–286)', type: 'read', quran: { sura: 2, from: 285, to: 286 } },
   ],
 }
 
 export const CLOSING_STEP = {
   id: 'fatiha-ruh', title: 'Fâtiha-i Şerîfe', type: 'read',
+  quran: { sura: 1 },
   note: 'Efendimiz ﷺ’in ruhuna, Ehl-i Beyt’e, Sahabe’ye, Kadiri silsilesine, Şeyh Abdülkadir Geylânî (k.s.) Hz.’nin ve tüm mümin ve müminatın ruhlarına okunur.',
 }
 

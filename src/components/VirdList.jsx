@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { getStepsFor, COMMON_STEPS, NAMAZ_META } from '../data/vird.js'
 import { minutesOf, nowMinutes } from '../lib/prayer.js'
 import { todayKey, loadVakitProgress, saveVakitProgress, resetVakitProgress } from '../lib/store.js'
+import QuranBlock from './QuranBlock.jsx'
 
 const VAKIT_ORDER = ['sabah', 'ogle', 'ikindi', 'aksam', 'yatsi']
 const VAKIT_LABEL = { sabah: 'Sabah', ogle: 'Öğle', ikindi: 'İkindi', aksam: 'Akşam', yatsi: 'Yatsı' }
@@ -197,6 +198,7 @@ function VirdFlow({ vakit }) {
               : step.arabic}
           </div>
         )}
+        {step.quran && <QuranBlock {...step.quran} />}
         {step.latin && <p className="latin">{step.latin}</p>}
         {step.note && <div className="note">{step.note}</div>}
 

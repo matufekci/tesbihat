@@ -6,6 +6,7 @@ Beş vaktin ardından okunan zikir, salavât, dua ve sureler için sayaçlı, an
 
 - 🕌 Açılışta içinde bulunulan vaktin zikir ekranı doğrudan açılır (çevrimdışı anında, online tazelemeli)
 - 📖 Sırayla ilerleyen adımlar; sayaçlar anlık sayar; vakte özel katman + kapanış
+- 🔤 Sureler tam metin olarak, harekeler ve vakıf (durak) işaretleriyle birlikte gösterilir (Fâtiha, Yâsîn, Haşr 59:20–24, Nuh, Nebe, Vâkıa, Mülk, Bakara 2:285–286)
 - 🔤 Arapça metin + okunuş (yerel yazılar)
 - 📍 Vakitler: çevrimdışı astronomik hesap (anında) + internet varsa Diyanet metoduyla güncelleme
 - 🔔 Ezan sonrası hatırlatma bildirimi (web: uygulama açıkken; APK: gerçek alarm)
@@ -24,3 +25,7 @@ npm run preview   # üretim önizlemesi (0.0.0.0:4173)
 
 `.github/workflows/apk.yml` her push'ta **debug APK** derleyip "Actions" sekmesinde artifact sunar.
 Yerelde (Android SDK'lı makine): `npm run build && npx cap sync android && cd android && ./gradlew assembleDebug`
+
+## Künye
+
+Kur’ân metinleri Ḥafṣ rivâyetiyle, Tanzil Project’in kodladığı vakıf işaretleriyle gelir (CC-BY-3.0). Uygulama yalnızca ezber/okuma kolaylığı sunar.
