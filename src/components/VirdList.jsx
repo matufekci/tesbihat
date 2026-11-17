@@ -51,6 +51,7 @@ export default function VirdList({ now, timesData }) {
   const minuteStamp = Math.floor(nowMinutes(now))
   const detected = useMemo(() => detectVakit(timesData?.timings, minuteStamp), [timesData, minuteStamp])
   const [pinned, setPinned] = useState(null)
+  const [started, setStarted] = useState(false)
   const vakit = pinned ?? detected ?? 'aksam'
   const auto = pinned == null
 
@@ -58,7 +59,8 @@ export default function VirdList({ now, timesData }) {
   const hijri = timesData?.hijri || ''
 
   return (
-    <main className="screen vird-screen">
+    <>
+    <main className="screen vird-screen start-screen">
       <div className="date-row">
         <b>{hijri}</b>
         <span style={{ textTransform: 'capitalize' }}>{greg}</span>
@@ -83,8 +85,18 @@ export default function VirdList({ now, timesData }) {
         ))}
       </div>
 
-      <VirdFlow key={`${todayKey()}-${vakit}`} vakit={vakit} />
+      <div className="start-wrap">
+        <button className="start-cta" onClick={() => setStarted(true)}>Tesbihata Başla</button>
+        <p className="start-hint">{VAKIT_LABEL[vakit]} namazı sonrası vird</p>
+      </div>
     </main>
+
+    {started && (
+      <div className="flow-overlay" role="dialog" aria-modal="true" aria-label="Tesbihat">
+        <VirdFlow key={`${todayKey()}-${vakit}`} vakit={vakit} onClose={() => setStarted(false)} />
+      </div>
+    )}
+    </>
   )
 }
 
@@ -97,7 +109,7 @@ function quranMeanings({ sura, from, to }) {
   return all.filter(([n]) => n >= lo && n <= hi).map(([n, , tr]) => [n, tr])
 }
 
-function VirdFlow({ vakit }) {
+function VirdFlow({ vakit, onClose }) {
   const steps = useMemo(() => getStepsFor(vakit), [vakit])
   const [state, setState] = useState(() => loadVakitProgress(vakit))
   const [laTarget, setLaTarget] = useState(20)
@@ -175,7 +187,10 @@ function VirdFlow({ vakit }) {
           </svg>
           <h1 className="done-title">Vird Tamamlandı</h1>
           <p className="done-sub">Allah kabul eylesin.</p>
-          <button className="btn btn-primary" style={{ maxWidth: 280 }} onClick={reset}>Baştan Başla</button>
+          <div style={{ display: 'flex', gap: 10 }}>
+            <button className="btn-secondary" style={{ maxWidth: 160 }} onClick={onClose}>Kapat</button>
+            <button className="btn btn-primary" style={{ maxWidth: 200 }} onClick={reset}>Baştan Başla</button>
+          </div>
         </div>
       </div>
     )
@@ -191,6 +206,9 @@ function VirdFlow({ vakit }) {
         <div className="g-step-label">{idx + 1}/{steps.length}</div>
         <button className="font-btn" onClick={() => bumpFont(-0.15)} aria-label="Yazıyı küçült" title="Yazıyı küçült">A−</button>
         <button className="font-btn" onClick={() => bumpFont(0.15)} aria-label="Yazıyı büyüt" title="Yazıyı büyüt">A+</button>
+        <button className="icon-btn" onClick={onClose} aria-label="Kapat" title="Kapat">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
       </div>
 
       <div className="guided-body inflow" key={idx} style={{ '--qs': fontScale }}>
