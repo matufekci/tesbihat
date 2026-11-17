@@ -4,7 +4,7 @@ import { QURAN, SURAH_NAMES, BASMALA } from '../data/quran.js'
 const AR_DIGITS = '٠١٢٣٤٥٦٧٨٩'
 const arDigits = (n) => String(n).replace(/\d/g, (d) => AR_DIGITS[+d])
 
-// Kur'ân âyet imini: ﴿١﴾ — künye eklenmez, sadece Durak işaretleri ve âyet numarası
+// Âyet imi: U+06DD (Arapça âyet sonu işareti) + âyet numarası — yönsüz tek işaret
 export default function QuranBlock({ sura, from = 1, to }) {
   const all = QURAN[String(sura)] || []
   const max = to ?? (all.length ? all[all.length - 1][0] : 0)
@@ -21,7 +21,7 @@ export default function QuranBlock({ sura, from = 1, to }) {
         {ayats.map(([n, text]) => (
           <React.Fragment key={n}>
             {text}
-            <span className="ayah-mark" aria-label={`Âyet ${n}`}> ﴾{arDigits(n)}﴿ </span>
+            <span className="ayah-mark" aria-label={`Âyet ${n}`}> ۝{arDigits(n)} </span>
           </React.Fragment>
         ))}
       </p>
