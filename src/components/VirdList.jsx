@@ -209,6 +209,8 @@ function VirdFlow({ vakit, onClose }) {
   const [fontScale, setFontScale] = useState(() => {
     try { const v = parseFloat(localStorage.getItem('tesbihat.fontScale')); return Number.isFinite(v) ? v : 1 } catch { return 1 }
   })
+  const [scrollCueVisible, setScrollCueVisible] = useState(false)
+  const guidedBodyRef = useRef(null)
   const advancing = useRef(false)
 
   const bumpFont = (delta) => setFontScale((s) => {
@@ -218,6 +220,25 @@ function VirdFlow({ vakit, onClose }) {
   })
 
   useEffect(() => { saveVakitProgress(vakit, state) }, [vakit, state])
+
+  useEffect(() => {
+    const node = guidedBodyRef.current
+    if (!node) { setScrollCueVisible(false); return undefined }
+    const updateCue = () => {
+      setScrollCueVisible(node.scrollHeight > node.clientHeight + 20 && node.scrollTop + node.clientHeight < node.scrollHeight - 18)
+    }
+    updateCue()
+    node.addEventListener('scroll', updateCue, { passive: true })
+    const observer = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(updateCue) : null
+    observer?.observe(node)
+    if (node.firstElementChild) observer?.observe(node.firstElementChild)
+    window.addEventListener('resize', updateCue)
+    return () => {
+      node.removeEventListener('scroll', updateCue)
+      observer?.disconnect()
+      window.removeEventListener('resize', updateCue)
+    }
+  }, [state.idx, fontScale, lang, extraWindow])
 
   const idx = Math.min(state.idx, steps.length - 1)
   const step = steps[idx]
@@ -267,7 +288,7 @@ function VirdFlow({ vakit, onClose }) {
     setLaTarget(20)
   }
 
-  const ring = 2 * Math.PI * 62
+  const ring = 2 * Math.PI * 69
   const offset = isCounter ? ring * (1 - Math.min(1, count / target)) : 0
   const arabicLong = step?.arabic && (Array.isArray(step.arabic) ? step.arabic.join('').length : step.arabic.length) > 200
 
@@ -304,7 +325,7 @@ function VirdFlow({ vakit, onClose }) {
         </button>
       </div>
 
-      <div className="guided-body inflow" key={idx} style={{ '--qs': fontScale }}>
+      <div className="guided-body inflow" key={idx} ref={guidedBodyRef} style={{ '--qs': fontScale }}>
         <div className="g-section">{sectionOf(idx)}</div>
         <h2 className="g-title">{step.title}</h2>
         {step.optional && <div className="g-optional">{t('optionalBadge')}</div>}
@@ -346,6 +367,12 @@ function VirdFlow({ vakit, onClose }) {
           </div>
         )}
       </div>
+      {scrollCueVisible && (
+        <div className="scroll-cue" aria-hidden="true">
+          <span>{t('scrollForMore')}</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+      )}
 
       {extraWindow && (() => {
         const w = extraWindow === 'rizik-duasi' ? getRizikDuasi(lang) : steps.find((x) => x.id === extraWindow)
@@ -391,8 +418,8 @@ function VirdFlow({ vakit, onClose }) {
                   <stop offset="100%" stopColor="#a87f3d" />
                 </linearGradient>
               </defs>
-              <circle className="ring-bg" cx="74" cy="74" r="62" strokeWidth="10" fill="none" />
-              <circle className="ring-fg" cx="74" cy="74" r="62" strokeWidth="10" fill="none"
+              <circle className="ring-bg" cx="74" cy="74" r="69" strokeWidth="10" fill="none" />
+              <circle className="ring-fg" cx="74" cy="74" r="69" strokeWidth="10" fill="none"
                       stroke="url(#goldGrad)" strokeDasharray={ring} strokeDashoffset={offset} />
             </svg>
             <span className="counter-num">

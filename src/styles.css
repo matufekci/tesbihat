@@ -874,3 +874,45 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
   text-wrap: pretty;
 }
 [data-theme='light'] .start-verse { color: #31513f; }
+
+/* v1.19.5 — sayaç ve devam halkaları aynı dış ölçüde; alt bant kaldırıldı */
+.counter-ring { padding: 0; display: flex; align-items: center; justify-content: center; }
+.counter-ring svg { flex: 0 0 148px; }
+.flow-dock {
+  background: transparent !important;
+  padding: 6px 14px calc(10px + env(safe-area-inset-bottom));
+}
+.flow { position: relative; }
+.scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: calc(164px + env(safe-area-inset-bottom));
+  z-index: 6;
+  translate: -50% 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border: 1px solid rgba(217,179,108,.4);
+  border-radius: 999px;
+  color: var(--gold-bright);
+  background: rgba(8,31,24,.88);
+  box-shadow: 0 3px 14px rgba(0,0,0,.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  animation: scrollCueIn .22s ease both, scrollCueNudge 1.5s ease-in-out .25s infinite;
+  pointer-events: none;
+}
+@keyframes scrollCueIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes scrollCueNudge { 50% { transform: translateY(3px); } }
+[data-theme='light'] .scroll-cue {
+  color: #725719;
+  background: rgba(255,253,247,.93);
+  border-color: rgba(120,90,30,.3);
+  box-shadow: 0 3px 14px rgba(80,65,30,.13);
+}
+@media (prefers-reduced-motion: reduce) { .scroll-cue { animation: none; } }
