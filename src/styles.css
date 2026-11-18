@@ -1016,3 +1016,26 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
 .lang-flag.fi-de { background-image:url('../node_modules/flag-icons/flags/4x3/de.svg'); }
 .lang-flag.fi-fr { background-image:url('../node_modules/flag-icons/flags/4x3/fr.svg'); }
 .lang-flag.fi-gb { background-image:url('../node_modules/flag-icons/flags/4x3/gb.svg'); }
+
+/* v1.20.5 — Ayarlar dil bayraklarını tek satırda kompakt göster */
+.settings-group .lang-chips.large {
+  width:100%;
+  flex-wrap:nowrap;
+  gap:8px;
+}
+.settings-group .lang-chips.large .lang-chip {
+  flex:1 1 0;
+  min-width:0;
+  gap:4px;
+  padding:7px 5px;
+  font-size:11px;
+  letter-spacing:.03em;
+}
+.settings-group .lang-chips.large .lang-flag {
+  width:1.12em !important;
+  height:.84em !important;
+}
+@media (max-width:360px) {
+  .settings-group .lang-chips.large { gap:5px; }
+  .settings-group .lang-chips.large .lang-chip { padding-inline:3px; font-size:10px; }
+}
