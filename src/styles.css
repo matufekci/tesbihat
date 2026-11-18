@@ -700,3 +700,33 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
 .quick-gps:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
 .quick-error { margin: 6px 0 2px; font-size: 11px; }
 @media (max-width: 380px) { .quick-select { max-width: 124px; } .quick-label { font-size: 11px; } }
+
+/* ── Splash'in açık tema görünümü ── */
+.splash[data-theme='light'] {
+  background:
+    radial-gradient(1100px 720px at 50% -8%, rgba(31,70,54,.12), transparent 58%),
+    radial-gradient(800px 620px at 50% 118%, rgba(201,162,75,.22), transparent 55%),
+    linear-gradient(180deg, #faf6ea, #f0ead9);
+}
+.splash[data-theme='light'] .splash-star { filter: drop-shadow(0 10px 30px rgba(111,83,22,.35)); }
+.splash[data-theme='light'] .splash-divider span { background: linear-gradient(90deg, transparent, rgba(138,106,36,.75), transparent); }
+.splash[data-theme='light'] .splash-bar { background: rgba(120,90,30,.16); }
+.splash[data-theme='light'] .splash-bar span { background: linear-gradient(90deg, transparent, #a87f3d, transparent); }
+.splash[data-theme='light'] .splash-foot { color: rgba(111,83,22,.55); }
+.splash[data-theme='light'] .lang-chip,
+.splash[data-theme='light'] .theme-chip {
+  background: rgba(255,255,255,.85);
+  border-color: rgba(120,90,30,.35);
+  color: #4a4436;
+  box-shadow: 0 1px 2px rgba(80,65,30,.10);
+}
+.splash[data-theme='light'] .lang-chip:hover,
+.splash[data-theme='light'] .theme-chip:hover { border-color: rgba(120,90,30,.65); color: #2b2a24; }
+.splash[data-theme='light'] .lang-chip.active,
+.splash[data-theme='light'] .theme-chip.active {
+  background: linear-gradient(160deg, #ecd99e, #c9a24b 58%, #8a6a24);
+  color: #33250a;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(160,124,42,.4), inset 0 1px 0 rgba(255,255,255,.8);
+}
+.splash[data-theme='light'] .splash-onboard-sub { color: #6d675a; }

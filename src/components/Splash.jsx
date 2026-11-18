@@ -22,7 +22,7 @@ export default function Splash({ onDone, onboard = false, theme = 'dark', onThem
   }, [onDone, onboard])
 
   return (
-    <div className={`splash${leaving ? ' is-leaving' : ''}${onboard ? ' is-onboard' : ''}`} aria-hidden={!onboard ? 'true' : undefined}>
+    <div className={`splash${leaving ? ' is-leaving' : ''}${onboard ? ' is-onboard' : ''}`} data-theme={theme} aria-hidden={!onboard ? 'true' : undefined}>
       <svg className="splash-star" viewBox="0 0 200 200" width="150" height="150" aria-hidden="true">
         <defs>
           <linearGradient id="spGold" x1="0" y1="0" x2="1" y2="1">
