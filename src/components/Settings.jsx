@@ -5,7 +5,7 @@ import { useLang } from '../lib/i18n.js'
 import LangChips from './LangChips.jsx'
 
 const REMINDER_OPTIONS = [5, 10, 15, 20, 30, 45, 60]
-const APP_VERSION = '1.19.14'
+const APP_VERSION = '1.20.0'
 
 export default function Settings({ settings, setSettings, locationName, source, onToggleNotif, onToast }) {
   const { t } = useLang()
@@ -118,7 +118,9 @@ export default function Settings({ settings, setSettings, locationName, source, 
             <div className="target-chips" style={{ marginTop: 8 }}>
               <button className={`chip ${settings.theme === 'dark' ? 'active' : ''}`} onClick={() => set({ theme: 'dark' })}>{t('themeDark')}</button>
               <button className={`chip ${settings.theme === 'light' ? 'active' : ''}`} onClick={() => set({ theme: 'light' })}>{t('themeLight')}</button>
+              <button className={`chip ${settings.theme === 'amoled' ? 'active' : ''}`} onClick={() => set({ theme: 'amoled' })}>{t('themeAmoled')}</button>
             </div>
+            <small style={{ display: 'block', marginTop: 8 }}>{t('themeAmoledHint')}</small>
           </div>
         </div>
       </section>

@@ -95,6 +95,10 @@ export default function Splash({ onDone, onboard = false, theme = 'dark', onThem
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.4"/><path d="M12 2v2.6M12 19.4V22M2 12h2.6M19.4 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
               {t('themeLight')}
             </button>
+            <button type="button" className={`theme-chip${theme === 'amoled' ? ' active' : ''}`} aria-pressed={theme === 'amoled'} onClick={() => onThemeChange?.('amoled')}>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg>
+              {t('themeAmoled')}
+            </button>
           </div>
           <button type="button" className="splash-continue" onClick={onDone}>
             {t('continueBtn')}
