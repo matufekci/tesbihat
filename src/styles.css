@@ -1039,3 +1039,162 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
   .settings-group .lang-chips.large { gap:5px; }
   .settings-group .lang-chips.large .lang-chip { padding-inline:3px; font-size:10px; }
 }
+
+/* ════════════════════════════════════════════════════════════
+   v1.20.6 — uygulama genelinde kompakt ve tutarlı aralıklar
+   ════════════════════════════════════════════════════════════ */
+/* Ayarlar: kartlar, satırlar ve alanlar ortak kompakt ölçülerde */
+.screen.settings-screen { padding:2px 14px 14px; }
+.settings-screen > .topbar { padding:10px 4px 2px; }
+.settings-screen .settings-group { margin-top:12px; border-radius:18px; }
+.settings-screen .settings-group > h3 { padding:11px 14px 0; font-size:10.5px; }
+.settings-screen .set-row { gap:10px; padding:10px 14px; }
+.settings-screen .set-row label { font-size:14px; }
+.settings-screen .set-row small { font-size:10.5px; line-height:1.45; }
+.settings-screen .settings-description { margin:0 0 8px !important; }
+.settings-screen .settings-control { margin-top:6px; }
+.settings-screen .settings-control select { padding:8px 10px; border-radius:10px; font-size:14px; }
+.settings-screen .gps-btn { margin-top:6px; padding:7px 10px; border-radius:10px; }
+.settings-screen .settings-theme-chips { gap:6px; margin-top:7px; }
+.settings-screen .settings-theme-chips .chip { padding:6px 11px; font-size:11.5px; }
+.settings-screen .hint { margin:0; padding:2px 14px 8px; font-size:10.5px; line-height:1.5; }
+.settings-screen .settings-source-line { margin:12px 4px 4px !important; font-size:10px; line-height:1.5; }
+
+/* Her dil seçicisi tek satırda kalır; dar ekranda yatay kaydırılabilir */
+.splash-onboard .lang-chips.large {
+  width:100%;
+  flex-wrap:nowrap;
+  justify-content:flex-start;
+  gap:5px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  overscroll-behavior-x:contain;
+}
+.splash-onboard .lang-chips.large::-webkit-scrollbar,
+.splash-theme::-webkit-scrollbar,
+.bottom-vakit-chips::-webkit-scrollbar { display:none; }
+.splash-onboard .lang-chips.large .lang-chip {
+  flex:1 1 0;
+  min-width:0;
+  gap:3px;
+  padding:8px 3px;
+  font-size:11px;
+  letter-spacing:0;
+}
+.splash-onboard .lang-chips.large .lang-flag { width:1.1em !important; height:.82em !important; }
+.splash-theme {
+  flex-wrap:nowrap;
+  justify-content:flex-start;
+  gap:5px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  overscroll-behavior-x:contain;
+}
+.splash-theme .theme-chip {
+  flex:1 1 0;
+  min-width:0;
+  justify-content:center;
+  gap:5px;
+  padding:7px 8px;
+  font-size:11.5px;
+}
+
+/* Ana ekran: vakit seçenekleri tek şerit; ana eylem daha ölçülü */
+.date-row { padding:10px 14px 0 !important; font-size:11px !important; }
+.start-wrap { gap:10px !important; padding:8px 16px 16px !important; }
+.start-orn span { width:clamp(44px, 18vw, 72px); }
+.start-cta {
+  width:min(300px, 100%);
+  min-width:0;
+  padding:15px 20px;
+  font-size:20px;
+}
+.quick-card { margin:10px 2px 2px; padding:10px 12px; border-radius:14px; }
+.quick-head { margin-bottom:6px; }
+.quick-row { gap:8px; padding:4px 0; }
+.quick-row + .quick-row { margin-top:4px; padding-top:8px; }
+.quick-label { gap:6px; font-size:11.5px; }
+.bottom-vakit-chips {
+  flex-wrap:nowrap;
+  justify-content:flex-start;
+  gap:6px;
+  margin:10px 0 8px;
+  padding:2px 0 6px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  overscroll-behavior-x:contain;
+}
+.bottom-vakit-chips .chip { flex:0 0 auto; padding:6px 10px !important; font-size:11.5px !important; }
+
+/* Zikir metinleri: gereksiz çevre boşluğunu azalt, Arapça puntosunu koru */
+.g-section { margin:4px 0 0; }
+.g-title { margin:4px 0 8px; line-height:1.2; }
+.flow-overlay .guided-body.inflow { padding:4px 2px 8px; }
+.flow-overlay .guided-body.inflow > .arabic {
+  margin:10px 0 3px;
+  padding:12px 12px;
+  line-height:1.9;
+}
+.flow-overlay .guided-body.inflow > .arabic.small { line-height:2; }
+.flow-overlay .quran-block { margin:8px 0 4px; padding:12px 12px 14px; }
+.flow-overlay .quran-basmala { padding-bottom:8px; margin-bottom:8px; }
+.meaning-wrap { margin-top:10px; }
+.meaning-toggle { padding:9px 12px; border-radius:12px; }
+.meaning-panel { padding:10px 12px; font-size:12.5px; line-height:1.65; }
+.note { margin-top:8px; padding:8px 12px; }
+.rizik-endnote { margin-top:10px; padding:10px 10px 8px; }
+.ren-line { margin-bottom:6px; }
+.extra-top { padding:8px 12px 4px; gap:6px; }
+.extra-body { padding:10px 14px 12px; }
+.extra-body .arabic.small { padding:10px 10px; margin:8px 0 2px; }
+
+/* Tamamlandı / kuran ek penceresi eylemleri de aynı kompakt ölçülerde */
+.done-wrap { padding:16px; gap:6px; }
+.done-star { width:80px; height:80px; }
+.done-title { margin:2px 0; font-size:26px; }
+.done-sub { margin:0 0 4px; font-size:13px; }
+.done-actions { display:flex; width:100%; max-width:360px; gap:8px; }
+.done-actions .btn-secondary,
+.done-actions .btn-primary { min-width:0; padding:10px 12px; font-size:13px; border-radius:12px; }
+.done-actions .btn-secondary { flex:1; }
+.done-actions .btn-primary { flex:1.2; width:auto; margin-top:0; }
+.extra-window .flow-dock .done-ring svg { width:36px; height:36px; }
+.install-prompt { position:absolute; right:18px; bottom:12px; left:18px; z-index:35; background:var(--card-solid); }
+
+@media (max-width:360px) {
+  .settings-screen .settings-group > h3 { padding-inline:12px; }
+  .settings-screen .set-row { padding-inline:12px; }
+  .start-wrap { padding-inline:12px !important; }
+  .start-cta { padding:14px 16px; font-size:19px; }
+  .splash-onboard .lang-chips.large .lang-chip { padding-inline:2px; font-size:10.5px; }
+  .splash-theme .theme-chip { padding-inline:6px; font-size:10.5px; }
+}
+.settings-screen .lang-chip,
+.settings-screen .settings-theme-chips .chip,
+.splash-onboard .lang-chip,
+.splash-theme .theme-chip,
+.bottom-vakit-chips .chip { min-height:36px; }
+.quick-gps { width:36px; height:36px; }
+.install-prompt { width:auto; margin-top:0; }
+.splash-theme .theme-chip { flex:0 0 auto; white-space:nowrap; }
+.splash-onboard .lang-chips.large .lang-chip,
+.settings-screen .lang-chips.large .lang-chip,
+.bottom-vakit-chips .chip { white-space:nowrap; }
+
+/* Onboarding içeriğinde paragraf varsayılanlarından kaynaklanan boşlukları kapat */
+.splash.is-onboard { padding-top:24px; padding-bottom:max(20px, env(safe-area-inset-bottom)); }
+.splash-onboard { gap:8px; margin-top:12px; }
+.splash-onboard-title { margin:0; }
+.splash-onboard-sub { margin:0; line-height:1.4; }
+.welcome-permissions { padding:10px 12px; border-radius:14px; }
+.welcome-permissions-intro { margin:4px 0 6px; line-height:1.4; }
+.welcome-permission-row { gap:8px; padding:4px 0; }
+.welcome-permission-btn,
+.welcome-settings-btn { min-height:36px; padding:6px 10px; }
+.welcome-permission-hint { margin:5px 0 3px; line-height:1.4; }
+.welcome-permission-optional { margin-top:5px; line-height:1.4; }
+.splash-continue { min-height:40px; padding:10px 28px; }
+@media (max-height:720px) {
+  .splash.is-onboard { padding-top:16px; }
+  .splash-onboard { gap:6px; margin-top:8px; }
+}

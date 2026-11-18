@@ -185,7 +185,6 @@ export default function App() {
           <Settings
             settings={settings}
             setSettings={setSettings}
-            locationName={location.name}
             onToggleNotif={toggleNotif}
             onToast={showToast}
           />
@@ -193,7 +192,7 @@ export default function App() {
 
 
         {installReady && (
-          <button className="notify-nudge install" style={{ position: 'absolute', bottom: 14, left: 22, right: 22, zIndex: 35, background: 'var(--card-solid)' }} onClick={installApp}>
+          <button className="notify-nudge install install-prompt" onClick={installApp}>
             {t('installBanner')}
           </button>
         )}

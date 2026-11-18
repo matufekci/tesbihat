@@ -5,9 +5,9 @@ import { useLang } from '../lib/i18n.js'
 import LangChips from './LangChips.jsx'
 
 const REMINDER_OPTIONS = [5, 10, 15, 20, 30, 45, 60]
-const APP_VERSION = '1.20.5'
+const APP_VERSION = '1.20.6'
 
-export default function Settings({ settings, setSettings, locationName, onToggleNotif, onToast }) {
+export default function Settings({ settings, setSettings, onToggleNotif, onToast }) {
   const { t } = useLang()
   const [gpsError, setGpsError] = useState('')
   const [gpsBusy, setGpsBusy] = useState(false)
@@ -36,8 +36,8 @@ export default function Settings({ settings, setSettings, locationName, onToggle
   }
 
   return (
-    <main className="screen">
-      <header className="topbar" style={{ padding: '12px 4px 4px' }}>
+    <main className="screen settings-screen">
+      <header className="topbar">
         <div className="greet">{t('preferences')}<strong>{t('settingsHeading')}</strong></div>
       </header>
 
@@ -46,7 +46,7 @@ export default function Settings({ settings, setSettings, locationName, onToggle
         <h3>{t('languageGroup')}</h3>
         <div className="set-row">
           <div className="grow">
-            <small style={{ display: 'block', marginBottom: 10 }}>{t('languageSmall')}</small>
+            <small className="settings-description">{t('languageSmall')}</small>
             <LangChips large />
           </div>
         </div>
@@ -59,7 +59,7 @@ export default function Settings({ settings, setSettings, locationName, onToggle
           <div className="grow">
             <label htmlFor="city">{t('cityLabel')}</label>
             <small>{t('cityHint')}</small>
-            <div style={{ marginTop: 8 }}>
+            <div className="settings-control">
               <select id="city" value={settings.custom ? 'custom' : settings.cityId} onChange={(e) => e.target.value !== 'custom' && pickCity(e.target.value)}>
                 {settings.custom && <option value="custom">{settings.custom.name}</option>}
                 {CITIES.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -89,7 +89,7 @@ export default function Settings({ settings, setSettings, locationName, onToggle
             <div className="set-row">
               <div className="grow">
                 <label htmlFor="reminder">{t('reminderLabel')}</label>
-                <div style={{ marginTop: 8 }}>
+                <div className="settings-control">
                   <select id="reminder" value={settings.reminderMin} onChange={(e) => set({ reminderMin: parseInt(e.target.value, 10) })}>
                     {REMINDER_OPTIONS.map((m) => <option key={m} value={m}>{t('reminderOption', { m })}</option>)}
                   </select>
@@ -114,7 +114,7 @@ export default function Settings({ settings, setSettings, locationName, onToggle
         <div className="set-row">
           <div className="grow">
             <label>{t('themeLabel')}</label>
-            <div className="target-chips" style={{ marginTop: 8 }}>
+            <div className="target-chips settings-theme-chips">
               <button className={`chip ${settings.theme === 'dark' ? 'active' : ''}`} onClick={() => set({ theme: 'dark' })}>{t('themeDark')}</button>
               <button className={`chip ${settings.theme === 'light' ? 'active' : ''}`} onClick={() => set({ theme: 'light' })}>{t('themeLight')}</button>
               <button className={`chip ${settings.theme === 'amoled' ? 'active' : ''}`} onClick={() => set({ theme: 'amoled' })}>{t('themeAmoled')}</button>
@@ -123,7 +123,7 @@ export default function Settings({ settings, setSettings, locationName, onToggle
         </div>
       </section>
 
-      <p className="source-line" style={{ marginTop: 20 }}>
+      <p className="source-line settings-source-line">
         {t('versionLine', { v: APP_VERSION })}<br />
         {t('sourceLine')}
       </p>

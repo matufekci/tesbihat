@@ -326,9 +326,9 @@ function VirdFlow({ vakit, onClose }) {
           </svg>
           <h1 className="done-title">{t('doneTitle')}</h1>
           <p className="done-sub">{t('doneSub')}</p>
-          <div style={{ display: 'flex', gap: 10 }}>
-            <button className="btn-secondary" style={{ maxWidth: 160 }} onClick={onClose}>{t('close')}</button>
-            <button className="btn btn-primary" style={{ maxWidth: 200 }} onClick={reset}>{t('restart')}</button>
+          <div className="done-actions">
+            <button className="btn-secondary" onClick={onClose}>{t('close')}</button>
+            <button className="btn btn-primary" onClick={reset}>{t('restart')}</button>
           </div>
         </div>
       </div>
@@ -451,7 +451,7 @@ function VirdFlow({ vakit, onClose }) {
             </div>
             <div className="flow-dock">
               <button className="done-ring" onClick={() => setExtraWindow(null)} aria-label={t('rizikContinueAria')}>
-                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>
               </button>
             </div>
           </div>
