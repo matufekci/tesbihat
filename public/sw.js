@@ -1,5 +1,5 @@
 // Tesbihat — sade bir app-shell service worker (çevrimdışı açılış)
-const CACHE = 'tesbihat-v30'
+const CACHE = 'tesbihat-v31'
 const SHELL = ['./', './index.html', './manifest.webmanifest']
 
 self.addEventListener('install', (e) => {

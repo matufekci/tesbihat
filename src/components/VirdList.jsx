@@ -289,6 +289,10 @@ function VirdFlow({ vakit, onClose }) {
     if ((dx > 0) === nextOnRightwardSwipe) goNext()
     else goBack()
   }
+  const scrollDown = () => {
+    const node = guidedBodyRef.current
+    if (node) node.scrollBy({ top: Math.max(180, node.clientHeight * 0.72), behavior: 'smooth' })
+  }
 
   const tapCounter = () => {
     if (!isCounter) return
@@ -312,7 +316,7 @@ function VirdFlow({ vakit, onClose }) {
     setLaTarget(20)
   }
 
-  const ring = 2 * Math.PI * 48
+  const ring = 2 * Math.PI * 41
   const offset = isCounter ? ring * (1 - Math.min(1, count / target)) : 0
   const arabicLong = step?.arabic && (Array.isArray(step.arabic) ? step.arabic.join('').length : step.arabic.length) > 200
 
@@ -392,14 +396,13 @@ function VirdFlow({ vakit, onClose }) {
         )}
         <div className="flow-dock flow-dock-float">
           {scrollCueVisible && (
-            <div className="scroll-cue" aria-hidden="true">
-              <span>{t('scrollForMore')}</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-            </div>
+            <button type="button" className="scroll-down-btn" onClick={scrollDown} aria-label={t('scrollForMore')} title={t('scrollForMore')}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
           )}
           {isCounter ? (
             <button className="counter-ring" onClick={tapCounter} aria-label={t('count')} autoFocus>
-              <svg width="104" height="104" viewBox="0 0 104 104">
+              <svg width="92" height="92" viewBox="0 0 92 92">
                 <defs>
                   <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
                     <stop offset="0%" stopColor="#ecc97e" />
@@ -407,8 +410,8 @@ function VirdFlow({ vakit, onClose }) {
                     <stop offset="100%" stopColor="#a87f3d" />
                   </linearGradient>
                 </defs>
-                <circle className="ring-bg" cx="52" cy="52" r="48" strokeWidth="8" fill="none" />
-                <circle className="ring-fg" cx="52" cy="52" r="48" strokeWidth="8" fill="none"
+                <circle className="ring-bg" cx="46" cy="46" r="41" strokeWidth="8" fill="none" />
+                <circle className="ring-fg" cx="46" cy="46" r="41" strokeWidth="8" fill="none"
                         stroke="url(#goldGrad)" strokeDasharray={ring} strokeDashoffset={offset} />
               </svg>
               <span className="counter-num">
@@ -418,7 +421,7 @@ function VirdFlow({ vakit, onClose }) {
             </button>
           ) : (
             <button className="done-ring" onClick={goNext} autoFocus aria-label={isLast ? t('doneLastAria') : t('readDoneAria')}>
-              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 6.5"/></svg>
             </button>
           )}
         </div>

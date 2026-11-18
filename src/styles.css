@@ -881,40 +881,6 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
   padding: 6px 14px calc(10px + env(safe-area-inset-bottom));
 }
 .flow { position: relative; }
-.scroll-cue {
-  position: absolute;
-  left: 50%;
-  bottom: calc(164px + env(safe-area-inset-bottom));
-  z-index: 6;
-  translate: -50% 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 7px 13px;
-  border: 1px solid rgba(217,179,108,.4);
-  border-radius: 999px;
-  color: var(--gold-bright);
-  background: rgba(8,31,24,.88);
-  box-shadow: 0 3px 14px rgba(0,0,0,.2);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .02em;
-  animation: scrollCueIn .22s ease both, scrollCueNudge 1.5s ease-in-out .25s infinite;
-  pointer-events: none;
-}
-@keyframes scrollCueIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes scrollCueNudge { 50% { transform: translateY(3px); } }
-[data-theme='light'] .scroll-cue {
-  color: #725719;
-  background: rgba(255,253,247,.93);
-  border-color: rgba(120,90,30,.3);
-  box-shadow: 0 3px 14px rgba(80,65,30,.13);
-}
-@media (prefers-reduced-motion: reduce) { .scroll-cue { animation: none; } }
-
 /* v1.19.6 — yatay kaydırma adım gezinmesi içindir; dikey kaydırma korunur */
 .flow { touch-action: pan-y; }
 
@@ -946,18 +912,6 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
 }
 .flow-dock-float .counter-ring,
 .flow-dock-float .done-ring { pointer-events:auto; }
-.scroll-cue { bottom:calc(120px + env(safe-area-inset-bottom)); }
-
-/* v1.19.8 — kaydırma ipucu ve halka ortak merkez ekseninde */
-.guided-body > .flow-dock-float { flex-direction:column; align-items:center; gap:2px; }
-.flow-dock-float > .scroll-cue {
-  position:relative;
-  left:auto;
-  bottom:auto;
-  translate:none;
-  align-self:center;
-  margin:0;
-}
 
 /* v1.19.9 — vakit seçimi ekranın altına; aktif vakit satırı CTA'nın üstüne */
 .bottom-vakit-chips {
@@ -973,3 +927,38 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
   margin-top: 1px;
 }
 .start-wrap .vakit-line .vl-name { font-size: 22px !important; }
+
+
+/* v1.19.11 — metni ilerleten sağ-alt ok düğmesi ve biraz daha küçük halkalar */
+.counter-ring { width:92px; height:92px; }
+.counter-ring svg { width:92px; height:92px; flex-basis:92px; }
+.counter-num b { font-size:29px; }
+.done-ring { width:92px; height:92px; flex-basis:92px; }
+.guided-body > .flow-dock-float { flex-direction:row; align-items:center; justify-content:center; }
+.scroll-down-btn {
+  position:absolute;
+  right:12px;
+  bottom:calc(12px + env(safe-area-inset-bottom));
+  width:42px;
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(217,179,108,.48);
+  border-radius:50%;
+  color:var(--gold-bright);
+  background:rgba(8,31,24,.86);
+  box-shadow:0 4px 14px rgba(0,0,0,.2);
+  cursor:pointer;
+  animation:scrollCueNudge 1.5s ease-in-out infinite;
+}
+.scroll-down-btn:active { transform:scale(.92); }
+.scroll-down-btn:focus-visible { outline:2px solid var(--gold-bright); outline-offset:3px; }
+[data-theme='light'] .scroll-down-btn {
+  color:#725719;
+  background:rgba(255,253,247,.96);
+  border-color:rgba(120,90,30,.34);
+  box-shadow:0 4px 14px rgba(80,65,30,.14);
+}
+@keyframes scrollCueNudge { 50% { transform:translateY(3px); } }
+@media (prefers-reduced-motion: reduce) { .scroll-down-btn { animation:none; } }
