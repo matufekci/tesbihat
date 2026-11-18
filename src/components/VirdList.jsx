@@ -346,7 +346,7 @@ function VirdFlow({ vakit, onClose }) {
         </button>
         <div className="g-progress" aria-hidden="true"><div style={{ width: `${pct}%` }} /></div>
         <button className="icon-btn step-next-btn" onClick={goNext} aria-label={t('nextStep')} title={t('nextStep')}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
         </button>
         <div className="g-step-label">{idx + 1}/{steps.length}</div>
         <button className="font-btn" onClick={() => bumpFont(-0.15)} aria-label={t('fontSmall')} title={t('fontSmall')}>A−</button>
