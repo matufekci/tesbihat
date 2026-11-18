@@ -211,6 +211,7 @@ function VirdFlow({ vakit, onClose }) {
   })
   const [scrollCueVisible, setScrollCueVisible] = useState(false)
   const guidedBodyRef = useRef(null)
+  const swipeStartRef = useRef(null)
   const advancing = useRef(false)
 
   const bumpFont = (delta) => setFontScale((s) => {
@@ -266,6 +267,32 @@ function VirdFlow({ vakit, onClose }) {
   }
   const goBack = () => setState((s) => (s.idx > 0 ? { ...s, idx: s.idx - 1, done: false } : s))
 
+  const startSwipe = (event) => {
+    const touch = event.touches?.[0]
+    if (!touch || event.touches.length !== 1 || event.target.closest('button, a, input, select, textarea, [role="button"], .extra-window')) {
+      swipeStartRef.current = null
+      return
+    }
+    // Leave the OS/browser's edge-swipe navigation untouched.
+    if (touch.clientX < 24 || touch.clientX > window.innerWidth - 24) {
+      swipeStartRef.current = null
+      return
+    }
+    swipeStartRef.current = { x: touch.clientX, y: touch.clientY, time: Date.now() }
+  }
+  const endSwipe = (event) => {
+    const start = swipeStartRef.current
+    swipeStartRef.current = null
+    const touch = event.changedTouches?.[0]
+    if (!start || !touch) return
+    const dx = touch.clientX - start.x
+    const dy = touch.clientY - start.y
+    if (Math.abs(dx) < 64 || Math.abs(dx) < Math.abs(dy) * 1.25 || Date.now() - start.time > 900) return
+    const nextOnRightwardSwipe = document.documentElement.dir === 'rtl'
+    if ((dx > 0) === nextOnRightwardSwipe) goNext()
+    else goBack()
+  }
+
   const tapCounter = () => {
     if (!isCounter) return
     vibrate(10)
@@ -311,7 +338,7 @@ function VirdFlow({ vakit, onClose }) {
   }
 
   return (
-    <div className="flow">
+    <div className="flow" onTouchStart={startSwipe} onTouchEnd={endSwipe} onTouchCancel={() => { swipeStartRef.current = null }}>
       <div className="guided-top inflow">
         <button className="icon-btn" onClick={goBack} aria-label={t('back')} disabled={idx === 0}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>

@@ -916,3 +916,6 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
   box-shadow: 0 3px 14px rgba(80,65,30,.13);
 }
 @media (prefers-reduced-motion: reduce) { .scroll-cue { animation: none; } }
+
+/* v1.19.6 — yatay kaydırma adım gezinmesi içindir; dikey kaydırma korunur */
+.flow { touch-action: pan-y; }
