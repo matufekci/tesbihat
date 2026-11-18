@@ -4,9 +4,21 @@ import LangChips from './LangChips.jsx'
 
 // Açılış: ilk çalıştırmada dil + tema seçimi (onboarding), sonra marka animasyonu.
 // Onboarding modunda otomatik kapanmaz — kullanıcı "Başla" düğmesiyle geçer.
-export default function Splash({ onDone, onboard = false, theme = 'dark', onThemeChange }) {
+export default function Splash({ onDone, onboard = false, theme = 'dark', onThemeChange, onRequestLocation, onRequestNotification, onOpenAppSettings, canOpenAppSettings = false }) {
   const { t } = useLang()
   const [leaving, setLeaving] = useState(false)
+  const [permissionState, setPermissionState] = useState({ location: 'idle', notification: 'idle' })
+
+  const requestPermission = async (kind, request) => {
+    setPermissionState((state) => ({ ...state, [kind]: 'pending' }))
+    try {
+      const result = await request?.()
+      setPermissionState((state) => ({ ...state, [kind]: result === 'granted' ? 'granted' : 'denied' }))
+    } catch {
+      setPermissionState((state) => ({ ...state, [kind]: 'denied' }))
+    }
+  }
+  const needsSettings = permissionState.location === 'denied' || permissionState.notification === 'denied'
 
   useEffect(() => {
     if (onboard) return undefined
@@ -53,6 +65,27 @@ export default function Splash({ onDone, onboard = false, theme = 'dark', onThem
           <p className="splash-onboard-title">{t('onboardTitle')}</p>
           <p className="splash-onboard-sub">{t('onboardSub')}</p>
           <LangChips large />
+          <section className="welcome-permissions" aria-label={t('permissionTitle')}>
+            <div className="welcome-permissions-title">{t('permissionTitle')}</div>
+            <p className="welcome-permissions-intro">{t('permissionIntro')}</p>
+            <div className="welcome-permission-row">
+              <span className="welcome-permission-label">{t('locationPermission')}</span>
+              <button type="button" className={`welcome-permission-btn${permissionState.location === 'granted' ? ' granted' : ''}`} disabled={permissionState.location === 'pending'} onClick={() => requestPermission('location', onRequestLocation)}>
+                {permissionState.location === 'pending' ? '…' : permissionState.location === 'granted' ? t('permissionGranted') : t('permissionEnable')}
+              </button>
+            </div>
+            <div className="welcome-permission-row">
+              <span className="welcome-permission-label">{t('notificationPermissionLabel')}</span>
+              <button type="button" className={`welcome-permission-btn${permissionState.notification === 'granted' ? ' granted' : ''}`} disabled={permissionState.notification === 'pending'} onClick={() => requestPermission('notification', onRequestNotification)}>
+                {permissionState.notification === 'pending' ? '…' : permissionState.notification === 'granted' ? t('permissionGranted') : t('permissionEnable')}
+              </button>
+            </div>
+            {needsSettings && <>
+              <p className="welcome-permission-hint">{t(canOpenAppSettings ? 'permissionSettingsHint' : 'permissionSettingsHintWeb')}</p>
+              {canOpenAppSettings && <button type="button" className="welcome-settings-btn" onClick={onOpenAppSettings}>{t('openDeviceSettings')}</button>}
+            </>}
+            <p className="welcome-permission-optional">{t('permissionOptional')}</p>
+          </section>
           <div className="splash-theme" role="group" aria-label={t('themeLabel')}>
             <button type="button" className={`theme-chip${theme === 'dark' ? ' active' : ''}`} aria-pressed={theme === 'dark'} onClick={() => onThemeChange?.('dark')}>
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>

@@ -29,9 +29,38 @@ export default function App() {
   const [installReady, setInstallReady] = useState(false)
   const [splash, setSplash] = useState(true)
   const completeOnboarding = useCallback(() => {
-    setSettings((s) => ({ ...s, onboarded: true }))
+    setSettings((s) => ({ ...s, onboarded: true, permissionsSetup: true }))
     setSplash(false)
   }, [])
+
+  const requestWelcomeLocation = useCallback(() => new Promise((resolve) => {
+    if (!navigator.geolocation) { resolve('denied'); return }
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        setSettings((s) => ({ ...s, custom: { id: 'custom', name: `${t('currentLocation')} (${coords.latitude.toFixed(2)}, ${coords.longitude.toFixed(2)})`, lat: coords.latitude, lng: coords.longitude } }))
+        resolve('granted')
+      },
+      () => resolve('denied'),
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
+    )
+  }), [t])
+
+  const requestWelcomeNotification = useCallback(async () => {
+    const permission = await notificationPermission()
+    if (!permission.granted) return 'denied'
+    setSettings((s) => ({ ...s, notifEnabled: true }))
+    return 'granted'
+  }, [])
+
+  const openAppSettings = useCallback(async () => {
+    try {
+      const launcher = window.Capacitor?.Plugins?.SettingsLauncher
+      if (!launcher?.openAppSettings) return false
+      await launcher.openAppSettings()
+      return true
+    } catch { return false }
+  }, [])
+  const canOpenAppSettings = window.Capacitor?.isNativePlatform?.() === true
 
   const showToast = useCallback((msg) => {
     setToast(msg)
@@ -127,10 +156,14 @@ export default function App() {
       <div className="app">
         {splash && (
           <Splash
-            onDone={settings.onboarded ? () => setSplash(false) : completeOnboarding}
-            onboard={!settings.onboarded}
+            onDone={settings.onboarded && settings.permissionsSetup ? () => setSplash(false) : completeOnboarding}
+            onboard={!settings.onboarded || !settings.permissionsSetup}
             theme={settings.theme}
             onThemeChange={(th) => setSettings((s) => ({ ...s, theme: th }))}
+            onRequestLocation={requestWelcomeLocation}
+            onRequestNotification={requestWelcomeNotification}
+            onOpenAppSettings={openAppSettings}
+            canOpenAppSettings={canOpenAppSettings}
           />
         )}
         {tab === 'vird' && (

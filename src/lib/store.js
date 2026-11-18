@@ -9,6 +9,7 @@ export const DEFAULT_SETTINGS = {
   notifEnabled: false,
   reminderMin: 15,
   onboarded: false, // ilk açılışta dil+tema seçimi tamamlandı mı?
+  permissionsSetup: false, // izin seçenekleri karşılama ekranında gösterildi mi?
 }
 
 export function loadSettings() {
