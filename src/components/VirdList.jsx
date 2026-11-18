@@ -394,6 +394,12 @@ function VirdFlow({ vakit, onClose }) {
           </div>
         )}
         <div className="flow-dock flow-dock-float">
+          {scrollCueVisible && (
+            <div className="scroll-cue" aria-hidden="true">
+              <span>{t('scrollForMore')}</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          )}
           {isCounter ? (
             <button className="counter-ring" onClick={tapCounter} aria-label={t('count')} autoFocus>
               <svg width="104" height="104" viewBox="0 0 104 104">
@@ -420,13 +426,6 @@ function VirdFlow({ vakit, onClose }) {
           )}
         </div>
       </div>
-      {scrollCueVisible && (
-        <div className="scroll-cue" aria-hidden="true">
-          <span>{t('scrollForMore')}</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-        </div>
-      )}
-
       {extraWindow && (() => {
         const w = extraWindow === 'rizik-duasi' ? getRizikDuasi(lang) : steps.find((x) => x.id === extraWindow)
         if (!w) return null

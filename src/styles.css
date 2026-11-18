@@ -949,3 +949,14 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
 .flow-dock-float .counter-ring,
 .flow-dock-float .done-ring { pointer-events:auto; }
 .scroll-cue { bottom:calc(120px + env(safe-area-inset-bottom)); }
+
+/* v1.19.8 — kaydırma ipucu ve halka ortak merkez ekseninde */
+.guided-body > .flow-dock-float { flex-direction:column; align-items:center; gap:2px; }
+.flow-dock-float > .scroll-cue {
+  position:relative;
+  left:auto;
+  bottom:auto;
+  translate:none;
+  align-self:center;
+  margin:0;
+}
