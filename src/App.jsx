@@ -28,6 +28,10 @@ export default function App() {
   const deferredInstall = useRef(null)
   const [installReady, setInstallReady] = useState(false)
   const [splash, setSplash] = useState(true)
+  const completeOnboarding = useCallback(() => {
+    setSettings((s) => ({ ...s, onboarded: true }))
+    setSplash(false)
+  }, [])
 
   const showToast = useCallback((msg) => {
     setToast(msg)
@@ -121,7 +125,14 @@ export default function App() {
   return (
     <div className="app-frame">
       <div className="app">
-        {splash && <Splash onDone={() => setSplash(false)} />}
+        {splash && (
+          <Splash
+            onDone={settings.onboarded ? () => setSplash(false) : completeOnboarding}
+            onboard={!settings.onboarded}
+            theme={settings.theme}
+            onThemeChange={(th) => setSettings((s) => ({ ...s, theme: th }))}
+          />
+        )}
         {tab === 'vird' && (
           <>
             <div className="date-row"><b>{hijri}</b><span style={{ textTransform: 'capitalize' }}>{greg}</span></div>
@@ -140,7 +151,7 @@ export default function App() {
             )}
           </button>
         </div>
-        {tab === 'vird' && <VirdList now={now} timesData={timesData} />}
+        {tab === 'vird' && <VirdList now={now} timesData={timesData} settings={settings} setSettings={setSettings} onToggleNotif={toggleNotif} onToast={showToast} />}
         {tab === 'settings' && (
           <Settings
             settings={settings}

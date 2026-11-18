@@ -5,6 +5,7 @@ import { todayKey, loadVakitProgress, saveVakitProgress, resetVakitProgress } fr
 import QuranBlock from './QuranBlock.jsx'
 import MeaningDisclosure from './MeaningDisclosure.jsx'
 import { QURAN } from '../data/quran.js'
+import { CITIES } from '../data/cities.js'
 import { useLang } from '../lib/i18n.js'
 import { mealsOf } from '../data/meals.js'
 
@@ -75,21 +76,45 @@ function chime() {
 }
 const vibrate = (p) => { try { navigator.vibrate?.(p) } catch { /* yoksay */ } }
 
-export default function VirdList({ now, timesData }) {
+const REMINDER_OPTIONS = [5, 10, 15, 20, 30, 45, 60]
+
+export default function VirdList({ now, timesData, settings, setSettings, onToggleNotif, onToast }) {
   const { t, lang } = useLang()
   const vlabel = (id) => t('vakit' + id.charAt(0).toUpperCase() + id.slice(1))
   const minuteStamp = Math.floor(nowMinutes(now))
   const detected = useMemo(() => detectVakit(timesData?.timings, minuteStamp), [timesData, minuteStamp])
   const [pinned, setPinned] = useState(null)
   const [started, setStarted] = useState(false)
+  const [gpsBusy, setGpsBusy] = useState(false)
+  const [gpsError, setGpsError] = useState('')
   const vakit = pinned ?? detected ?? 'aksam'
   const auto = pinned == null
+
+  const pickCity = (cityId) => setSettings?.((s) => ({ ...s, cityId, custom: null }))
+  const useGps = () => {
+    setGpsError('')
+    if (!('geolocation' in navigator)) { setGpsError(t('gpsUnsupported')); return }
+    setGpsBusy(true)
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords
+        setSettings?.((s) => ({ ...s, custom: { id: 'custom', name: `${t('currentLocation')} (${latitude.toFixed(2)}, ${longitude.toFixed(2)})`, lat: latitude, lng: longitude } }))
+        setGpsBusy(false)
+        onToast?.(t('gpsOk'))
+      },
+      (err) => {
+        setGpsBusy(false)
+        setGpsError(err?.code === 1 ? t('gpsDenied') : t('gpsFailed'))
+      },
+      { enableHighAccuracy: false, timeout: 9000, maximumAge: 300000 }
+    )
+  }
 
   return (
     <>
     <main className="screen vird-screen start-screen">
       {/* Kompakt vakit satırı */}
-      <div className="vakit-line" aria-label="İçinde bulunulan vakit">
+      <div className="vakit-line" aria-label={t('vakitLineAria')}>
         <span className="vl-name">{vlabel(vakit)}</span>
         <span className="vl-sep">·</span>
         <span className="vl-sub">{t('vakitLine', { vakit: vlabel(vakit) })}</span>
@@ -114,6 +139,45 @@ export default function VirdList({ now, timesData }) {
         <button className="start-cta" onClick={() => setStarted(true)}>{t('startCta')}</button>
         <p className="start-hint">{t('startHint', { vakit: vlabel(vakit) })}</p>
       </div>
+
+      {/* Hızlı ayarlar — ilk açılışta gerekenleri burada seç, Ayarlar'a dönmeye gerek kalmasın */}
+      {settings && (
+        <section className="quick-card" aria-label={t('quickSettings')}>
+          <div className="quick-head">{t('quickSettings')}</div>
+          <div className="quick-row">
+            <label className="quick-label" htmlFor="quick-city">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.4-6.5-10.5A6.5 6.5 0 0 1 12 4a6.5 6.5 0 0 1 6.5 6.5C18.5 15.6 12 21 12 21Z"/><circle cx="12" cy="10.5" r="2.3"/></svg>
+              {t('locationGroup')}
+            </label>
+            <div className="quick-controls">
+              <select id="quick-city" className="quick-select" value={settings.custom ? 'custom' : settings.cityId} onChange={(e) => e.target.value !== 'custom' && pickCity(e.target.value)}>
+                {settings.custom && <option value="custom">{settings.custom.name}</option>}
+                {CITIES.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+              <button type="button" className="quick-gps" onClick={useGps} disabled={gpsBusy} aria-label={gpsBusy ? t('gpsBusy') : t('gpsButton')} title={gpsBusy ? t('gpsBusy') : t('gpsButton')}>
+                {gpsBusy
+                  ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="2.6"/></svg>
+                  : <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7.5"/></svg>}
+              </button>
+            </div>
+          </div>
+          {gpsError && <div className="gps-error quick-error">{gpsError}</div>}
+          <div className="quick-row">
+            <label className="quick-label" htmlFor="quick-notif">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8"/><path d="M13.7 20a2 2 0 0 1-3.4 0"/></svg>
+              {t('notifLabel')}
+            </label>
+            <div className="quick-controls">
+              {settings.notifEnabled && (
+                <select className="quick-select quick-min" aria-label={t('reminderLabel')} value={settings.reminderMin} onChange={(e) => setSettings?.((s) => ({ ...s, reminderMin: parseInt(e.target.value, 10) }))}>
+                  {REMINDER_OPTIONS.map((m) => <option key={m} value={m}>{t('reminderOption', { m })}</option>)}
+                </select>
+              )}
+              <button id="quick-notif" type="button" className="switch" role="switch" aria-checked={settings.notifEnabled} aria-label={t('notifSwitchAria')} onClick={() => onToggleNotif?.(!settings.notifEnabled)} />
+            </div>
+          </div>
+        </section>
+      )}
     </main>
 
     {started && (

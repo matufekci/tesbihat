@@ -8,6 +8,7 @@ export const DEFAULT_SETTINGS = {
   theme: 'dark',
   notifEnabled: false,
   reminderMin: 15,
+  onboarded: false, // ilk açılışta dil+tema seçimi tamamlandı mı?
 }
 
 export function loadSettings() {

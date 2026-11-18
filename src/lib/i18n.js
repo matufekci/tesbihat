@@ -85,6 +85,11 @@ const UI = {
     startVerseTr: 'Namazı bitirdiğinizde — ayakta, otururken ve yanınız üzere — Allah’ı zikredin. (Nisa 4/103)',
     notifChannelName: 'Namaz Sonrası Tesbihat',
     notifChannelDesc: 'Ezan sonrası tesbihat hatırlatmaları',
+    continueBtn: 'Başla',
+    onboardTitle: 'Başlamadan önce',
+    onboardSub: 'Dilini ve temanı seç — hepsi bu kadar.',
+    quickSettings: 'Hızlı Ayarlar',
+    vakitLineAria: 'Şu an içinde bulunulan vakit',
   },
   /* ───────────────── ENGLISH ───────────────── */
   en: {
@@ -161,6 +166,11 @@ const UI = {
     startVerseTr: '…when you have completed the prayer, remember Allah standing, sitting and on your sides. (An-Nisa 4/103)',
     notifChannelName: 'Tesbihat · After-Prayer Dhikr',
     notifChannelDesc: 'Dhikr reminders after the adhan',
+    continueBtn: 'Begin',
+    onboardTitle: 'Before you begin',
+    onboardSub: 'Pick your language and theme — that’s all.',
+    quickSettings: 'Quick Settings',
+    vakitLineAria: 'Current prayer time',
   },
   /* ───────────────── DEUTSCH ───────────────── */
   de: {
@@ -237,6 +247,11 @@ const UI = {
     startVerseTr: '…wenn ihr das Gebet beendet habt, so gedenkt Allahs stehend, sitzend und auf euren Seiten. (An-Nisa 4/103)',
     notifChannelName: 'Tesbihat · Dhikr nach dem Gebet',
     notifChannelDesc: 'Dhikr-Erinnerungen nach dem Adhan',
+    continueBtn: 'Beginnen',
+    onboardTitle: 'Bevor es losgeht',
+    onboardSub: 'Wähle Sprache und Farbschema — das war’s.',
+    quickSettings: 'Schnelleinstellungen',
+    vakitLineAria: 'Aktuelle Gebetszeit',
   },
   /* ───────────────── FRANÇAIS ───────────────── */
   fr: {
@@ -313,6 +328,11 @@ const UI = {
     startVerseTr: '…lorsque vous avez terminé la prière, invoquez Allah debout, assis et sur vos côtés. (An-Nisa 4/103)',
     notifChannelName: 'Tesbihat · Dhikr après la prière',
     notifChannelDesc: 'Rappels de dhikr après l’adhan',
+    continueBtn: 'Commencer',
+    onboardTitle: 'Avant de commencer',
+    onboardSub: 'Choisissez votre langue et votre thème — c’est tout.',
+    quickSettings: 'Réglages rapides',
+    vakitLineAria: 'Temps de prière actuel',
   },
   /* ───────────────── العربية ───────────────── */
   ar: {
@@ -389,6 +409,11 @@ const UI = {
     startVerseTr: '﴿فَإِذَا قَضَيْتُمُ الصَّلَاةَ فَاذْكُرُوا اللَّهَ قِيَامًا وَقُعُودًا وَعَلَىٰ جُنُوبِكُمْ﴾ (النساء 4/103)',
     notifChannelName: 'تسبيحات · ذكر بعد الصلاة',
     notifChannelDesc: 'تذكيرات بالذكر بعد الأذان',
+    continueBtn: 'ابدأ',
+    onboardTitle: 'قبل أن تبدأ',
+    onboardSub: 'اختر لغتك ومظهرك — هذا كل شيء.',
+    quickSettings: 'إعدادات سريعة',
+    vakitLineAria: 'وقت الصلاة الحالي',
   },
 }
 

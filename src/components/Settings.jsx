@@ -5,7 +5,7 @@ import { useLang } from '../lib/i18n.js'
 import LangChips from './LangChips.jsx'
 
 const REMINDER_OPTIONS = [5, 10, 15, 20, 30, 45, 60]
-const APP_VERSION = '1.18.0'
+const APP_VERSION = '1.19.0'
 
 export default function Settings({ settings, setSettings, locationName, source, onToggleNotif, onToast }) {
   const { t } = useLang()

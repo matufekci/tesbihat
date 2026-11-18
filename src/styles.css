@@ -664,3 +664,39 @@ html[dir='rtl'] .hijri { text-align: left; }
 html[dir='rtl'] .g-step-label { text-align: left; }
 html[dir='rtl'] .gear-btn { right: auto; left: 14px; }
 html[dir='rtl'] .zrow-ar, html[dir='rtl'] .zrow-latin, html[dir='rtl'] .zrow-meaning { text-align: right; }
+
+/* ── Onboarding (ilk açılış splash'i) ── */
+.splash.is-onboard { overflow-y: auto; justify-content: flex-start; padding: 46px 0 34px; gap: 0; }
+.splash.is-onboard .splash-star { width: 96px; height: 96px; }
+.splash.is-onboard .splash-eyebrow { margin-top: 14px; }
+.splash.is-onboard .splash-title { font-size: 23px; }
+.splash.is-onboard .splash-divider { margin: 10px 0 8px; }
+.splash-onboard { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 18px; width: min(340px, 90vw); animation: sUp .8s cubic-bezier(.2,1.2,.3,1) .15s both; }
+.splash-onboard-title { font-size: 12px; letter-spacing: .24em; text-transform: uppercase; color: var(--gold); font-weight: 800; }
+.splash-onboard-sub { font-size: 12px; color: var(--cream-dim); margin-top: -6px; text-align: center; }
+.splash-onboard .lang-chips { margin: 2px 0 0; }
+.splash-onboard .lang-chips.large { justify-content: center; }
+.splash-theme { display: flex; gap: 10px; }
+.theme-chip { display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(217,179,108,.30); background: rgba(18,53,40,.35); color: var(--cream-dim); border-radius: 999px; padding: 9px 17px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: var(--font-ui); transition: border-color .18s ease, color .18s ease, background .18s ease; }
+.theme-chip:hover { border-color: rgba(217,179,108,.65); color: var(--cream); }
+.theme-chip.active { background: linear-gradient(160deg, #f2d894, #d9b36c 58%, #a87f3d); color: #241a05; border-color: transparent; box-shadow: 0 4px 16px rgba(217,179,108,.35), inset 0 1px 0 rgba(255,255,255,.6); }
+.theme-chip:focus-visible, .splash-continue:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
+.splash-continue { display: inline-flex; align-items: center; gap: 10px; margin-top: 6px; border: 0; cursor: pointer; border-radius: 999px; padding: 13px 34px; font-size: 15px; font-weight: 800; letter-spacing: .02em; color: #241a05; background: linear-gradient(160deg, #f6e5ac, #d9b36c 55%, #a87f3d); box-shadow: 0 8px 30px rgba(217,179,108,.4), inset 0 1px 0 rgba(255,255,255,.7); font-family: var(--font-ui); transition: transform .16s ease, box-shadow .16s ease; }
+.splash-continue:active { transform: scale(.96); }
+html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
+
+/* ── Giriş ekranı hızlı ayarlar kartı ── */
+.quick-card { margin: 12px 2px 4px; border: 1px solid var(--line); background: rgba(18,53,40,.28); border-radius: 16px; padding: 11px 14px 12px; }
+.quick-head { font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); font-weight: 800; margin: 0 0 8px; }
+.quick-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 5px 0; }
+.quick-row + .quick-row { border-top: 1px solid rgba(217,179,108,.09); margin-top: 6px; padding-top: 11px; }
+.quick-label { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; color: var(--cream-dim); white-space: nowrap; }
+.quick-controls { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+.quick-select { max-width: 158px; padding: 7px 9px !important; font-size: 12px !important; border-radius: 10px !important; }
+.quick-min { max-width: 128px !important; }
+.quick-gps { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 11px; border: 1px solid rgba(217,179,108,.32); background: rgba(18,53,40,.35); color: var(--gold); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: border-color .18s ease, transform .18s ease; }
+.quick-gps:hover { border-color: rgba(217,179,108,.65); transform: translateY(-1px); }
+.quick-gps:disabled { opacity: .55; cursor: default; }
+.quick-gps:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
+.quick-error { margin: 6px 0 2px; font-size: 11px; }
+@media (max-width: 380px) { .quick-select { max-width: 124px; } .quick-label { font-size: 11px; } }
