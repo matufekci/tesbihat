@@ -124,7 +124,6 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
           {!auto && <span className="vl-picked">{t('picked')}</span>}
         </div>
         <button className="start-cta" onClick={() => setStarted(true)}>{t('startCta')}</button>
-        <p className="start-hint">{t('startHint', { vakit: vlabel(vakit) })}</p>
       </div>
 
       {/* Hızlı ayarlar — ilk açılışta gerekenleri burada seç, Ayarlar'a dönmeye gerek kalmasın */}

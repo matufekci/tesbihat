@@ -418,7 +418,6 @@ select:focus, input:focus { border-color: var(--gold); }
   0%, 100% { box-shadow: 0 14px 44px rgba(217,179,108,.28), inset 0 1px 0 rgba(255,255,255,.5); }
   50% { box-shadow: 0 14px 60px rgba(236,201,126,.45), inset 0 1px 0 rgba(255,255,255,.6); }
 }
-.start-hint { font-size: 12px; color: var(--cream-dim); letter-spacing: .08em; }
 
 /* ── tam ekran akış katmanı (başlık/tarih/çip görünmez) ── */
 .flow-overlay {
@@ -584,7 +583,6 @@ select:focus, input:focus { border-color: var(--gold); }
 .start-verse-tr { font-size: 11px; line-height: 1.65; color: var(--cream-dim); margin: -4px 0 2px; max-width: 330px; text-align: center; font-style: italic; }
 .start-wrap { gap: 12px !important; justify-content: center !important; padding-bottom: 40px !important; }
 .start-cta { min-width: 260px; border-radius: 999px !important; font-weight: 800 !important; letter-spacing: .01em !important; }
-.start-hint { letter-spacing: .22em !important; text-transform: uppercase; font-size: 10px !important; opacity: .85; }
 
 /* ── TESBİHAT EKRANI: alt sabit alan YALNIZ halka ── */
 .flow-dock { flex: 0 0 auto; display: flex; justify-content: center; align-items: center; padding: 10px 14px calc(16px + env(safe-area-inset-bottom)); background: radial-gradient(150% 130% at 50% 135%, rgba(217,179,108,.17), transparent 56%), linear-gradient(180deg, transparent, rgba(5,15,12,.35) 45%); }
