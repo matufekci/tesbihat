@@ -134,7 +134,7 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
 
       <div className="start-wrap">
         <div className="start-orn" aria-hidden="true"><span /><i>◆</i><span /></div>
-        <p className="start-verse" lang="ar" dir="rtl">فَإِذَا قَضَيْتُمُ الصَّلَاةَ فَاذْكُرُوا اللَّهَ</p>
+        <p className="start-verse" lang="ar" dir="rtl">فَإِذَا قَضَيْتُمُ الصَّلَاةَ فَاذْكُرُوا اللَّهَ قِيَامًا وَقُعُودًا وَعَلَىٰ جُنُوبِكُمْ ۚ فَإِذَا اطْمَأْنَنتُمْ فَأَقِيمُوا الصَّلَاةَ ۚ إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا</p>
         <p className="start-verse-tr">{t('startVerseTr')}</p>
         <button className="start-cta" onClick={() => setStarted(true)}>{t('startCta')}</button>
         <p className="start-hint">{t('startHint', { vakit: vlabel(vakit) })}</p>

@@ -860,3 +860,17 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
   .splash.is-onboard .splash-eyebrow { margin-top:8px; }
   .splash-onboard { margin-top:10px; gap:8px; }
 }
+
+/* v1.19.4 — başlangıç ekranında Nisa 4:103'ün tamamı */
+.start-verse {
+  width: min(100%, 480px);
+  line-height: 1.9;
+  text-align: center;
+  text-wrap: pretty;
+}
+.start-verse-tr {
+  line-height: 1.65;
+  max-width: 390px;
+  text-wrap: pretty;
+}
+[data-theme='light'] .start-verse { color: #31513f; }
