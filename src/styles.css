@@ -960,3 +960,18 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
   align-self:center;
   margin:0;
 }
+
+/* v1.19.9 — vakit seçimi ekranın altına; aktif vakit satırı CTA'nın üstüne */
+.bottom-vakit-chips {
+  flex: 0 0 auto;
+  justify-content: center;
+  margin: 16px 2px 10px;
+  padding-bottom: 6px;
+}
+.start-wrap .vakit-line {
+  flex-wrap: wrap;
+  row-gap: 2px;
+  padding: 4px 2px 0;
+  margin-top: 1px;
+}
+.start-wrap .vakit-line .vl-name { font-size: 22px !important; }

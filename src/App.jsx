@@ -5,7 +5,6 @@ import { loadSettings, saveSettings } from './lib/store.js'
 import { notificationPermission, scheduleReminders, cancelReminders } from './lib/notify.js'
 import VirdList from './components/VirdList.jsx'
 import Splash from './components/Splash.jsx'
-import LangChips from './components/LangChips.jsx'
 import { useLang, langById } from './lib/i18n.js'
 import Settings from './components/Settings.jsx'
 
@@ -167,10 +166,7 @@ export default function App() {
           />
         )}
         {tab === 'vird' && (
-          <>
-            <div className="date-row"><b>{hijri}</b><span style={{ textTransform: 'capitalize' }}>{greg}</span></div>
-            <LangChips />
-          </>
+          <div className="date-row"><b>{hijri}</b><span style={{ textTransform: 'capitalize' }}>{greg}</span></div>
         )}
         <div className="app-title">
           <div className="app-title-eyebrow">{t('eyebrow')}</div>

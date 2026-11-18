@@ -113,29 +113,16 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
   return (
     <>
     <main className="screen vird-screen start-screen">
-      {/* Kompakt vakit satırı */}
-      <div className="vakit-line" aria-label={t('vakitLineAria')}>
-        <span className="vl-name">{vlabel(vakit)}</span>
-        <span className="vl-sep">·</span>
-        <span className="vl-sub">{t('vakitLine', { vakit: vlabel(vakit) })}</span>
-        {!auto && <span className="vl-picked">{t('picked')}</span>}
-      </div>
-
-      <div className="vakit-chips" role="group" aria-label={t('vakitPick')}>
-        {!auto && (
-          <button className="chip chip-auto" onClick={() => setPinned(null)}>{t('autoChip')}</button>
-        )}
-        {VAKIT_ORDER.map((v) => (
-          <button key={v} className={`chip ${v === vakit ? 'active' : ''}`} onClick={() => setPinned(v)}>
-            {vlabel(v)}
-          </button>
-        ))}
-      </div>
-
       <div className="start-wrap">
         <div className="start-orn" aria-hidden="true"><span /><i>◆</i><span /></div>
         <p className="start-verse" lang="ar" dir="rtl">فَإِذَا قَضَيْتُمُ الصَّلَاةَ فَاذْكُرُوا اللَّهَ قِيَامًا وَقُعُودًا وَعَلَىٰ جُنُوبِكُمْ ۚ فَإِذَا اطْمَأْنَنتُمْ فَأَقِيمُوا الصَّلَاةَ ۚ إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا</p>
         <p className="start-verse-tr">{t('startVerseTr')}</p>
+        <div className="vakit-line" aria-label={t('vakitLineAria')}>
+          <span className="vl-name">{vlabel(vakit)}</span>
+          <span className="vl-sep">·</span>
+          <span className="vl-sub">{t('vakitLine', { vakit: vlabel(vakit) })}</span>
+          {!auto && <span className="vl-picked">{t('picked')}</span>}
+        </div>
         <button className="start-cta" onClick={() => setStarted(true)}>{t('startCta')}</button>
         <p className="start-hint">{t('startHint', { vakit: vlabel(vakit) })}</p>
       </div>
@@ -178,6 +165,17 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
           </div>
         </section>
       )}
+
+      <div className="vakit-chips bottom-vakit-chips" role="group" aria-label={t('vakitPick')}>
+        {!auto && (
+          <button className="chip chip-auto" onClick={() => setPinned(null)}>{t('autoChip')}</button>
+        )}
+        {VAKIT_ORDER.map((v) => (
+          <button key={v} className={`chip ${v === vakit ? 'active' : ''}`} onClick={() => setPinned(v)}>
+            {vlabel(v)}
+          </button>
+        ))}
+      </div>
     </main>
 
     {started && (
