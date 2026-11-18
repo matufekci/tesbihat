@@ -186,7 +186,6 @@ export default function App() {
             settings={settings}
             setSettings={setSettings}
             locationName={location.name}
-            source={timesData?.source}
             onToggleNotif={toggleNotif}
             onToast={showToast}
           />

@@ -5,9 +5,9 @@ import { useLang } from '../lib/i18n.js'
 import LangChips from './LangChips.jsx'
 
 const REMINDER_OPTIONS = [5, 10, 15, 20, 30, 45, 60]
-const APP_VERSION = '1.20.1'
+const APP_VERSION = '1.20.2'
 
-export default function Settings({ settings, setSettings, locationName, source, onToggleNotif, onToast }) {
+export default function Settings({ settings, setSettings, locationName, onToggleNotif, onToast }) {
   const { t } = useLang()
   const [gpsError, setGpsError] = useState('')
   const [gpsBusy, setGpsBusy] = useState(false)
@@ -39,7 +39,6 @@ export default function Settings({ settings, setSettings, locationName, source, 
     <main className="screen">
       <header className="topbar" style={{ padding: '12px 4px 4px' }}>
         <div className="greet">{t('preferences')}<strong>{t('settingsHeading')}</strong></div>
-        <span className="badge-source">{source === 'offline' ? t('sourceOffline') : t('sourceOnline')}</span>
       </header>
 
       {/* Dil */}
