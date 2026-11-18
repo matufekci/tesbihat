@@ -119,9 +119,6 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
         <p className="start-verse-tr">{t('startVerseTr')}</p>
         <div className="vakit-line" aria-label={t('vakitLineAria')}>
           <span className="vl-name">{vlabel(vakit)}</span>
-          <span className="vl-sep">·</span>
-          <span className="vl-sub">{t('vakitLine', { vakit: vlabel(vakit) })}</span>
-          {!auto && <span className="vl-picked">{t('picked')}</span>}
         </div>
         <button className="start-cta" onClick={() => setStarted(true)}>{t('startCta')}</button>
       </div>
