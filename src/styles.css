@@ -1002,3 +1002,23 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
 }
 .splash[data-theme='amoled'] .splash-star { filter:drop-shadow(0 10px 34px rgba(217,179,108,.28)); }
 .splash-theme { flex-wrap:wrap; justify-content:center; width:100%; }
+
+/* v1.20.1 — bayrak ikonları (flag-icons renkli SVG seti) */
+.lang-chip { display:inline-flex; align-items:center; justify-content:center; gap:6px; }
+.lang-flag {
+  width:1.2em !important;
+  height:.9em !important;
+  flex:0 0 auto;
+  line-height:1 !important;
+  border-radius:2px;
+  background-size:cover !important;
+  box-shadow:0 0 0 1px rgba(20,24,20,.18);
+  vertical-align:middle;
+}
+[data-theme='light'] .lang-flag { box-shadow:0 0 0 1px rgba(35,35,30,.2); }
+[data-theme='amoled'] .lang-flag { box-shadow:0 0 0 1px rgba(217,179,108,.3); }
+.lang-flag.fi-tr { background-image:url('../node_modules/flag-icons/flags/4x3/tr.svg'); }
+.lang-flag.fi-sa { background-image:url('../node_modules/flag-icons/flags/4x3/sa.svg'); }
+.lang-flag.fi-de { background-image:url('../node_modules/flag-icons/flags/4x3/de.svg'); }
+.lang-flag.fi-fr { background-image:url('../node_modules/flag-icons/flags/4x3/fr.svg'); }
+.lang-flag.fi-gb { background-image:url('../node_modules/flag-icons/flags/4x3/gb.svg'); }
