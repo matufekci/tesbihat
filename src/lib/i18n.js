@@ -100,6 +100,7 @@ const UI = {
     onboardTitle: 'Başlamadan önce',
     onboardSub: 'Dilini ve temanı seç; istersen konum ve bildirim izinlerini de ver.',
     quickSettings: 'Hızlı Ayarlar',
+    timeUntilPrayerEnd: 'Vaktin Çıkmasına: {time} dk kaldı.',
     vakitLineAria: 'Şu an içinde bulunulan vakit',
   },
   /* ───────────────── ENGLISH ───────────────── */
@@ -192,6 +193,7 @@ const UI = {
     onboardTitle: 'Before you begin',
     onboardSub: 'Choose your language and theme; optionally allow location and notifications.',
     quickSettings: 'Quick Settings',
+    timeUntilPrayerEnd: 'Time left in this prayer: {time} min.',
     vakitLineAria: 'Current prayer time',
   },
   /* ───────────────── DEUTSCH ───────────────── */
@@ -284,6 +286,7 @@ const UI = {
     onboardTitle: 'Bevor es losgeht',
     onboardSub: 'Wähle Sprache und Farbschema; erlaube bei Bedarf Standort und Benachrichtigungen.',
     quickSettings: 'Schnelleinstellungen',
+    timeUntilPrayerEnd: 'Bis zum Ende der Gebetszeit: {time} Min.',
     vakitLineAria: 'Aktuelle Gebetszeit',
   },
   /* ───────────────── FRANÇAIS ───────────────── */
@@ -376,6 +379,7 @@ const UI = {
     onboardTitle: 'Avant de commencer',
     onboardSub: 'Choisissez la langue et le thème ; autorisez si vous le souhaitez la localisation et les notifications.',
     quickSettings: 'Réglages rapides',
+    timeUntilPrayerEnd: 'Temps restant dans cette prière : {time} min.',
     vakitLineAria: 'Temps de prière actuel',
   },
   /* ───────────────── العربية ───────────────── */
@@ -468,6 +472,7 @@ const UI = {
     onboardTitle: 'قبل أن تبدأ',
     onboardSub: 'اختر لغتك ومظهرك، واسمح اختياريًا بالموقع وإشعارات التذكير.',
     quickSettings: 'إعدادات سريعة',
+    timeUntilPrayerEnd: 'الوقت المتبقي لانتهاء الصلاة: {time} دقيقة.',
     vakitLineAria: 'وقت الصلاة الحالي',
   },
 }

@@ -16,6 +16,22 @@ function initialTimes(settings) {
   return { timings: offlineTimes(d, loc.lat, loc.lng), hijri: '', source: 'offline' }
 }
 
+function timeUntilVakitEnds(timings, date) {
+  if (!timings) return '00.00'
+  const boundaries = ['Imsak', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
+    .map((key) => minutesOf(timings[key]))
+    .filter(Number.isFinite)
+    .sort((a, b) => a - b)
+  if (!boundaries.length) return '00.00'
+  const nowSeconds = date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds()
+  let nextBoundary = boundaries.find((minute) => minute * 60 > nowSeconds)
+  if (nextBoundary == null) nextBoundary = boundaries[0] + 1440
+  const remainingMinutes = Math.max(0, Math.floor((nextBoundary * 60 - nowSeconds) / 60))
+  const hours = String(Math.floor(remainingMinutes / 60)).padStart(2, '0')
+  const minutes = String(remainingMinutes % 60).padStart(2, '0')
+  return `${hours}.${minutes}`
+}
+
 export default function App() {
   const { t, lang } = useLang()
   const [settings, setSettings] = useState(loadSettings)
@@ -165,9 +181,11 @@ export default function App() {
             canOpenAppSettings={canOpenAppSettings}
           />
         )}
-        {tab === 'vird' && (
-          <div className="date-row"><b>{hijri}</b><span style={{ textTransform: 'capitalize' }}>{greg}</span></div>
-        )}
+        <div className="date-row">
+          <b className="date-hijri">{hijri}</b>
+          <span className="date-countdown">{t('timeUntilPrayerEnd', { time: timeUntilVakitEnds(timesData?.timings, now) })}</span>
+          <span className="date-gregorian">{greg}</span>
+        </div>
         <div className="app-title">
           <div className="app-title-eyebrow">{t('eyebrow')}</div>
           <h1 className="app-title-main">{t('appTitle')}</h1>

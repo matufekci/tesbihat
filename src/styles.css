@@ -1376,3 +1376,25 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
   .quick-sheet-headline svg,
   .quick-sheet-settings { transition:none !important; }
 }
+
+/* Ortak üst bilgi: her sekmede Hicrî, vakit sayacı ve Milâdî tarih sabit kalsın */
+.app > .date-row,
+.app > .app-title { flex:0 0 auto; }
+.app > .date-row {
+  display:grid;
+  grid-template-columns:minmax(0,1.1fr) minmax(0,2.2fr) minmax(0,1.1fr);
+  align-items:center;
+  column-gap:8px;
+  padding:10px 14px 2px !important;
+  font-size:11px !important;
+  line-height:1.35;
+}
+.date-row .date-hijri,
+.date-row .date-countdown,
+.date-row .date-gregorian { min-width:0; font-size:inherit; line-height:inherit; }
+.date-row .date-hijri { text-align:start; overflow-wrap:anywhere; }
+.date-row .date-countdown { text-align:center; color:var(--cream-dim); font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
+.date-row .date-gregorian { text-align:end; text-transform:capitalize; overflow-wrap:anywhere; }
+@media (max-width:360px) {
+  .app > .date-row { column-gap:5px; padding-inline:10px !important; }
+}
