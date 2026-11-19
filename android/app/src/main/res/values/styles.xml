@@ -17,6 +17,14 @@
 
 
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/tesbihat_splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/tesbihat_launch_mark</item>
+        <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
+        <item name="android:windowBackground">@drawable/splash</item>
         <item name="android:background">@drawable/splash</item>
+        <item name="android:statusBarColor">@color/tesbihat_splash_background</item>
+        <item name="android:navigationBarColor">@color/tesbihat_splash_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
     </style>
 </resources>
