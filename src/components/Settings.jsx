@@ -3,6 +3,7 @@ import { CITIES } from '../data/cities.js'
 import { notifyNow } from '../lib/notify.js'
 import { useLang } from '../lib/i18n.js'
 import LangChips from './LangChips.jsx'
+import CompletionCelebration from './CompletionCelebration.jsx'
 
 const REMINDER_OPTIONS = [5, 10, 15, 20, 30, 45, 60]
 const APP_VERSION = '1.21.2'
@@ -11,6 +12,7 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
   const { t } = useLang()
   const [gpsError, setGpsError] = useState('')
   const [gpsBusy, setGpsBusy] = useState(false)
+  const [celebrationPreviewId, setCelebrationPreviewId] = useState(0)
 
   const set = (patch) => setSettings((s) => ({ ...s, ...patch }))
 
@@ -121,6 +123,16 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
             </div>
           </div>
         </div>
+        <div className="set-row">
+          <div className="grow">
+            <label>{t('celebrationPreviewLabel')}</label>
+            <small>{t('celebrationPreviewHint')}</small>
+          </div>
+          <button type="button" className="btn-ghost" onClick={() => setCelebrationPreviewId((id) => id + 1)}>
+            {t('celebrationPreviewButton')}
+          </button>
+        </div>
+        {celebrationPreviewId > 0 && <CompletionCelebration key={celebrationPreviewId} />}
       </section>
 
       <p className="source-line settings-source-line">

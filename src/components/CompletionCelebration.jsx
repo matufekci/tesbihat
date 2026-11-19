@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 
 const GOLD = '255, 218, 146'
 const IVORY = '255, 247, 222'
@@ -166,9 +167,10 @@ export default function CompletionCelebration() {
     }
   }, [])
 
-  return (
+  const overlay = (
     <div className="completion-celebration" aria-hidden="true">
       <canvas ref={canvasRef} />
     </div>
   )
+  return typeof document === 'undefined' ? overlay : createPortal(overlay, document.body)
 }

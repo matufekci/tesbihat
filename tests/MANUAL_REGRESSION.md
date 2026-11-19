@@ -20,3 +20,4 @@ Run this checklist on representative Android devices before a release; automate 
 - [ ] Test compact phone, large phone, tablet, and foldable open/closed; resize/rotate while open and confirm content stays reachable and controls do not overlap.
 - [ ] Run through the main prayer flow, settings, city/GPS selection, notifications on/off, PWA install prompt, and offline-to-online recovery.
 - [ ] Complete a full prayer dhikr: the screen-wide celebration plays once only at the final completion; intermediate-step checks and reopening an already-completed prayer do not replay it. With reduced motion enabled, only the static glow is shown.
+- [ ] From Settings, use the celebration preview button: it plays the same effect without changing or completing dhikr progress, and can be replayed.
