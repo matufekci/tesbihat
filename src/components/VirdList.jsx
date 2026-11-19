@@ -87,8 +87,48 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
   const [started, setStarted] = useState(false)
   const [gpsBusy, setGpsBusy] = useState(false)
   const [gpsError, setGpsError] = useState('')
+  const [quickExpanded, setQuickExpanded] = useState(false)
+  const [sheetDragY, setSheetDragY] = useState(0)
+  const [sheetDragging, setSheetDragging] = useState(false)
+  const sheetGesture = useRef(null)
+  const suppressHandleClick = useRef(false)
   const vakit = pinned ?? detected ?? 'aksam'
   const auto = pinned == null
+
+  const startSheetDrag = (event) => {
+    if (event.button != null && event.button !== 0) return
+    sheetGesture.current = { startY: event.clientY }
+    setSheetDragging(true)
+    suppressHandleClick.current = false
+    event.currentTarget.setPointerCapture?.(event.pointerId)
+  }
+  const moveSheetDrag = (event) => {
+    if (!sheetGesture.current) return
+    setSheetDragY(Math.max(-110, Math.min(110, event.clientY - sheetGesture.current.startY)))
+  }
+  const finishSheetDrag = (event) => {
+    if (!sheetGesture.current) return
+    const distance = event.clientY - sheetGesture.current.startY
+    sheetGesture.current = null
+    setSheetDragging(false)
+    setSheetDragY(0)
+    if (Math.abs(distance) > 8) suppressHandleClick.current = true
+    if (distance < -40) setQuickExpanded(true)
+    else if (distance > 40) setQuickExpanded(false)
+  }
+  const cancelSheetDrag = () => {
+    sheetGesture.current = null
+    setSheetDragging(false)
+    setSheetDragY(0)
+  }
+  const toggleSheet = (event) => {
+    if (suppressHandleClick.current) {
+      suppressHandleClick.current = false
+      event.preventDefault()
+      return
+    }
+    setQuickExpanded((expanded) => !expanded)
+  }
 
   const pickCity = (cityId) => setSettings?.((s) => ({ ...s, cityId, custom: null }))
   const useGps = () => {
@@ -112,7 +152,7 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
 
   return (
     <>
-    <main className="screen vird-screen start-screen">
+    <main className={`screen vird-screen start-screen${quickExpanded ? ' sheet-expanded' : ''}`}>
       <div className="start-wrap">
         <div className="start-orn" aria-hidden="true"><span /><i>◆</i><span /></div>
         <p className="start-verse" lang="ar" dir="rtl">فَإِذَا قَضَيْتُمُ الصَّلَاةَ فَاذْكُرُوا اللَّهَ قِيَامًا وَقُعُودًا وَعَلَىٰ جُنُوبِكُمْ ۚ فَإِذَا اطْمَأْنَنتُمْ فَأَقِيمُوا الصَّلَاةَ ۚ إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا</p>
@@ -123,55 +163,78 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
         <button className="start-cta" onClick={() => setStarted(true)}>{t('startCta')}</button>
       </div>
 
-      {/* Hızlı ayarlar — ilk açılışta gerekenleri burada seç, Ayarlar'a dönmeye gerek kalmasın */}
       {settings && (
-        <section className="quick-card" aria-label={t('quickSettings')}>
-          <div className="quick-head">{t('quickSettings')}</div>
-          <div className="quick-row">
-            <label className="quick-label" htmlFor="quick-city">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.4-6.5-10.5A6.5 6.5 0 0 1 12 4a6.5 6.5 0 0 1 6.5 6.5C18.5 15.6 12 21 12 21Z"/><circle cx="12" cy="10.5" r="2.3"/></svg>
-              {t('locationGroup')}
-            </label>
-            <div className="quick-controls">
-              <select id="quick-city" className="quick-select" value={settings.custom ? 'custom' : settings.cityId} onChange={(e) => e.target.value !== 'custom' && pickCity(e.target.value)}>
-                {settings.custom && <option value="custom">{settings.custom.name}</option>}
-                {CITIES.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
-              <button type="button" className="quick-gps" onClick={useGps} disabled={gpsBusy} aria-label={gpsBusy ? t('gpsBusy') : t('gpsButton')} title={gpsBusy ? t('gpsBusy') : t('gpsButton')}>
-                {gpsBusy
-                  ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="2.6"/></svg>
-                  : <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7.5"/></svg>}
+        <section
+          className={`quick-sheet${quickExpanded ? ' is-expanded' : ''}${sheetDragging ? ' is-dragging' : ''}`}
+          style={{ '--sheet-drag-y': `${sheetDragY}px` }}
+          aria-label={t('quickSettings')}
+        >
+          <button
+            type="button"
+            className="quick-sheet-handle"
+            aria-expanded={quickExpanded}
+            aria-controls="quick-settings-panel"
+            onClick={toggleSheet}
+            onPointerDown={startSheetDrag}
+            onPointerMove={moveSheetDrag}
+            onPointerUp={finishSheetDrag}
+            onPointerCancel={cancelSheetDrag}
+          >
+            <span className="quick-sheet-grabber" aria-hidden="true" />
+            <span className="quick-sheet-headline">
+              <span>{t('quickSettings')}</span>
+              <span className="quick-sheet-current">{vlabel(vakit)}</span>
+              <svg className={quickExpanded ? 'open' : ''} width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </span>
+          </button>
+
+          <div className="vakit-chips bottom-vakit-chips" role="group" aria-label={t('vakitPick')}>
+            {!auto && (
+              <button className="chip chip-auto" onClick={() => setPinned(null)}>{t('autoChip')}</button>
+            )}
+            {VAKIT_ORDER.map((v) => (
+              <button key={v} className={`chip ${v === vakit ? 'active' : ''}`} onClick={() => setPinned(v)}>
+                {vlabel(v)}
               </button>
-            </div>
+            ))}
           </div>
-          {gpsError && <div className="gps-error quick-error">{gpsError}</div>}
-          <div className="quick-row">
-            <label className="quick-label" htmlFor="quick-notif">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8"/><path d="M13.7 20a2 2 0 0 1-3.4 0"/></svg>
-              {t('notifLabel')}
-            </label>
-            <div className="quick-controls">
-              {settings.notifEnabled && (
-                <select className="quick-select quick-min" aria-label={t('reminderLabel')} value={settings.reminderMin} onChange={(e) => setSettings?.((s) => ({ ...s, reminderMin: parseInt(e.target.value, 10) }))}>
-                  {REMINDER_OPTIONS.map((m) => <option key={m} value={m}>{t('reminderOption', { m })}</option>)}
+
+          <div id="quick-settings-panel" className={`quick-sheet-settings${quickExpanded ? ' is-expanded' : ''}`} aria-hidden={!quickExpanded}>
+            <div className="quick-row">
+              <label className="quick-label" htmlFor="quick-city">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.4-6.5-10.5A6.5 6.5 0 0 1 12 4a6.5 6.5 0 0 1 6.5 6.5C18.5 15.6 12 21 12 21Z"/><circle cx="12" cy="10.5" r="2.3"/></svg>
+                {t('locationGroup')}
+              </label>
+              <div className="quick-controls">
+                <select id="quick-city" className="quick-select" value={settings.custom ? 'custom' : settings.cityId} onChange={(e) => e.target.value !== 'custom' && pickCity(e.target.value)}>
+                  {settings.custom && <option value="custom">{settings.custom.name}</option>}
+                  {CITIES.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
-              )}
-              <button id="quick-notif" type="button" className="switch" role="switch" aria-checked={settings.notifEnabled} aria-label={t('notifSwitchAria')} onClick={() => onToggleNotif?.(!settings.notifEnabled)} />
+                <button type="button" className="quick-gps" onClick={useGps} disabled={gpsBusy} aria-label={gpsBusy ? t('gpsBusy') : t('gpsButton')} title={gpsBusy ? t('gpsBusy') : t('gpsButton')}>
+                  {gpsBusy
+                    ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="2.6"/></svg>
+                    : <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7.5"/></svg>}
+                </button>
+              </div>
+            </div>
+            {gpsError && <div className="gps-error quick-error">{gpsError}</div>}
+            <div className="quick-row">
+              <label className="quick-label" htmlFor="quick-notif">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8"/><path d="M13.7 20a2 2 0 0 1-3.4 0"/></svg>
+                {t('notifLabel')}
+              </label>
+              <div className="quick-controls">
+                {settings.notifEnabled && (
+                  <select className="quick-select quick-min" aria-label={t('reminderLabel')} value={settings.reminderMin} onChange={(e) => setSettings?.((s) => ({ ...s, reminderMin: parseInt(e.target.value, 10) }))}>
+                    {REMINDER_OPTIONS.map((m) => <option key={m} value={m}>{t('reminderOption', { m })}</option>)}
+                  </select>
+                )}
+                <button id="quick-notif" type="button" className="switch" role="switch" aria-checked={settings.notifEnabled} aria-label={t('notifSwitchAria')} onClick={() => onToggleNotif?.(!settings.notifEnabled)} />
+              </div>
             </div>
           </div>
         </section>
       )}
-
-      <div className="vakit-chips bottom-vakit-chips" role="group" aria-label={t('vakitPick')}>
-        {!auto && (
-          <button className="chip chip-auto" onClick={() => setPinned(null)}>{t('autoChip')}</button>
-        )}
-        {VAKIT_ORDER.map((v) => (
-          <button key={v} className={`chip ${v === vakit ? 'active' : ''}`} onClick={() => setPinned(v)}>
-            {vlabel(v)}
-          </button>
-        ))}
-      </div>
     </main>
 
     {started && (
