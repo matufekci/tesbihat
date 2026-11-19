@@ -233,7 +233,18 @@ body {
   contain:strict;
   mix-blend-mode:screen;
 }
-.completion-celebration canvas { display:block; width:100%; height:100%; }
+.completion-preview-star {
+  position:absolute;
+  z-index:0;
+  left:50%;
+  top:50%;
+  width:88px;
+  height:88px;
+  transform:translate(-50%,-50%);
+  color:var(--gold-bright);
+  filter:drop-shadow(0 0 24px rgba(236,201,126,.55));
+}
+.completion-celebration canvas { position:absolute; z-index:1; inset:0; display:block; width:100%; height:100%; }
 @media (prefers-reduced-motion:reduce) {
   .completion-celebration { background:radial-gradient(circle at var(--celebration-origin-x, 50%) var(--celebration-origin-y, 50%), rgba(236,201,126,.16), transparent 48%); }
 }

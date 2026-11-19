@@ -51,6 +51,8 @@ function makeSparks(width, height, cx, cy) {
 
 export default function CompletionCelebration({ originRef }) {
   const canvasRef = useRef(null)
+  const fallbackOriginRef = useRef(null)
+  const activeOriginRef = originRef ?? fallbackOriginRef
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -71,7 +73,7 @@ export default function CompletionCelebration({ originRef }) {
     const rings = [0, 145, 285]
 
     const updateOrigin = () => {
-      const rect = originRef?.current?.getBoundingClientRect?.()
+      const rect = activeOriginRef?.current?.getBoundingClientRect?.()
       if (rect && rect.width > 0 && rect.height > 0) {
         originX = rect.left + rect.width / 2
         originY = rect.top + rect.height / 2
@@ -193,10 +195,15 @@ export default function CompletionCelebration({ originRef }) {
       else motionPreference?.removeListener?.(onMotionPreferenceChange)
       context.clearRect(0, 0, width, height)
     }
-  }, [originRef])
+  }, [activeOriginRef])
 
   const overlay = (
     <div className="completion-celebration" aria-hidden="true">
+      {!originRef && (
+        <svg ref={fallbackOriginRef} className="completion-preview-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinejoin="round">
+          <path d="M12 2l2.6 6.2 6.7.3-5.2 4.3 1.8 6.4L12 16l-5.9 3.2 1.8-6.4-5.2-4.3 6.7-.3L12 2Z" fill="rgba(236,201,126,.18)"/>
+        </svg>
+      )}
       <canvas ref={canvasRef} />
     </div>
   )
