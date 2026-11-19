@@ -87,8 +87,23 @@ export default function App() {
   useEffect(() => { saveSettings(settings) }, [settings])
 
   useEffect(() => {
-    const t = setInterval(() => setNow(new Date()), 1000)
-    return () => clearInterval(t)
+    let timer
+    const scheduleMinuteTick = () => {
+      const delay = 60000 - (Date.now() % 60000)
+      timer = setTimeout(() => {
+        setNow(new Date())
+        scheduleMinuteTick()
+      }, delay)
+    }
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === 'visible') setNow(new Date())
+    }
+    scheduleMinuteTick()
+    document.addEventListener('visibilitychange', refreshWhenVisible)
+    return () => {
+      clearTimeout(timer)
+      document.removeEventListener('visibilitychange', refreshWhenVisible)
+    }
   }, [])
 
   const greg = new Intl.DateTimeFormat(langById(lang).intl, { weekday: 'long', day: 'numeric', month: 'long' }).format(now)

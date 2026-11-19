@@ -194,10 +194,10 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
 
           <div className="vakit-chips bottom-vakit-chips" role="group" aria-label={t('vakitPick')}>
             {!auto && (
-              <button className="chip chip-auto" onClick={() => setPinned(null)}>{t('autoChip')}</button>
+              <button type="button" className="chip chip-auto" aria-pressed={auto} onClick={() => setPinned(null)}>{t('autoChip')}</button>
             )}
             {VAKIT_ORDER.map((v) => (
-              <button key={v} className={`chip ${v === vakit ? 'active' : ''}`} onClick={() => setPinned(v)}>
+              <button type="button" key={v} className={`chip ${v === vakit ? 'active' : ''}`} aria-pressed={v === vakit && !auto} onClick={() => setPinned(v)}>
                 {vlabel(v)}
               </button>
             ))}
@@ -420,6 +420,7 @@ function VirdFlow({ vakit, onClose }) {
         </button>
       </div>
 
+      <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">{isCounter ? `${t('count')} ${count} / ${target}` : step.title}</div>
       <div className="guided-body inflow" key={idx} ref={guidedBodyRef} style={{ '--qs': fontScale }}>
         <div className="g-section">{sectionOf(idx)}</div>
         <h2 className="g-title">{step.title}</h2>

@@ -34,9 +34,9 @@ export default function Splash({ onDone, onboard = false, theme = 'dark', onThem
       leavingStarted = true
       clearTimeout(exitTimer)
       setLeaving(true)
-      finishTimer = setTimeout(finish, 550)
+      finishTimer = setTimeout(finish, 250)
     }
-    const exitTimer = setTimeout(beginExit, 1450)
+    const exitTimer = setTimeout(beginExit, 350)
     window.addEventListener('pointerdown', beginExit, { once: true })
     return () => {
       clearTimeout(exitTimer)

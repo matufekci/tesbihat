@@ -2,7 +2,7 @@ name: Android APK
 
 on:
   push:
-    branches: [arena/956bc0c6-tesbihat, main]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -24,6 +24,9 @@ jobs:
 
       - name: Bağımlılıklar
         run: npm ci
+
+      - name: Otomatik regresyon testleri
+        run: npm test
 
       - name: Web derle
         run: npm run build

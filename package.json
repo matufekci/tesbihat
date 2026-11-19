@@ -6,6 +6,7 @@
   "description": "Tesbihat — beş vaktin ardından okunan zikir, salavât, dua ve sureler; her vakit için sayaçlı rehber",
   "scripts": {
     "dev": "vite",
+    "test": "node --test",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "cap:sync": "vite build && cap sync android",
