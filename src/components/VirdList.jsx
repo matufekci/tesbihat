@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { getStepsFor, COMMON_STEPS, getRizikDuasi } from '../data/vird.js'
 import { minutesOf, nowMinutes } from '../lib/prayer.js'
-import { todayKey, loadVakitProgress, loadDailyProgressSummary, saveVakitProgress, resetVakitProgress } from '../lib/store.js'
+import { todayKey, loadVakitProgress, saveVakitProgress, resetVakitProgress } from '../lib/store.js'
 import QuranBlock from './QuranBlock.jsx'
 import MeaningDisclosure from './MeaningDisclosure.jsx'
 import { QURAN } from '../data/quran.js'
@@ -94,7 +94,6 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
   const suppressHandleClick = useRef(false)
   const vakit = pinned ?? detected ?? 'aksam'
   const auto = pinned == null
-  const dailySummary = useMemo(() => loadDailyProgressSummary(), [started, todayKey(now)])
 
   const startSheetDrag = (event) => {
     if (event.button != null && event.button !== 0) return
@@ -162,19 +161,6 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
         <div className="start-orn" aria-hidden="true"><span /><i>◆</i><span /></div>
         <p className="start-verse" lang="ar" dir="rtl">فَإِذَا قَضَيْتُمُ الصَّلَاةَ فَاذْكُرُوا اللَّهَ قِيَامًا وَقُعُودًا وَعَلَىٰ جُنُوبِكُمْ ۚ فَإِذَا اطْمَأْنَنتُمْ فَأَقِيمُوا الصَّلَاةَ ۚ إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا</p>
         <p className="start-verse-tr">{t('startVerseTr')}</p>
-        <section className="dashboard-summary" aria-label={t('todaySummary')}>
-          <h2>{t('todaySummary')}</h2>
-          <div className="dashboard-metrics">
-            <article className="dashboard-metric">
-              <span>{t('prayersCompletedToday')}</span>
-              <strong>{dailySummary.completedVakits}<small> / {dailySummary.totalVakits}</small></strong>
-            </article>
-            <article className="dashboard-metric">
-              <span>{t('dhikrCountToday')}</span>
-              <strong>{dailySummary.dhikrCount}</strong>
-            </article>
-          </div>
-        </section>
         <div className="vakit-line" aria-label={t('vakitLineAria')}>
           <span className="vl-name">{vlabel(vakit)}</span>
         </div>
