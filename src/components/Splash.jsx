@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useLang } from '../lib/i18n.js'
 import splashEmblem from '../assets/tesbihat-splash-emblem.png'
 import LangChips from './LangChips.jsx'
@@ -8,7 +8,10 @@ import LangChips from './LangChips.jsx'
 export default function Splash({ onDone, onboard = false, theme = 'dark', onThemeChange, onRequestLocation, onRequestNotification, onOpenAppSettings, canOpenAppSettings = false }) {
   const { t } = useLang()
   const [leaving, setLeaving] = useState(false)
+  const onDoneRef = useRef(onDone)
   const [permissionState, setPermissionState] = useState({ location: 'idle', notification: 'idle' })
+
+  useEffect(() => { onDoneRef.current = onDone }, [onDone])
 
   const requestPermission = async (kind, request) => {
     setPermissionState((state) => ({ ...state, [kind]: 'pending' }))
@@ -23,16 +26,24 @@ export default function Splash({ onDone, onboard = false, theme = 'dark', onThem
 
   useEffect(() => {
     if (onboard) return undefined
-    const t1 = setTimeout(() => setLeaving(true), 2200)
-    const t2 = setTimeout(onDone, 2750)
-    const skip = () => setLeaving(true)
-    window.addEventListener('pointerdown', skip, { once: true })
-    return () => {
-      clearTimeout(t1)
-      clearTimeout(t2)
-      window.removeEventListener('pointerdown', skip)
+    let finishTimer
+    let leavingStarted = false
+    const finish = () => onDoneRef.current?.()
+    const beginExit = () => {
+      if (leavingStarted) return
+      leavingStarted = true
+      clearTimeout(exitTimer)
+      setLeaving(true)
+      finishTimer = setTimeout(finish, 550)
     }
-  }, [onDone, onboard])
+    const exitTimer = setTimeout(beginExit, 1450)
+    window.addEventListener('pointerdown', beginExit, { once: true })
+    return () => {
+      clearTimeout(exitTimer)
+      clearTimeout(finishTimer)
+      window.removeEventListener('pointerdown', beginExit)
+    }
+  }, [onboard])
 
   return (
     <div className={`splash${leaving ? ' is-leaving' : ''}${onboard ? ' is-onboard' : ''}`} data-theme={theme} aria-hidden={!onboard ? 'true' : undefined}>
