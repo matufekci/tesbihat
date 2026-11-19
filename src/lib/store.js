@@ -99,6 +99,18 @@ export function loadVakitProgress(vakit) {
   return sanitizeProgress(progress)
 }
 
+export function loadDailyProgressSummary() {
+  const vakits = readDay().vakits
+  let completedVakits = 0
+  let dhikrCount = 0
+  for (const vakit of VALID_VAKITS) {
+    const progress = sanitizeProgress(vakits[vakit])
+    if (progress.done) completedVakits += 1
+    dhikrCount += Object.values(progress.counts).reduce((sum, count) => sum + count, 0)
+  }
+  return { completedVakits, totalVakits: VALID_VAKITS.size, dhikrCount }
+}
+
 export function saveVakitProgress(vakit, progress) {
   if (!VALID_VAKITS.has(vakit)) return false
   try {

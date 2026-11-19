@@ -1,6 +1,6 @@
 import test, { beforeEach } from 'node:test'
 import assert from 'node:assert/strict'
-import { DEFAULT_SETTINGS, loadSettings, saveSettings, loadVakitProgress, saveVakitProgress, resetVakitProgress, todayKey } from '../src/lib/store.js'
+import { DEFAULT_SETTINGS, loadSettings, loadDailyProgressSummary, saveSettings, loadVakitProgress, saveVakitProgress, resetVakitProgress, todayKey } from '../src/lib/store.js'
 
 class MemoryStorage {
   values = new Map()
@@ -47,6 +47,12 @@ test('daily progress round-trips, resets one prayer, and rejects invalid prayer 
   assert.deepEqual(loadVakitProgress('unknown'), { idx: 0, counts: {}, done: false })
   assert.equal(resetVakitProgress('sabah'), true)
   assert.deepEqual(loadVakitProgress('sabah'), { idx: 0, counts: {}, done: false })
+})
+
+test('daily summary totals completed prayers and sanitized dhikr counts', () => {
+  saveVakitProgress('sabah', { idx: 8, counts: { tasbih: 33, salawat: 10 }, done: true })
+  saveVakitProgress('ogle', { idx: 2, counts: { tasbih: 7, invalid: -3 }, done: false })
+  assert.deepEqual(loadDailyProgressSummary(), { completedVakits: 1, totalVakits: 5, dhikrCount: 50 })
 })
 
 test('corrupt progress is bounded and cannot produce invalid counters', () => {
