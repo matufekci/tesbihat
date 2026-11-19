@@ -2,6 +2,13 @@
 
 Beş vaktin ardından okunan zikir, salavât, dua ve sureler için sayaçlı, anlık rehber. Web/PWA; Android'de ana ekrana eklenebilir, Capacitor + GitHub Actions ile APK üretilebilir.
 
+## İndir / Canlı Site
+
+- 🌐 **Canlı site:** https://matufekci.github.io/tesbihat/
+- 📱 **Son APK (debug):** https://github.com/matufekci/tesbihat/actions/runs/44560084785/artifacts/14548851348
+  - Derleme: https://github.com/matufekci/tesbihat/actions/runs/44560084785 (commit `ccefdf3`, 2026-11-19)
+  - Artifact adı: `tesbihat-debug-apk` (~8,5 MB, 30 gün saklanır)
+
 ## Özellikler
 
 - 🕌 Açılışta içinde bulunulan vaktin zikir ekranı doğrudan açılır (çevrimdışı anında, online tazelemeli)
@@ -24,7 +31,8 @@ npm run preview   # üretim önizlemesi (0.0.0.0:4173)
 
 ## Android (APK)
 
-`.github/workflows/apk.yml` her push'ta **debug APK** derleyip "Actions" sekmesinde artifact sunar.
+`.github/workflows/apk.yml` **debug APK** derleyip "Actions" sekmesinde artifact sunar.
+Son derleme: https://github.com/matufekci/tesbihat/actions/runs/44560084785
 Yerelde (Android SDK'lı makine): `npm run build && npx cap sync android && cd android && ./gradlew assembleDebug`
 
 ## Künye
