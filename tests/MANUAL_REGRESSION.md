@@ -13,6 +13,7 @@ Run this checklist on representative Android devices before a release; automate 
 - [ ] TalkBack: traverse onboarding, settings, prayer choices, switches, counters, next/back/close controls; labels and pressed/expanded states are meaningful, and counter updates are announced.
 - [ ] Increase Android display/font size to the largest supported setting and use the in-app A−/A+ controls; text remains readable without clipping or blocking primary actions.
 - [ ] Enable Android high-contrast text and inspect both light and dark themes, including selected/past prayer rows and focus indicators.
+- [ ] Select System theme, change the Android light/dark appearance while the app is open, and verify the app follows it. Explicit dark, light, and AMOLED selections should remain unchanged by later system changes.
 - [ ] Check Türkçe, English, Deutsch, Français, and Arabic; Arabic is RTL and Quran text remains legible.
 
 ## Device and Android compatibility

@@ -116,10 +116,11 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
         <div className="set-row">
           <div className="grow">
             <label>{t('themeLabel')}</label>
-            <div className="target-chips settings-theme-chips">
-              <button className={`chip ${settings.theme === 'dark' ? 'active' : ''}`} onClick={() => set({ theme: 'dark' })}>{t('themeDark')}</button>
-              <button className={`chip ${settings.theme === 'light' ? 'active' : ''}`} onClick={() => set({ theme: 'light' })}>{t('themeLight')}</button>
-              <button className={`chip ${settings.theme === 'amoled' ? 'active' : ''}`} onClick={() => set({ theme: 'amoled' })}>{t('themeAmoled')}</button>
+            <div className="target-chips settings-theme-chips" role="group" aria-label={t('themeLabel')}>
+              <button type="button" className={`chip ${settings.theme === 'system' ? 'active' : ''}`} aria-pressed={settings.theme === 'system'} onClick={() => set({ theme: 'system' })}>{t('themeSystem')}</button>
+              <button type="button" className={`chip ${settings.theme === 'dark' ? 'active' : ''}`} aria-pressed={settings.theme === 'dark'} onClick={() => set({ theme: 'dark' })}>{t('themeDark')}</button>
+              <button type="button" className={`chip ${settings.theme === 'light' ? 'active' : ''}`} aria-pressed={settings.theme === 'light'} onClick={() => set({ theme: 'light' })}>{t('themeLight')}</button>
+              <button type="button" className={`chip ${settings.theme === 'amoled' ? 'active' : ''}`} aria-pressed={settings.theme === 'amoled'} onClick={() => set({ theme: 'amoled' })}>{t('themeAmoled')}</button>
             </div>
           </div>
         </div>

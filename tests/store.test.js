@@ -34,6 +34,11 @@ test('settings discard invalid fields and validate custom coordinates', () => {
   })
 })
 
+test('system theme preference is accepted and persisted', () => {
+  assert.equal(saveSettings({ ...DEFAULT_SETTINGS, theme: 'system' }), true)
+  assert.equal(loadSettings().theme, 'system')
+})
+
 test('valid settings round-trip without preserving obsolete fields', () => {
   const settings = { ...DEFAULT_SETTINGS, cityId: 'diyarbakir', theme: 'amoled', reminderMin: 30, custom: { id: 'custom', name: 'Konum', lat: 37.91, lng: 40.24 }, laIlaheTarget: 200 }
   assert.equal(saveSettings(settings), true)

@@ -1065,7 +1065,7 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
 .settings-screen .settings-control { margin-top:6px; }
 .settings-screen .settings-control select { padding:8px 10px; border-radius:10px; font-size:14px; }
 .settings-screen .gps-btn { margin-top:6px; padding:7px 10px; border-radius:10px; }
-.settings-screen .settings-theme-chips { gap:6px; margin-top:7px; }
+.settings-screen .settings-theme-chips { gap:6px; margin-top:7px; flex-wrap:wrap; }
 .settings-screen .settings-theme-chips .chip { padding:6px 11px; font-size:11.5px; }
 .settings-screen .hint { margin:0; padding:2px 14px 8px; font-size:10.5px; line-height:1.5; }
 .settings-screen .settings-source-line { margin:12px 4px 4px !important; font-size:10px; line-height:1.5; }

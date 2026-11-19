@@ -5,7 +5,7 @@ import LangChips from './LangChips.jsx'
 
 // Açılış: ilk çalıştırmada dil + tema seçimi (onboarding), sonra marka animasyonu.
 // Onboarding modunda otomatik kapanmaz — kullanıcı "Başla" düğmesiyle geçer.
-export default function Splash({ onDone, onboard = false, theme = 'dark', onThemeChange, onRequestLocation, onRequestNotification, onOpenAppSettings, canOpenAppSettings = false }) {
+export default function Splash({ onDone, onboard = false, theme = 'dark', themeChoice = theme, onThemeChange, onRequestLocation, onRequestNotification, onOpenAppSettings, canOpenAppSettings = false }) {
   const { t } = useLang()
   const [leaving, setLeaving] = useState(false)
   const onDoneRef = useRef(onDone)
@@ -84,15 +84,19 @@ export default function Splash({ onDone, onboard = false, theme = 'dark', onThem
             <p className="welcome-permission-optional">{t('permissionOptional')}</p>
           </section>
           <div className="splash-theme" role="group" aria-label={t('themeLabel')}>
-            <button type="button" className={`theme-chip${theme === 'dark' ? ' active' : ''}`} aria-pressed={theme === 'dark'} onClick={() => onThemeChange?.('dark')}>
+            <button type="button" className={`theme-chip${themeChoice === 'system' ? ' active' : ''}`} aria-pressed={themeChoice === 'system'} onClick={() => onThemeChange?.('system')}>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              {t('themeSystem')}
+            </button>
+            <button type="button" className={`theme-chip${themeChoice === 'dark' ? ' active' : ''}`} aria-pressed={themeChoice === 'dark'} onClick={() => onThemeChange?.('dark')}>
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
               {t('themeDark')}
             </button>
-            <button type="button" className={`theme-chip${theme === 'light' ? ' active' : ''}`} aria-pressed={theme === 'light'} onClick={() => onThemeChange?.('light')}>
+            <button type="button" className={`theme-chip${themeChoice === 'light' ? ' active' : ''}`} aria-pressed={themeChoice === 'light'} onClick={() => onThemeChange?.('light')}>
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.4"/><path d="M12 2v2.6M12 19.4V22M2 12h2.6M19.4 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
               {t('themeLight')}
             </button>
-            <button type="button" className={`theme-chip${theme === 'amoled' ? ' active' : ''}`} aria-pressed={theme === 'amoled'} onClick={() => onThemeChange?.('amoled')}>
+            <button type="button" className={`theme-chip${themeChoice === 'amoled' ? ' active' : ''}`} aria-pressed={themeChoice === 'amoled'} onClick={() => onThemeChange?.('amoled')}>
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg>
               {t('themeAmoled')}
             </button>

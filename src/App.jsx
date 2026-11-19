@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { CITIES } from './data/cities.js'
 import { fetchTimes, offlineTimes, hijriFromIntl, minutesOf } from './lib/prayer.js'
 import { loadSettings, saveSettings } from './lib/store.js'
@@ -35,6 +35,13 @@ function timeUntilVakitEnds(timings, date) {
 export default function App() {
   const { t, lang } = useLang()
   const [settings, setSettings] = useState(loadSettings)
+  const [systemTheme, setSystemTheme] = useState(() => {
+    try {
+      const preference = window.matchMedia?.('(prefers-color-scheme: dark)')
+      return preference ? (preference.matches ? 'dark' : 'light') : 'dark'
+    } catch { return 'dark' }
+  })
+  const resolvedTheme = settings.theme === 'system' ? systemTheme : settings.theme
   const [tab, setTab] = useState('vird')
   const [now, setNow] = useState(() => new Date())
   const [timesData, setTimesData] = useState(() => initialTimes(loadSettings()))
@@ -83,7 +90,20 @@ export default function App() {
     toastTimer.current = setTimeout(() => setToast(''), 2600)
   }, [])
 
-  useEffect(() => { document.documentElement.dataset.theme = settings.theme }, [settings.theme])
+  useEffect(() => {
+    let preference
+    try { preference = window.matchMedia?.('(prefers-color-scheme: dark)') } catch { return undefined }
+    if (!preference) return undefined
+    const syncTheme = () => setSystemTheme(preference.matches ? 'dark' : 'light')
+    syncTheme()
+    if (preference.addEventListener) {
+      preference.addEventListener('change', syncTheme)
+      return () => preference.removeEventListener('change', syncTheme)
+    }
+    preference.addListener?.(syncTheme)
+    return () => preference.removeListener?.(syncTheme)
+  }, [])
+  useLayoutEffect(() => { document.documentElement.dataset.theme = resolvedTheme }, [resolvedTheme])
   useEffect(() => { saveSettings(settings) }, [settings])
 
   useEffect(() => {
@@ -188,7 +208,8 @@ export default function App() {
           <Splash
             onDone={settings.onboarded && settings.permissionsSetup ? () => setSplash(false) : completeOnboarding}
             onboard={!settings.onboarded || !settings.permissionsSetup}
-            theme={settings.theme}
+            theme={resolvedTheme}
+            themeChoice={settings.theme}
             onThemeChange={(th) => setSettings((s) => ({ ...s, theme: th }))}
             onRequestLocation={requestWelcomeLocation}
             onRequestNotification={requestWelcomeNotification}
