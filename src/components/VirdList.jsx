@@ -104,7 +104,11 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
   }
   const moveSheetDrag = (event) => {
     if (!sheetGesture.current) return
-    setSheetDragY(Math.max(-110, Math.min(110, event.clientY - sheetGesture.current.startY)))
+    const distance = event.clientY - sheetGesture.current.startY
+    setSheetDragY(Math.max(-110, Math.min(110, distance)))
+    // Expand/collapse while the finger is still moving, not only on pointer release.
+    if (distance < -24) setQuickExpanded(true)
+    else if (distance > 24) setQuickExpanded(false)
   }
   const finishSheetDrag = (event) => {
     if (!sheetGesture.current) return
