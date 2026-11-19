@@ -3,6 +3,7 @@ import { getStepsFor, COMMON_STEPS, getRizikDuasi } from '../data/vird.js'
 import { minutesOf, nowMinutes } from '../lib/prayer.js'
 import { todayKey, loadVakitProgress, saveVakitProgress, resetVakitProgress } from '../lib/store.js'
 import QuranBlock from './QuranBlock.jsx'
+import CompletionCelebration from './CompletionCelebration.jsx'
 import MeaningDisclosure from './MeaningDisclosure.jsx'
 import { QURAN } from '../data/quran.js'
 import { CITIES } from '../data/cities.js'
@@ -265,6 +266,8 @@ function VirdFlow({ vakit, onClose }) {
   const vlabel = (id) => t('vakit' + id.charAt(0).toUpperCase() + id.slice(1))
   const steps = useMemo(() => getStepsFor(vakit, lang), [vakit, lang])
   const [state, setState] = useState(() => loadVakitProgress(vakit))
+  const [celebrationId, setCelebrationId] = useState(0)
+  const wasDone = useRef(state.done)
   const [laTarget, setLaTarget] = useState(20)
   const [extraWindow, setExtraWindow] = useState(null)
   const [fontScale, setFontScale] = useState(() => {
@@ -282,6 +285,11 @@ function VirdFlow({ vakit, onClose }) {
   })
 
   useEffect(() => { saveVakitProgress(vakit, state) }, [vakit, state])
+
+  useEffect(() => {
+    if (state.done && !wasDone.current) setCelebrationId((id) => id + 1)
+    wasDone.current = state.done
+  }, [state.done])
 
   useEffect(() => {
     const node = guidedBodyRef.current
@@ -387,6 +395,7 @@ function VirdFlow({ vakit, onClose }) {
   if (state.done) {
     return (
       <div className="flow">
+        {celebrationId > 0 && <CompletionCelebration key={celebrationId} />}
         <div className="done-wrap">
           <svg className="done-star" width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinejoin="round" aria-hidden="true">
             <path d="M12 2l2.6 6.2 6.7.3-5.2 4.3 1.8 6.4L12 16l-5.9 3.2 1.8-6.4-5.2-4.3 6.7-.3L12 2Z" fill="rgba(236,201,126,.18)"/>

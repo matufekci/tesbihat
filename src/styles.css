@@ -223,6 +223,21 @@ body {
 .btn-secondary { flex: 1; padding: 13px; border-radius: 14px; border: 1px solid var(--line-strong); background: transparent; color: var(--gold); font-weight: 600; font-size: 14px; }
 .btn-gold { flex: 1.4; padding: 13px; border-radius: 14px; background: linear-gradient(180deg, var(--gold-bright), var(--gold)); color: #241a06; font-weight: 700; font-size: 14px; border: 0; }
 
+/* Tam vird bitişinde tek seferlik, merkezden yayılan kutlama efekti */
+.completion-celebration {
+  position:fixed;
+  inset:0;
+  z-index:75;
+  overflow:hidden;
+  pointer-events:none;
+  contain:strict;
+  mix-blend-mode:screen;
+}
+.completion-celebration canvas { display:block; width:100%; height:100%; }
+@media (prefers-reduced-motion:reduce) {
+  .completion-celebration { background:radial-gradient(circle at center, rgba(236,201,126,.16), transparent 48%); }
+}
+
 /* tamamlandı ekranı */
 .done-wrap { flex: 1; display:flex; flex-direction: column; align-items:center; justify-content:center; text-align:center; padding: 24px; gap: 8px; animation: fadeUp .4s ease both; }
 .done-star { color: var(--gold-bright); filter: drop-shadow(0 0 26px rgba(236,201,126,.5)); animation: pulseStar 2.4s ease-in-out infinite; }
