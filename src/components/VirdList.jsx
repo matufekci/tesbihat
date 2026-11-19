@@ -275,6 +275,7 @@ function VirdFlow({ vakit, onClose }) {
   })
   const [scrollCueVisible, setScrollCueVisible] = useState(false)
   const guidedBodyRef = useRef(null)
+  const doneStarRef = useRef(null)
   const swipeStartRef = useRef(null)
   const advancing = useRef(false)
 
@@ -395,9 +396,9 @@ function VirdFlow({ vakit, onClose }) {
   if (state.done) {
     return (
       <div className="flow">
-        {celebrationId > 0 && <CompletionCelebration key={celebrationId} />}
+        {celebrationId > 0 && <CompletionCelebration key={celebrationId} originRef={doneStarRef} />}
         <div className="done-wrap">
-          <svg className="done-star" width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinejoin="round" aria-hidden="true">
+          <svg ref={doneStarRef} className="done-star" width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.1" strokeLinejoin="round" aria-hidden="true">
             <path d="M12 2l2.6 6.2 6.7.3-5.2 4.3 1.8 6.4L12 16l-5.9 3.2 1.8-6.4-5.2-4.3 6.7-.3L12 2Z" fill="rgba(236,201,126,.18)"/>
           </svg>
           <h1 className="done-title">{t('doneTitle')}</h1>

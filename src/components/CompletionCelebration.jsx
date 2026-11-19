@@ -16,9 +16,7 @@ function rayDistance(cx, cy, angle, width, height) {
   return Math.min(xEdge, yEdge)
 }
 
-function makeSparks(width, height) {
-  const cx = width / 2
-  const cy = height / 2
+function makeSparks(width, height, cx, cy) {
   const sparks = []
   const total = 150
   for (let i = 0; i < total; i += 1) {
@@ -31,11 +29,10 @@ function makeSparks(width, height) {
       duration: 1000 + Math.random() * 520,
       size: 1 + Math.random() * 2.5,
       tail: 12 + Math.random() * 28,
-      phase: Math.random() * Math.PI * 2,
       color: Math.random() > 0.72 ? IVORY : GOLD,
     })
   }
-  // A smaller, softer second wave gives the central burst depth without obscuring the text.
+  // A smaller, softer second wave gives the star-origin burst depth without obscuring the text.
   for (let i = 0; i < 58; i += 1) {
     const angle = (i / 58) * Math.PI * 2 + (Math.random() - 0.5) * 0.08
     const edge = rayDistance(cx, cy, angle, width, height)
@@ -46,14 +43,13 @@ function makeSparks(width, height) {
       duration: 760 + Math.random() * 440,
       size: 0.8 + Math.random() * 1.6,
       tail: 8 + Math.random() * 18,
-      phase: Math.random() * Math.PI * 2,
       color: Math.random() > 0.55 ? IVORY : GOLD,
     })
   }
   return sparks
 }
 
-export default function CompletionCelebration() {
+export default function CompletionCelebration({ originRef }) {
   const canvasRef = useRef(null)
 
   useEffect(() => {
@@ -61,16 +57,32 @@ export default function CompletionCelebration() {
     const context = canvas?.getContext('2d', { alpha: true, desynchronized: true })
     if (!canvas || !context) return undefined
 
-    const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true
-    if (reducedMotion) return undefined
-
+    let motionPreference
+    try { motionPreference = window.matchMedia?.('(prefers-reduced-motion: reduce)') } catch { /* unsupported */ }
+    let reducedMotion = motionPreference?.matches === true
     let width = 0
     let height = 0
+    let originX = 0
+    let originY = 0
     let sparks = []
     let frameId = 0
     let startTime = 0
     const duration = 1850
     const rings = [0, 145, 285]
+
+    const updateOrigin = () => {
+      const rect = originRef?.current?.getBoundingClientRect?.()
+      if (rect && rect.width > 0 && rect.height > 0) {
+        originX = rect.left + rect.width / 2
+        originY = rect.top + rect.height / 2
+      } else {
+        originX = width / 2
+        originY = height / 2
+      }
+      const layer = canvas.parentElement
+      layer?.style.setProperty('--celebration-origin-x', `${originX}px`)
+      layer?.style.setProperty('--celebration-origin-y', `${originY}px`)
+    }
 
     const resize = () => {
       width = window.innerWidth
@@ -79,19 +91,20 @@ export default function CompletionCelebration() {
       canvas.width = Math.max(1, Math.round(width * dpr))
       canvas.height = Math.max(1, Math.round(height * dpr))
       context.setTransform(dpr, 0, 0, dpr, 0, 0)
-      sparks = makeSparks(width, height)
+      updateOrigin()
+      sparks = reducedMotion ? [] : makeSparks(width, height, originX, originY)
     }
 
     const draw = (time) => {
       if (!startTime) startTime = time
       const elapsed = time - startTime
-      const cx = width / 2
-      const cy = height / 2
+      const cx = originX
+      const cy = originY
       const maxRadius = Math.hypot(width, height) * 0.7
       context.clearRect(0, 0, width, height)
       context.globalCompositeOperation = 'lighter'
 
-      // Brief central ignition and three expanding, feathered shock rings.
+      // Brief ignition begins on the completion star; three feathered rings follow it outward.
       const flash = Math.max(0, 1 - elapsed / 480)
       if (flash > 0) {
         const radius = 12 + (1 - flash) * Math.min(width, height) * 0.42
@@ -153,19 +166,34 @@ export default function CompletionCelebration() {
       }
       context.shadowBlur = 0
       context.globalCompositeOperation = 'source-over'
-      if (elapsed < duration && !document.hidden) frameId = window.requestAnimationFrame(draw)
+      if (elapsed < duration && !document.hidden && !reducedMotion) frameId = window.requestAnimationFrame(draw)
+    }
+
+    const onMotionPreferenceChange = (event) => {
+      reducedMotion = event.matches
+      window.cancelAnimationFrame(frameId)
+      context.clearRect(0, 0, width, height)
+      if (!reducedMotion) {
+        startTime = 0
+        sparks = makeSparks(width, height, originX, originY)
+        frameId = window.requestAnimationFrame(draw)
+      }
     }
 
     resize()
-    startTime = 0
-    frameId = window.requestAnimationFrame(draw)
     window.addEventListener('resize', resize, { passive: true })
+    if (motionPreference?.addEventListener) motionPreference.addEventListener('change', onMotionPreferenceChange)
+    else motionPreference?.addListener?.(onMotionPreferenceChange)
+    if (!reducedMotion) frameId = window.requestAnimationFrame(draw)
+
     return () => {
       window.cancelAnimationFrame(frameId)
       window.removeEventListener('resize', resize)
+      if (motionPreference?.removeEventListener) motionPreference.removeEventListener('change', onMotionPreferenceChange)
+      else motionPreference?.removeListener?.(onMotionPreferenceChange)
       context.clearRect(0, 0, width, height)
     }
-  }, [])
+  }, [originRef])
 
   const overlay = (
     <div className="completion-celebration" aria-hidden="true">
