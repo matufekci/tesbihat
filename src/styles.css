@@ -1421,3 +1421,22 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
   .time-row.past .t-name, .time-row.past .t-clock { opacity:1; }
 }
 html { text-size-adjust:100%; -webkit-text-size-adjust:100%; }
+
+/* Tutarlı, kısa basma geri bildirimi; mevcut özel sayaç/CTA hareketlerini korur. */
+.icon-btn, .chip, .btn-secondary, .gps-btn, .welcome-permission-btn, .welcome-settings-btn,
+.switch, .mini-reset, .zundo, .btn-ghost {
+  transition:transform .12s ease, filter .12s ease, background-color .12s ease;
+}
+.icon-btn:active:not(:disabled), .chip:active, .btn-secondary:active, .gps-btn:active,
+.welcome-permission-btn:active:not(:disabled), .welcome-settings-btn:active,
+.switch:active, .mini-reset:active, .zundo:active, .btn-ghost:active {
+  transform:scale(.97);
+  filter:brightness(1.07);
+}
+.theme-chip {
+  transition:transform .12s ease, filter .12s ease, border-color .18s ease, color .18s ease, background .18s ease;
+}
+.theme-chip:active, .lang-chip:active, .quick-gps:active:not(:disabled) {
+  transform:scale(.97);
+  filter:brightness(1.07);
+}
