@@ -130,3 +130,21 @@ test('rose theme can be chosen during onboarding', async ({ page }) => {
   await page.reload()
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'rose')
 })
+
+test('long surahs grow to the same size as short Arabic prayers', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 700 })
+  await ready(page)
+  for (const [prayer, title] of [['Sabah', 'Yâsîn Suresi'], ['Akşam', 'Vâkıa Suresi']]) {
+    await page.locator('.bottom-vakit-chips').getByRole('button', { name: prayer, exact: true }).click()
+    await page.getByRole('button', { name: 'Tesbihata Başla' }).click()
+    await page.getByRole('button', { name: 'Adım listesini aç' }).click()
+    await page.getByRole('dialog', { name: 'Adım Listesi' }).getByRole('button', { name: new RegExp(title) }).click()
+    const text = page.locator('.quran-text')
+    await expect(text).toHaveCSS('font-size', '26px')
+    for (let i = 0; i < 4; i++) await page.getByRole('button', { name: 'Yazıyı büyüt' }).click()
+    await expect(text).toHaveCSS('font-size', '41.6px')
+    expect(await text.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
+    await page.getByRole('button', { name: 'Kapat', exact: true }).click()
+    await page.evaluate(() => localStorage.removeItem('tesbihat.fontScale'))
+  }
+})
