@@ -5,8 +5,8 @@ Beş vaktin ardından okunan zikir, salavât, dua ve sureler için sayaçlı, an
 ## İndir / Canlı Site
 
 - 🌐 **Canlı site:** https://matufekci.github.io/tesbihat/
-- 📱 **Son APK (debug):** https://github.com/matufekci/tesbihat/actions/runs/44777287558/artifacts/14650626795
-  - Derleme: https://github.com/matufekci/tesbihat/actions/runs/44777287558 (commit `f9b76e2`)
+- 📱 **Son APK (debug):** https://github.com/matufekci/tesbihat/actions/runs/44778614971/artifacts/14650174761
+  - Derleme: https://github.com/matufekci/tesbihat/actions/runs/44778614971 (commit `bd82d92`)
   - Artifact adı: `tesbihat-debug-apk` (~8,5 MB, 30 gün saklanır)
 
 ## Özellikler
@@ -38,7 +38,7 @@ Yayın öncesi sınırlamalar ve cihaz kontrolü için [yayına hazırlık notla
 ## Android (APK)
 
 `.github/workflows/apk.yml` **debug APK** derleyip "Actions" sekmesinde artifact sunar.
-Son derleme: https://github.com/matufekci/tesbihat/actions/runs/44777287558
+Son derleme: https://github.com/matufekci/tesbihat/actions/runs/44778614971
 Yerelde (Android SDK'lı makine): `npm run build && npx cap sync android && cd android && ./gradlew assembleDebug`
 
 ## Künye
