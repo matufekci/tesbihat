@@ -1,44 +1,28 @@
-// Tesbihat — sade bir app-shell service worker (çevrimdışı açılış)
-const CACHE = 'tesbihat-v50'
-const SHELL = ['./', './index.html', './manifest.webmanifest']
+// Cache version and asset list are generated from the production build.
+const CACHE = 'tesbihat-v__VERSION__'
+const ASSETS = JSON.parse('__PRECACHE_ASSETS__')
 
-self.addEventListener('install', (e) => {
-  self.skipWaiting()
-  e.waitUntil(
-    caches.open(CACHE).then((c) => c.addAll(SHELL).catch(() => undefined))
-  )
+self.addEventListener('install', (event) => {
+  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS)))
 })
 
-self.addEventListener('activate', (e) => {
-  e.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))
-    ).then(() => self.clients.claim())
-  )
+self.addEventListener('activate', (event) => {
+  event.waitUntil(caches.keys().then((keys) =>
+    Promise.all(keys.filter((key) => key.startsWith('tesbihat-v') && key !== CACHE).map((key) => caches.delete(key)))
+  ).then(() => self.clients.claim()))
 })
 
-self.addEventListener('fetch', (e) => {
-  const { request } = e
+self.addEventListener('fetch', (event) => {
+  const { request } = event
   if (request.method !== 'GET') return
   const url = new URL(request.url)
-  // API çağrıları: ağ öncelikli, düşerse sessiz (uygulamanın çevrimdışı hesabı var)
-  if (url.hostname.includes('aladhan.com')) {
-    e.respondWith(fetch(request).catch(() => caches.match(request)))
+  if (url.origin !== self.location.origin || !url.pathname.startsWith(new URL(self.registration.scope).pathname)) return
+  if (request.mode === 'navigate') {
+    event.respondWith(fetch(request).catch(() => caches.open(CACHE).then((cache) => cache.match('./index.html'))))
     return
   }
-  // Uygulama kabuğu: önbellek öncelikli, ağdan tazele
-  e.respondWith(
-    caches.match(request).then((cached) => {
-      const network = fetch(request)
-        .then((res) => {
-          if (res && res.ok && url.origin === self.location.origin) {
-            const copy = res.clone()
-            caches.open(CACHE).then((c) => c.put(request, copy))
-          }
-          return res
-        })
-        .catch(() => cached)
-      return cached || network
-    })
-  )
+  event.respondWith(caches.open(CACHE).then(async (cache) => {
+    const cached = await cache.match(request, { ignoreVary: true })
+    return cached || fetch(request)
+  }))
 })

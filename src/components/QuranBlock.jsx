@@ -1,5 +1,5 @@
 import React from 'react'
-import { QURAN, SURAH_NAMES, BASMALA } from '../data/quran.js'
+import { QURAN, BASMALA } from '../data/quran.js'
 import { useLang } from '../lib/i18n.js'
 
 const AR_DIGITS = '٠١٢٣٤٥٦٧٨٩'

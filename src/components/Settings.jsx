@@ -110,6 +110,25 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
         <p className="hint">{t('notifHint')}</p>
       </section>
 
+      {/* Ses ve Titreşim */}
+      <section className="settings-group">
+        <h3>{t('soundGroup')}</h3>
+        <div className="set-row">
+          <div className="grow">
+            <label htmlFor="sound-switch">{t('soundLabel')}</label>
+            <small>{t('soundSmall')}</small>
+          </div>
+          <button id="sound-switch" className="switch" role="switch" aria-checked={settings.soundEnabled !== false} aria-label={t('soundSwitchAria')} onClick={() => set({ soundEnabled: settings.soundEnabled === false })} />
+        </div>
+        <div className="set-row">
+          <div className="grow">
+            <label htmlFor="vibration-switch">{t('vibrationLabel')}</label>
+            <small>{t('vibrationSmall')}</small>
+          </div>
+          <button id="vibration-switch" className="switch" role="switch" aria-checked={settings.vibrationEnabled !== false} aria-label={t('vibrationSwitchAria')} onClick={() => set({ vibrationEnabled: settings.vibrationEnabled === false })} />
+        </div>
+      </section>
+
       {/* Görünüm */}
       <section className="settings-group">
         <h3>{t('appearanceGroup')}</h3>

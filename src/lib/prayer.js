@@ -57,7 +57,7 @@ export function offlineTimes(date, lat, lng) {
   const out = {}
   for (const k of Object.keys(t)) out[k] = t[k] != null ? fmtHM(t[k]) : null
   out.Sunset = out.Maghrib
-  out.Imsak = out.Imsak // Diyanet: imsak = fecr-i sâdık
+  // Diyanet: imsak = fecr-i sâdık (Imsak zaten yukarıda hesaplandı)
   return out
 }
 
@@ -86,7 +86,8 @@ export function hijriFromIntl(date, lang = 'tr') {
 
 function cleanTime(s) {
   const m = String(s ?? '').match(/\d{1,2}:\d{2}/)
-  return m ? m[0].padStart(5, '0') : null
+  const time = m ? m[0].padStart(5, '0') : null
+  return time && minutesOf(time) != null ? time : null
 }
 
 /** Bugünün vakitlerini döner: { timings:{Imsak,Sunrise,Dhuhr,Asr,Maghrib,Isha}, hijri, source } */
@@ -113,7 +114,7 @@ export async function fetchTimes({ lat, lng, date = new Date(), lang = 'tr' }) {
     const h = json?.data?.date?.hijri
     const hijri = h ? `${h.day} ${hijriMonthName(lang, (parseInt(h.month?.number, 10) || 1) - 1)} ${h.year}` : hijriFromIntl(date, lang)
     return { timings, hijri, source: 'aladhan' }
-  } catch (e) {
+  } catch {
     return { timings: offlineTimes(date, lat, lng), hijri: hijriFromIntl(date, lang), source: 'offline' }
   } finally {
     clearTimeout(timer)
@@ -121,9 +122,9 @@ export async function fetchTimes({ lat, lng, date = new Date(), lang = 'tr' }) {
 }
 
 export function minutesOf(hhmm) {
-  if (!hhmm) return null
+  if (typeof hhmm !== 'string' || !/^\d{1,2}:\d{2}$/.test(hhmm)) return null
   const [h, m] = hhmm.split(':').map(Number)
-  return h * 60 + m
+  return h < 24 && m < 60 ? h * 60 + m : null
 }
 
 export function nowMinutes(date = new Date()) {

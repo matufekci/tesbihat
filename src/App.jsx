@@ -127,7 +127,7 @@ export default function App() {
   }, [])
 
   const greg = new Intl.DateTimeFormat(langById(lang).intl, { weekday: 'long', day: 'numeric', month: 'long' }).format(now)
-  const hijri = useMemo(() => hijriFromIntl(now, lang), [lang, now.toDateString()])
+  const hijri = hijriFromIntl(now, lang)
 
   const location = useMemo(() => {
     if (settings.custom) return settings.custom
@@ -141,7 +141,6 @@ export default function App() {
       if (alive) setTimesData(d)
     })
     return () => { alive = false }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.lat, location.lng, dayKey, lang])
 
   // Ezan sonrası hatırlatmalar
@@ -166,7 +165,6 @@ export default function App() {
       }
     }
     scheduleReminders(events, { title: t('notifTitle'), body: (e) => e.body }).catch(() => {})
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timesData, settings.notifEnabled, settings.reminderMin, lang])
 

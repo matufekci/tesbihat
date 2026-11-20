@@ -70,3 +70,15 @@ test('storage quota failures do not crash the app', () => {
   assert.equal(saveVakitProgress('ogle', { idx: 1, counts: {}, done: false }), false)
   assert.equal(resetVakitProgress('ogle'), false)
 })
+
+test('sound and vibration settings persist independently and old settings get defaults', () => {
+  localStorage.setItem('tesbihat.settings', JSON.stringify({ theme: 'light' }))
+  assert.equal(loadSettings().soundEnabled, true)
+  assert.equal(loadSettings().vibrationEnabled, true)
+  assert.equal(saveSettings({ ...loadSettings(), soundEnabled: false, vibrationEnabled: false }), true)
+  assert.equal(loadSettings().soundEnabled, false)
+  assert.equal(loadSettings().vibrationEnabled, false)
+  localStorage.setItem('tesbihat.settings', JSON.stringify({ soundEnabled: 'false', vibrationEnabled: null }))
+  assert.equal(loadSettings().soundEnabled, true)
+  assert.equal(loadSettings().vibrationEnabled, true)
+})

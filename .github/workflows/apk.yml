@@ -28,6 +28,9 @@ jobs:
       - name: Otomatik regresyon testleri
         run: npm test
 
+      - name: Kod kontrolü
+        run: npm run lint
+
       - name: Web derle
         run: npm run build
 

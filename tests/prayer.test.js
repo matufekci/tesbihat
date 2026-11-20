@@ -34,3 +34,18 @@ test('failed prayer-time network request safely falls back to offline calculatio
     globalThis.fetch = previousFetch
   }
 })
+
+test('invalid times are rejected instead of entering calculations', () => {
+  for (const value of ['24:00', '12:60', 'noon', '', null, '10:30extra']) assert.equal(minutesOf(value), null)
+  assert.equal(minutesOf('9:05'), 545)
+})
+
+test('malformed API prayer times fall back to offline calculations', async () => {
+  const previousFetch = globalThis.fetch
+  globalThis.fetch = async () => ({ ok: true, json: async () => ({ data: { timings: { ...timings, Imsak: '99:99' } } }) })
+  try {
+    const result = await fetchTimes({ lat: 37.91, lng: 40.24, date: new Date(2026, 0, 15, 12) })
+    assert.equal(result.source, 'offline')
+    assert.notEqual(result.timings.Imsak, '99:99')
+  } finally { globalThis.fetch = previousFetch }
+})

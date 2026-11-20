@@ -4,7 +4,13 @@ import { tStatic } from './i18n.js'
 const isNative = () =>
   typeof window !== 'undefined' && window.Capacitor?.isNativePlatform?.() === true
 
-let scheduledIds = []
+// Serialize updates so a slow native schedule cannot undo a later cancellation.
+let operation = Promise.resolve()
+function enqueue(task) {
+  const result = operation.then(task, task)
+  operation = result.catch(() => {})
+  return result
+}
 
 export async function notificationPermission() {
   if (isNative()) {
@@ -24,24 +30,17 @@ export async function notificationPermission() {
 }
 
 /** Mevcut zamanlanmışları iptal eder ve events listesini (Date[]) zamanlar. */
-export async function scheduleReminders(events, { title = 'Tesbihat', body } = {}) {
-  await cancelReminders()
+export function scheduleReminders(events, { title = 'Tesbihat', body } = {}) {
+  return enqueue(() => scheduleRemindersNow(events, { title, body }))
+}
+
+async function scheduleRemindersNow(events, { title, body }) {
+  await cancelRemindersNow()
   const upcoming = events.filter((e) => e.when.getTime() > Date.now())
   if (!upcoming.length) return { scheduled: 0 }
 
   if (isNative()) {
     const { LocalNotifications } = await import('@capacitor/local-notifications')
-    scheduledIds = upcoming.map((_, i) => Date.now() % 100000 + i + 1)
-    await LocalNotifications.schedule({
-      notifications: upcoming.map((e, i) => ({
-        id: scheduledIds[i],
-        title: title,
-        body: body ? body(e) : e.body,
-        schedule: { at: e.when, allowWhileIdle: true },
-        extra: { prayerId: e.prayerId },
-        channelId: 'namaz-hatirlatma',
-      })),
-    })
     try {
       await LocalNotifications.createChannel({
         id: 'namaz-hatirlatma',
@@ -52,7 +51,18 @@ export async function scheduleReminders(events, { title = 'Tesbihat', body } = {
         sound: 'default',
         vibration: true,
       })
-    } catch { /* kanal zaten varsa yoksay */ }
+    } catch { /* channel creation is not supported on all platforms */ }
+    const scheduledIds = upcoming.map((_, i) => Date.now() % 100000 + i + 1)
+    await LocalNotifications.schedule({
+      notifications: upcoming.map((e, i) => ({
+        id: scheduledIds[i],
+        title: title,
+        body: body ? body(e) : e.body,
+        schedule: { at: e.when, allowWhileIdle: true },
+        extra: { prayerId: e.prayerId },
+        channelId: 'namaz-hatirlatma',
+      })),
+    })
     return { scheduled: upcoming.length, via: 'capacitor' }
   }
 
@@ -64,7 +74,11 @@ export async function scheduleReminders(events, { title = 'Tesbihat', body } = {
   return { scheduled: upcoming.length, via: 'web' }
 }
 
-export async function cancelReminders() {
+export function cancelReminders() {
+  return enqueue(cancelRemindersNow)
+}
+
+async function cancelRemindersNow() {
   if (isNative()) {
     try {
       const { LocalNotifications } = await import('@capacitor/local-notifications')
@@ -84,7 +98,7 @@ async function fireWeb(title, body, e) {
     if ('serviceWorker' in navigator) {
       const reg = await navigator.serviceWorker.getRegistration()
       if (reg?.showNotification) {
-        reg.showNotification(title, { body, icon: './icons/icon-192.png', badge: './icons/icon-192.png', tag: `tesbihat-${e.prayerId}` })
+        await reg.showNotification(title, { body, icon: './icons/icon-192.png', badge: './icons/icon-192.png', tag: `tesbihat-${e.prayerId}` })
         return
       }
     }

@@ -56,7 +56,8 @@ function detectVakit(timings, nowMin) {
   return 'yatsi'
 }
 
-function chime() {
+function chime(enabled = true) {
+  if (!enabled) return
   try {
     const Ctx = window.AudioContext || window.webkitAudioContext
     const ctx = new Ctx()
@@ -72,15 +73,16 @@ function chime() {
       o.connect(g).connect(ctx.destination)
       o.start(t0)
       o.stop(t0 + 1)
+      if (i === 2) o.onended = () => { ctx.close().catch(() => {}) }
     })
   } catch { /* ses yoksa sessiz devam */ }
 }
-const vibrate = (p) => { try { navigator.vibrate?.(p) } catch { /* yoksay */ } }
+const vibrate = (p, enabled = true) => { if (!enabled) return; try { navigator.vibrate?.(p) } catch { /* yoksay */ } }
 
 const REMINDER_OPTIONS = [5, 10, 15, 20, 30, 45, 60]
 
 export default function VirdList({ now, timesData, settings, setSettings, onToggleNotif, onToast }) {
-  const { t, lang } = useLang()
+  const { t } = useLang()
   const vlabel = (id) => t('vakit' + id.charAt(0).toUpperCase() + id.slice(1))
   const minuteStamp = Math.floor(nowMinutes(now))
   const detected = useMemo(() => detectVakit(timesData?.timings, minuteStamp), [timesData, minuteStamp])
@@ -244,7 +246,7 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
 
     {started && (
       <div className="flow-overlay" role="dialog" aria-modal="true" aria-label={t('appTitle')}>
-        <VirdFlow key={`${todayKey()}-${vakit}`} vakit={vakit} onClose={() => setStarted(false)} />
+        <VirdFlow key={`${todayKey()}-${vakit}`} vakit={vakit} settings={settings} onClose={() => setStarted(false)} />
       </div>
     )}
     </>
@@ -261,8 +263,10 @@ function quranMeanings({ sura, from, to }, lang) {
   return all.filter(([n]) => n >= lo && n <= hi).map(([n, , tr]) => [n, override[n] ?? tr])
 }
 
-function VirdFlow({ vakit, onClose }) {
+function VirdFlow({ vakit, settings, onClose }) {
   const { t, lang } = useLang()
+  const soundOn = settings?.soundEnabled !== false
+  const vibrationOn = settings?.vibrationEnabled !== false
   const vlabel = (id) => t('vakit' + id.charAt(0).toUpperCase() + id.slice(1))
   const steps = useMemo(() => getStepsFor(vakit, lang), [vakit, lang])
   const [state, setState] = useState(() => loadVakitProgress(vakit))
@@ -270,6 +274,7 @@ function VirdFlow({ vakit, onClose }) {
   const wasDone = useRef(state.done)
   const [laTarget, setLaTarget] = useState(20)
   const [extraWindow, setExtraWindow] = useState(null)
+  const [stepListOpen, setStepListOpen] = useState(false)
   const [fontScale, setFontScale] = useState(() => {
     try { const v = parseFloat(localStorage.getItem('tesbihat.fontScale')); return Number.isFinite(v) ? v : 1 } catch { return 1 }
   })
@@ -277,6 +282,7 @@ function VirdFlow({ vakit, onClose }) {
   const guidedBodyRef = useRef(null)
   const doneStarRef = useRef(null)
   const swipeStartRef = useRef(null)
+  const stepListButtonRef = useRef(null)
   const advancing = useRef(false)
 
   const bumpFont = (delta) => setFontScale((s) => {
@@ -326,20 +332,38 @@ function VirdFlow({ vakit, onClose }) {
     if (advancing.current) return
     advancing.current = true
     setTimeout(() => { advancing.current = false }, 150)
+    if (idx + 1 >= steps.length) { chime(soundOn); vibrate([40, 80, 40, 80, 160], vibrationOn) }
     setState((s) => {
       if (s.idx + 1 >= steps.length) {
-        chime()
-        vibrate([40, 80, 40, 80, 160])
         return { ...s, idx: steps.length - 1, done: true }
       }
       return { ...s, idx: s.idx + 1 }
     })
   }
   const goBack = () => setState((s) => (s.idx > 0 ? { ...s, idx: s.idx - 1, done: false } : s))
+  const closeStepList = () => {
+    setStepListOpen(false)
+    stepListButtonRef.current?.focus()
+  }
+  const handleStepListKeyDown = (event) => {
+    if (event.key === 'Escape') { event.stopPropagation(); closeStepList(); return }
+    if (event.key !== 'Tab') return
+    const buttons = [...event.currentTarget.querySelectorAll('button:not(:disabled)')]
+    if (!buttons.length) return
+    const first = buttons[0]
+    const last = buttons[buttons.length - 1]
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus() }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus() }
+  }
+  const jumpToStep = (targetIdx) => {
+    const clamped = Math.max(0, Math.min(steps.length - 1, targetIdx))
+    setState((s) => ({ ...s, idx: clamped, done: false }))
+    closeStepList()
+  }
 
   const startSwipe = (event) => {
     const touch = event.touches?.[0]
-    if (!touch || event.touches.length !== 1 || event.target.closest('button, a, input, select, textarea, [role="button"], .extra-window')) {
+    if (!touch || event.touches.length !== 1 || event.target.closest('button, a, input, select, textarea, [role="button"], .extra-window, .step-list-overlay')) {
       swipeStartRef.current = null
       return
     }
@@ -369,11 +393,11 @@ function VirdFlow({ vakit, onClose }) {
 
   const tapCounter = () => {
     if (!isCounter) return
-    vibrate(10)
+    vibrate(10, vibrationOn)
+    if (count + 1 >= target) { chime(soundOn); vibrate([25, 45, 25], vibrationOn) }
     setState((s) => {
       const c = (s.counts?.[step.id] ?? 0) + 1
       const reached = c >= target
-      if (reached) { chime(); vibrate([25, 45, 25]) }
       const next = { ...s, counts: { ...s.counts, [step.id]: c } }
       if (reached) {
         if (s.idx + 1 >= steps.length) return { ...next, done: true }
@@ -422,7 +446,7 @@ function VirdFlow({ vakit, onClose }) {
         <button className="icon-btn step-next-btn" onClick={goNext} aria-label={t('nextStep')} title={t('nextStep')}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
         </button>
-        <div className="g-step-label">{idx + 1}/{steps.length}</div>
+        <button ref={stepListButtonRef} className="g-step-label g-step-label-btn" onClick={() => setStepListOpen(true)} aria-label={t('stepListAria')} title={t('stepListAria')}>{idx + 1}/{steps.length}</button>
         <button className="font-btn" onClick={() => bumpFont(-0.15)} aria-label={t('fontSmall')} title={t('fontSmall')}>A−</button>
         <button className="font-btn" onClick={() => bumpFont(0.15)} aria-label={t('fontLarge')} title={t('fontLarge')}>A+</button>
         <button className="icon-btn" onClick={onClose} aria-label={t('close')} title={t('close')}>
@@ -535,6 +559,43 @@ function VirdFlow({ vakit, onClose }) {
           </div>
         )
       })()}
+
+      {stepListOpen && (
+        <div className="step-list-overlay" role="dialog" aria-modal="true" aria-label={t('stepList')} onKeyDown={handleStepListKeyDown}>
+          <div className="step-list-panel">
+            <div className="step-list-head">
+              <h2>{t('stepList')}</h2>
+              <button className="icon-btn" autoFocus onClick={closeStepList} aria-label={t('close')} title={t('close')}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+              </button>
+            </div>
+            <ol className="step-list-items">
+              {steps.map((s, i) => {
+                const isCurrent = i === idx
+                const sCount = state.counts?.[s.id] ?? 0
+                const sTarget = s.id === 'la-ilahe' ? laTarget : s.target ?? 1
+                const isCounterStep = s.type === 'counter'
+                return (
+                  <li key={s.id}>
+                    <button
+                      type="button"
+                      className={`step-list-item${isCurrent ? ' is-current' : ''}`}
+                      onClick={() => jumpToStep(i)}
+                      aria-current={isCurrent ? 'step' : undefined}
+                    >
+                      <span className="step-list-num">{i + 1}</span>
+                      <span className="step-list-title">{s.title}</span>
+                      <span className="step-list-meta">
+                        {isCurrent ? t('stepCurrent') : isCounterStep ? `${sCount}/${sTarget}` : ''}
+                      </span>
+                    </button>
+                  </li>
+                )
+              })}
+            </ol>
+          </div>
+        </div>
+      )}
 
     </div>
   )

@@ -25,9 +25,15 @@ Beş vaktin ardından okunan zikir, salavât, dua ve sureler için sayaçlı, an
 ```bash
 npm install
 npm run dev       # http://localhost:5173
+npm run lint      # statik kontrol
+npm test          # birim ve veri testleri
+npx playwright install --with-deps chromium
+npm run test:e2e  # tarayıcı regresyon testleri
 npm run build     # dist/ üretir
 npm run preview   # üretim önizlemesi (0.0.0.0:4173)
 ```
+
+Yayın öncesi sınırlamalar ve cihaz kontrolü için [yayına hazırlık notlarına](tests/RELEASE_READINESS.md) bakın.
 
 ## Android (APK)
 

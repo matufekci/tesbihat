@@ -16,6 +16,8 @@ export const DEFAULT_SETTINGS = Object.freeze({
   theme: 'dark',
   notifEnabled: false,
   reminderMin: 15,
+  soundEnabled: true,
+  vibrationEnabled: true,
   onboarded: false,
   permissionsSetup: false,
 })
@@ -40,6 +42,8 @@ function sanitizeSettings(value) {
     theme: VALID_THEMES.has(value.theme) ? value.theme : DEFAULT_SETTINGS.theme,
     notifEnabled: typeof value.notifEnabled === 'boolean' ? value.notifEnabled : DEFAULT_SETTINGS.notifEnabled,
     reminderMin: VALID_REMINDERS.has(value.reminderMin) ? value.reminderMin : DEFAULT_SETTINGS.reminderMin,
+    soundEnabled: typeof value.soundEnabled === 'boolean' ? value.soundEnabled : DEFAULT_SETTINGS.soundEnabled,
+    vibrationEnabled: typeof value.vibrationEnabled === 'boolean' ? value.vibrationEnabled : DEFAULT_SETTINGS.vibrationEnabled,
     onboarded: typeof value.onboarded === 'boolean' ? value.onboarded : DEFAULT_SETTINGS.onboarded,
     permissionsSetup: typeof value.permissionsSetup === 'boolean' ? value.permissionsSetup : DEFAULT_SETTINGS.permissionsSetup,
   }
