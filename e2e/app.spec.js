@@ -85,3 +85,21 @@ test('first launch works on a compact screen and language switches to RTL', asyn
   await page.reload()
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl')
 })
+
+test('date header remains readable without overflow on compact and wide screens', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 })
+  await ready(page)
+  for (const width of [320, 390, 1024]) {
+    await page.setViewportSize({ width, height: 720 })
+    const header = page.locator('.date-row')
+    await expect(header).toHaveCSS('font-size', '14px')
+    const fits = await header.evaluate((element) => {
+      const rect = element.getBoundingClientRect()
+      return [...element.children].every((child) => {
+        const box = child.getBoundingClientRect()
+        return box.left >= rect.left && box.right <= rect.right && child.scrollWidth <= child.clientWidth
+      })
+    })
+    expect(fits).toBe(true)
+  }
+})

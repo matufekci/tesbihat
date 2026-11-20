@@ -1416,8 +1416,8 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
   align-items:center;
   column-gap:8px;
   padding:10px 14px 2px !important;
-  font-size:11px !important;
-  line-height:1.35;
+  font-size:14px !important;
+  line-height:1.4;
 }
 .date-row .date-hijri,
 .date-row .date-countdown,
@@ -1425,8 +1425,11 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
 .date-row .date-hijri { text-align:start; overflow-wrap:anywhere; }
 .date-row .date-countdown { text-align:center; color:var(--cream-dim); font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
 .date-row .date-gregorian { text-align:end; text-transform:capitalize; overflow-wrap:anywhere; }
-@media (max-width:360px) {
-  .app > .date-row { column-gap:5px; padding-inline:10px !important; }
+@media (max-width:480px) {
+  .app > .date-row { grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:2px 8px; padding-inline:10px !important; }
+  .date-row .date-hijri { grid-column:1; grid-row:1; }
+  .date-row .date-gregorian { grid-column:2; grid-row:1; }
+  .date-row .date-countdown { grid-column:1 / -1; grid-row:2; }
 }
 
 /* Adaptive large-screen layouts and user accessibility preferences. */
