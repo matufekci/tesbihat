@@ -944,9 +944,12 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
 .start-wrap .vakit-line .vl-name { font-size: 22px !important; }
 
 
-/* v1.19.11 — metni ilerleten sağ-alt ok düğmesi ve biraz daha küçük halkalar */
-.counter-ring { width:92px; height:92px; }
+/* Sayaç ve devam halkaları aynı dış ölçüde ve çizgi kalınlığında kalır. */
+.counter-ring { width:92px; height:92px; flex:0 0 92px; }
 .counter-ring svg { width:92px; height:92px; flex-basis:92px; }
+.counter-ring .ring-bg { stroke:rgba(217,179,108,.45); }
+[data-theme='light'] .counter-ring .ring-bg { stroke:rgba(120,90,30,.4); }
+[data-theme='rose'] .counter-ring .ring-bg { stroke:var(--line-strong); }
 .counter-num b { font-size:29px; }
 .done-ring { width:92px; height:92px; flex-basis:92px; }
 .guided-body > .flow-dock-float { flex-direction:row; align-items:center; justify-content:center; }

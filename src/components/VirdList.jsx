@@ -413,7 +413,7 @@ function VirdFlow({ vakit, settings, onClose }) {
     setLaTarget(20)
   }
 
-  const ring = 2 * Math.PI * 41
+  const ring = 2 * Math.PI * 45
   const offset = isCounter ? ring * (1 - Math.min(1, count / target)) : 0
   const arabicLong = step?.arabic && (Array.isArray(step.arabic) ? step.arabic.join('').length : step.arabic.length) > 200
 
@@ -512,8 +512,8 @@ function VirdFlow({ vakit, settings, onClose }) {
                     <stop offset="100%" stopColor="#a87f3d" />
                   </linearGradient>
                 </defs>
-                <circle className="ring-bg" cx="46" cy="46" r="41" strokeWidth="8" fill="none" />
-                <circle className="ring-fg" cx="46" cy="46" r="41" strokeWidth="8" fill="none"
+                <circle className="ring-bg" cx="46" cy="46" r="45" strokeWidth="2" fill="none" />
+                <circle className="ring-fg" cx="46" cy="46" r="45" strokeWidth="2" fill="none"
                         stroke="url(#goldGrad)" strokeDasharray={ring} strokeDashoffset={offset} />
               </svg>
               <span className="counter-num">

@@ -237,3 +237,25 @@ test('settings sections collapse and language heading is multilingual without te
   await expect(page.locator('#reminder')).toBeVisible()
   await expect(page.locator('#sound-switch')).toBeVisible()
 })
+
+test('counter and check rings have matching size and stroke', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 700 })
+  await ready(page)
+  await expect(page.locator('.splash')).toHaveCount(0)
+  await page.locator('.bottom-vakit-chips').getByRole('button', { name: 'Akşam', exact: true }).click()
+  await page.getByRole('button', { name: 'Tesbihata Başla' }).click()
+  const counter = page.locator('.counter-ring')
+  const counterBox = await counter.boundingBox()
+  const geometry = await counter.locator('.ring-bg').evaluate((circle) => ({
+    radius: Number(circle.getAttribute('r')),
+    strokeWidth: Number(circle.getAttribute('stroke-width')),
+  }))
+  await page.getByRole('button', { name: 'Sonraki adıma geç' }).click()
+  const done = page.locator('.done-ring')
+  await expect(done).toBeVisible()
+  const doneBox = await done.boundingBox()
+  expect(counterBox.width).toBe(doneBox.width)
+  expect(counterBox.height).toBe(doneBox.height)
+  expect(geometry.radius * 2 + geometry.strokeWidth).toBe(doneBox.width)
+  expect(geometry.strokeWidth).toBe(parseFloat(await done.evaluate((el) => window.getComputedStyle(el).borderTopWidth)))
+})
