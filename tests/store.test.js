@@ -82,3 +82,8 @@ test('sound and vibration settings persist independently and old settings get de
   assert.equal(loadSettings().soundEnabled, true)
   assert.equal(loadSettings().vibrationEnabled, true)
 })
+
+test('dusty rose theme is accepted and persists', () => {
+  assert.equal(saveSettings({ ...DEFAULT_SETTINGS, theme: 'rose' }), true)
+  assert.equal(loadSettings().theme, 'rose')
+})

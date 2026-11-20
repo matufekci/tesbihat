@@ -3,7 +3,7 @@ import { CITIES } from '../data/cities.js'
 
 const SETTINGS_KEY = 'tesbihat.settings'
 const DAY_KEY = 'tesbihat.day'
-const VALID_THEMES = new Set(['dark', 'light', 'amoled', 'system'])
+const VALID_THEMES = new Set(['dark', 'light', 'amoled', 'system', 'rose'])
 const VALID_REMINDERS = new Set([5, 10, 15, 20, 30, 45, 60])
 const VALID_VAKITS = new Set(['sabah', 'ogle', 'ikindi', 'aksam', 'yatsi'])
 const VALID_CITY_IDS = new Set(CITIES.map((city) => city.id))

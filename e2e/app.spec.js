@@ -103,3 +103,30 @@ test('date header remains readable without overflow on compact and wide screens'
     expect(fits).toBe(true)
   }
 })
+
+test('rose theme can be selected, persists and is readable in the prayer flow', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await ready(page)
+  await page.getByRole('button', { name: 'Ayarlar', exact: true }).click()
+  await page.getByRole('button', { name: 'Gül Kurusu' }).click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'rose')
+  await expect(page.getByRole('button', { name: 'Gül Kurusu' })).toHaveAttribute('aria-pressed', 'true')
+  await page.reload()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'rose')
+  await page.getByRole('button', { name: 'Tesbihata Başla' }).click()
+  await expect(page.locator('.flow-overlay')).toBeVisible()
+  await expect(page.locator('.g-title')).toHaveCSS('color', 'rgb(53, 35, 42)')
+  await page.getByRole('button', { name: 'Adım listesini aç' }).click()
+  await expect(page.getByRole('dialog', { name: 'Adım Listesi' })).toBeVisible()
+})
+
+test('rose theme can be chosen during onboarding', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 700 })
+  await page.goto('./')
+  await page.getByRole('button', { name: 'Gül Kurusu' }).click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'rose')
+  await page.getByRole('button', { name: 'Başla', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Tesbihata Başla' })).toBeVisible()
+  await page.reload()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'rose')
+})

@@ -140,6 +140,7 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
               <button type="button" className={`chip ${settings.theme === 'dark' ? 'active' : ''}`} aria-pressed={settings.theme === 'dark'} onClick={() => set({ theme: 'dark' })}>{t('themeDark')}</button>
               <button type="button" className={`chip ${settings.theme === 'light' ? 'active' : ''}`} aria-pressed={settings.theme === 'light'} onClick={() => set({ theme: 'light' })}>{t('themeLight')}</button>
               <button type="button" className={`chip ${settings.theme === 'amoled' ? 'active' : ''}`} aria-pressed={settings.theme === 'amoled'} onClick={() => set({ theme: 'amoled' })}>{t('themeAmoled')}</button>
+              <button type="button" className={`chip ${settings.theme === 'rose' ? 'active' : ''}`} aria-pressed={settings.theme === 'rose'} onClick={() => set({ theme: 'rose' })}>{t('themeRose')}</button>
             </div>
           </div>
         </div>

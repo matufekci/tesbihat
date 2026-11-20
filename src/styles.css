@@ -1520,3 +1520,68 @@ html { text-size-adjust:100%; -webkit-text-size-adjust:100%; }
 .step-list-title { flex: 1 1 auto; min-width: 0; }
 .step-list-meta { flex: 0 0 auto; font-size: 11px; color: var(--cream-dim); letter-spacing: .04em; }
 .step-list-item.is-current .step-list-meta { color: var(--gold-bright); }
+
+/* Gül kurusu: krem yüzeyler, koyu mürdüm metin ve gül tonlu vurgular. */
+[data-theme='rose'] {
+  --bg-0:#f2e4e2;
+  --bg-1:#fff9f6;
+  --bg-2:#f9eeeb;
+  --bg-3:#fffdfb;
+  --card:rgba(255,253,251,.92);
+  --card-solid:#fffdfb;
+  --line:rgba(132,67,85,.20);
+  --line-strong:rgba(132,67,85,.38);
+  --gold:#844355;
+  --gold-bright:#71364a;
+  --gold-deep:#a65d70;
+  --cream:#35232a;
+  --cream-dim:#665058;
+  --green:#844355;
+  --ok:#267145;
+  --shadow:0 18px 40px rgba(92,46,59,.16);
+}
+[data-theme='rose'] body { background:#f2e4e2; }
+[data-theme='rose'] .app,
+[data-theme='rose'] .flow-overlay,
+[data-theme='rose'] .guided,
+[data-theme='rose'] .extra-window { background:linear-gradient(180deg,#fff9f6,#f9eeeb); }
+[data-theme='rose'] .app-title { background:linear-gradient(180deg,#f8e9e8,#fff9f6) !important; border-bottom-color:var(--line) !important; }
+[data-theme='rose'] .gear-btn { background:#fff8f6 !important; border-color:var(--line-strong) !important; color:var(--gold-bright); }
+[data-theme='rose'] .start-verse { color:#493039; text-shadow:none; }
+[data-theme='rose'] .start-cta,
+[data-theme='rose'] .btn-primary,
+[data-theme='rose'] .btn-gold,
+[data-theme='rose'] .splash-continue { background:#844355; color:#fff; box-shadow:0 9px 24px rgba(132,67,85,.24) !important; }
+[data-theme='rose'] .start-cta { animation:none; }
+[data-theme='rose'] .quick-sheet,
+[data-theme='rose'] .quick-sheet-handle { background:#fff9f6; }
+[data-theme='rose'] .quick-sheet { box-shadow:0 -10px 28px rgba(92,46,59,.15); }
+[data-theme='rose'] .quick-sheet-grabber { background:rgba(132,67,85,.55); }
+[data-theme='rose'] .quick-gps,
+[data-theme='rose'] .lang-chip,
+[data-theme='rose'] .theme-chip,
+[data-theme='rose'] .welcome-permission-btn,
+[data-theme='rose'] .welcome-settings-btn { background:#fff8f6; color:#71364a; border-color:var(--line-strong); }
+[data-theme='rose'] .lang-chip.active,
+[data-theme='rose'] .theme-chip.active,
+[data-theme='rose'] .chip.active { background:#844355; color:#fff; border-color:#844355; box-shadow:none; }
+[data-theme='rose'] .switch { background:#eadbdc; border-color:var(--line-strong); }
+[data-theme='rose'] .switch::after { background:#77636a; }
+[data-theme='rose'] .switch[aria-checked='true'] { background:#844355; }
+[data-theme='rose'] .switch[aria-checked='true']::after { background:#fff; }
+[data-theme='rose'] .flow-dock { background:linear-gradient(180deg,transparent,rgba(166,93,112,.08)); }
+[data-theme='rose'] .done-ring { background:radial-gradient(circle at 50% 38%,#fffdfb,#f5e4e5 75%); color:#71364a; border-color:var(--line-strong); box-shadow:0 10px 30px rgba(92,46,59,.16); }
+[data-theme='rose'] .meaning-panel { background:#fff9f6; }
+[data-theme='rose'] .step-list-item.is-current { background:#f7e9e9; }
+[data-theme='rose'] .step-list-item.is-current .step-list-num { background:#844355; border-color:#844355; color:#fff; }
+[data-theme='rose'] .gps-error { color:#a03345; }
+.splash[data-theme='rose'] { background:radial-gradient(800px 600px at 50% -10%,#f4dfdf,transparent 65%),#fff9f6; }
+.splash[data-theme='rose'] .welcome-permissions { background:#fff9f6; border-color:var(--line); }
+.splash[data-theme='rose'] .splash-emblem-orbit-outer { border-color:rgba(132,67,85,.35); }
+.splash[data-theme='rose'] .splash-emblem-orbit-inner { border-color:rgba(132,67,85,.2); border-left-color:transparent; border-right-color:transparent; }
+.splash[data-theme='rose'] .splash-foot { color:#665058; }
+@media (prefers-contrast:more) {
+  [data-theme='rose'] { --line:rgba(53,35,42,.4); --line-strong:rgba(53,35,42,.72); --cream-dim:#49343c; }
+}
+[data-theme='rose'] .vakit-chips .chip { background:#f6e8e8; border-color:var(--line-strong) !important; color:#71364a; }
+[data-theme='rose'] .vakit-chips .chip.active { background:#844355 !important; color:#fff !important; border-color:#844355 !important; box-shadow:none !important; }
