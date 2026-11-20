@@ -105,8 +105,3 @@ async function fireWeb(title, body, e) {
     if (Notification.permission === 'granted') new Notification(title, { body, icon: './icons/icon-192.png' })
   } catch { /* kullanıcı bildirimi reddetmiş olabilir */ }
 }
-
-/** Hemen tek bildirim (test için) */
-export async function notifyNow(title, body) {
-  await fireWeb(title, body, { prayerId: 'test' })
-}

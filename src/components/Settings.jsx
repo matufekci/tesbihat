@@ -1,18 +1,35 @@
 import React, { useState } from 'react'
 import { CITIES } from '../data/cities.js'
-import { notifyNow } from '../lib/notify.js'
 import { useLang } from '../lib/i18n.js'
 import LangChips from './LangChips.jsx'
-import CompletionCelebration from './CompletionCelebration.jsx'
 
 const REMINDER_OPTIONS = [5, 10, 15, 20, 30, 45, 60]
 const APP_VERSION = '1.21.2'
+
+const LANGUAGE_TITLES = [
+  ['tr', 'Dil Seçimi'], ['ar', 'اختيار اللغة'], ['de', 'Sprachauswahl'],
+  ['fr', 'Choix de la langue'], ['en', 'Language selection'],
+]
+
+function SettingsGroup({ title, children }) {
+  return (
+    <details className="settings-group">
+      <summary className="settings-group-summary"><span>{title}</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
+      <div className="settings-group-content">{children}</div>
+    </details>
+  )
+}
+
+function LanguageTitle() {
+  return LANGUAGE_TITLES.map(([lang, title], i) => (
+    <React.Fragment key={lang}>{i > 0 && ' / '}<bdi lang={lang}>{title}</bdi></React.Fragment>
+  ))
+}
 
 export default function Settings({ settings, setSettings, onToggleNotif, onToast }) {
   const { t } = useLang()
   const [gpsError, setGpsError] = useState('')
   const [gpsBusy, setGpsBusy] = useState(false)
-  const [celebrationPreviewId, setCelebrationPreviewId] = useState(0)
 
   const set = (patch) => setSettings((s) => ({ ...s, ...patch }))
 
@@ -44,19 +61,17 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
       </header>
 
       {/* Dil */}
-      <section className="settings-group">
-        <h3>{t('languageGroup')}</h3>
+      <SettingsGroup title={<LanguageTitle />}>
         <div className="set-row">
           <div className="grow">
             <small className="settings-description">{t('languageSmall')}</small>
             <LangChips large />
           </div>
         </div>
-      </section>
+      </SettingsGroup>
 
       {/* Konum */}
-      <section className="settings-group">
-        <h3>{t('locationGroup')}</h3>
+      <SettingsGroup title={t('locationGroup')}>
         <div className="set-row">
           <div className="grow">
             <label htmlFor="city">{t('cityLabel')}</label>
@@ -74,11 +89,10 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
             {gpsError && <div className="gps-error">{gpsError}</div>}
           </div>
         </div>
-      </section>
+      </SettingsGroup>
 
       {/* Hatırlatmalar */}
-      <section className="settings-group">
-        <h3>{t('notifGroup')}</h3>
+      <SettingsGroup title={t('notifGroup')}>
         <div className="set-row">
           <div className="grow">
             <label htmlFor="notif-switch">{t('notifLabel')}</label>
@@ -98,21 +112,13 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
                 </div>
               </div>
             </div>
-            <div className="set-row">
-              <div className="grow">
-                <label>{t('testLabel')}</label>
-                <small>{t('testSmall')}</small>
-              </div>
-              <button className="btn-ghost" onClick={() => notifyNow(t('testNotifTitle'), t('testNotifBody'))}>{t('testButton')}</button>
-            </div>
           </>
         )}
         <p className="hint">{t('notifHint')}</p>
-      </section>
+      </SettingsGroup>
 
       {/* Ses ve Titreşim */}
-      <section className="settings-group">
-        <h3>{t('soundGroup')}</h3>
+      <SettingsGroup title={t('soundGroup')}>
         <div className="set-row">
           <div className="grow">
             <label htmlFor="sound-switch">{t('soundLabel')}</label>
@@ -127,11 +133,10 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
           </div>
           <button id="vibration-switch" className="switch" role="switch" aria-checked={settings.vibrationEnabled !== false} aria-label={t('vibrationSwitchAria')} onClick={() => set({ vibrationEnabled: settings.vibrationEnabled === false })} />
         </div>
-      </section>
+      </SettingsGroup>
 
       {/* Görünüm */}
-      <section className="settings-group">
-        <h3>{t('appearanceGroup')}</h3>
+      <SettingsGroup title={t('appearanceGroup')}>
         <div className="set-row">
           <div className="grow">
             <label>{t('themeLabel')}</label>
@@ -144,17 +149,7 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
             </div>
           </div>
         </div>
-        <div className="set-row">
-          <div className="grow">
-            <label>{t('celebrationPreviewLabel')}</label>
-            <small>{t('celebrationPreviewHint')}</small>
-          </div>
-          <button type="button" className="btn-ghost" onClick={() => setCelebrationPreviewId((id) => id + 1)}>
-            {t('celebrationPreviewButton')}
-          </button>
-        </div>
-        {celebrationPreviewId > 0 && <CompletionCelebration key={celebrationPreviewId} />}
-      </section>
+      </SettingsGroup>
 
       <p className="source-line settings-source-line">
         {t('versionLine', { v: APP_VERSION })}<br />
