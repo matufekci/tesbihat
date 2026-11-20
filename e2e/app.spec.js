@@ -278,3 +278,24 @@ test('returning users see the splash emblem before the app opens', async ({ page
   await expect(splash).toHaveCount(0)
   await expect(page.getByRole('button', { name: 'Tesbihata Başla' })).toBeVisible()
 })
+
+test('animated startup appears before the application JavaScript is ready', async ({ page }) => {
+  let releaseScript
+  const scriptGate = new Promise((resolve) => { releaseScript = resolve })
+  await page.route('**/assets/*.js', async (route) => {
+    await scriptGate
+    await route.continue()
+  })
+  await page.addInitScript(() => localStorage.setItem('tesbihat.settings', JSON.stringify({ onboarded: true, permissionsSetup: true })))
+  await page.goto('./', { waitUntil: 'commit' })
+  const startup = page.locator('.startup')
+  await expect(startup).toBeVisible()
+  const mark = startup.locator('img')
+  await expect.poll(() => mark.evaluate((img) => img.complete && img.naturalWidth > 0)).toBe(true)
+  await expect(mark).toHaveCSS('animation-name', 'startup-reveal')
+  expect(await page.locator('html').evaluate((el) => window.getComputedStyle(el).backgroundColor)).toBe('rgb(6, 15, 12)')
+  releaseScript()
+  await expect(page.locator('.splash img.splash-star')).toBeVisible()
+  await expect(page.locator('.splash')).toHaveCount(0, { timeout: 15000 })
+  await expect(page.getByRole('button', { name: 'Tesbihata Başla' })).toBeVisible()
+})

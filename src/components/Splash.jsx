@@ -1,13 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useLang } from '../lib/i18n.js'
-import splashEmblem from '../assets/tesbihat-splash-emblem.png'
 import LangChips from './LangChips.jsx'
+
+const splashEmblem = `${import.meta.env.BASE_URL}icons/splash-emblem.png`
 
 // Açılış: ilk çalıştırmada dil + tema seçimi (onboarding), sonra marka animasyonu.
 // Onboarding modunda otomatik kapanmaz — kullanıcı "Başla" düğmesiyle geçer.
 export default function Splash({ onDone, onboard = false, theme = 'dark', themeChoice = theme, onThemeChange, onRequestLocation, onRequestNotification, onOpenAppSettings, canOpenAppSettings = false }) {
   const { t } = useLang()
   const [leaving, setLeaving] = useState(false)
+  const [emblemReady, setEmblemReady] = useState(false)
   const onDoneRef = useRef(onDone)
   const [permissionState, setPermissionState] = useState({ location: 'idle', notification: 'idle' })
 
@@ -25,7 +27,7 @@ export default function Splash({ onDone, onboard = false, theme = 'dark', themeC
   const needsSettings = permissionState.location === 'denied' || permissionState.notification === 'denied'
 
   useEffect(() => {
-    if (onboard) return undefined
+    if (onboard || !emblemReady) return undefined
     // Let the emblem and title animations complete before fading out. The
     // underlying screen must not receive the tap that dismisses the splash.
     let finishTimer
@@ -37,14 +39,14 @@ export default function Splash({ onDone, onboard = false, theme = 'dark', themeC
       clearTimeout(exitTimer)
       clearTimeout(finishTimer)
     }
-  }, [onboard])
+  }, [onboard, emblemReady])
 
   return (
     <div className={`splash${leaving ? ' is-leaving' : ''}${onboard ? ' is-onboard' : ''}`} data-theme={theme} aria-hidden={!onboard ? 'true' : undefined}>
       <div className="splash-emblem" aria-hidden="true">
         <span className="splash-emblem-orbit splash-emblem-orbit-outer" />
         <span className="splash-emblem-orbit splash-emblem-orbit-inner" />
-        <img className="splash-star" src={splashEmblem} width="184" height="184" alt="" />
+        <img className="splash-star" src={splashEmblem} width="184" height="184" alt="" onLoad={() => setEmblemReady(true)} onError={() => setEmblemReady(true)} />
       </div>
       <div className="splash-eyebrow">{t('eyebrow')}</div>
       <h1 className="splash-title">{t('appTitle')}</h1>
