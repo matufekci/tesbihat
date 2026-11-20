@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a2620" />
+    <meta name="description" content="Beş vaktin ardından okunan zikir, salavât, dua ve sureler — adım adım rehber. Guided dhikr after the five daily prayers, in Türkçe, العربية, Deutsch, Français and English." />
+    <title>Tesbihat · Namaz Sonrası Zikir</title>
+    <link rel="preload" as="image" href="./icons/splash-emblem.png" />
+    <style>
+      html, body, #root { margin: 0; min-height: 100%; background: #060f0c; }
+      .startup { position: fixed; inset: 0; display: grid; place-items: center; background: radial-gradient(1100px 720px at 50% -8%, rgba(46,93,75,.42), transparent 58%), radial-gradient(800px 620px at 50% 118%, rgba(217,179,108,.2), transparent 55%), #060f0c; }
+      .startup-mark { position: relative; width: 184px; height: 184px; display: grid; place-items: center; animation: startup-float 5.4s ease-in-out infinite; }
+      .startup-mark::before, .startup-mark::after { content: ''; position: absolute; border-radius: 50%; }
+      .startup-mark::before { inset: 2%; border: 1px dashed rgba(236,201,126,.34); animation: startup-spin 24s linear infinite; }
+      .startup-mark::after { inset: 8%; border: 1px solid rgba(217,179,108,.2); border-left-color: transparent; border-right-color: transparent; animation: startup-spin 18s linear infinite reverse; }
+      .startup-mark img { width: 166px; height: 166px; object-fit: contain; filter: drop-shadow(0 10px 32px rgba(217,179,108,.32)); animation: startup-reveal 1.05s ease-out both; }
+      @keyframes startup-reveal { from { opacity: 0; transform: scale(.68) rotate(-18deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+      @keyframes startup-float { 50% { transform: translateY(-4px); } }
+      @keyframes startup-spin { to { transform: rotate(360deg); } }
+      @media (prefers-reduced-motion: reduce) { .startup-mark, .startup-mark::before, .startup-mark::after, .startup-mark img { animation: none; } }
+    </style>
+    <link rel="icon" type="image/png" href="./icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+  </head>
+  <body>
+    <div id="root"><div class="startup" aria-hidden="true"><div class="startup-mark"><img src="./icons/splash-emblem.png" alt="" width="166" height="166" /></div></div></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

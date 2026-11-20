@@ -1,0 +1,14 @@
+{
+  "appId": "com.matufekci.tesbihat",
+  "appName": "Tesbihat",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_tesbihat"
+    }
+  }
+}

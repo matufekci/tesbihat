@@ -1,0 +1,26 @@
+# bağımlılıklar / derleme çıktıları
+node_modules/
+dist/
+
+# android derleme
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/captures/
+android/.idea/
+
+# kullanıcı çalışma alanı (Drive'dan inen geçici dosyalar)
+google_drive/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+*.log
+.env
+.env.*
+
+# Playwright çıktıları
+test-results/
+playwright-report/
