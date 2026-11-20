@@ -1584,3 +1584,35 @@ html { text-size-adjust:100%; -webkit-text-size-adjust:100%; }
 }
 [data-theme='rose'] .vakit-chips .chip { background:#f6e8e8; border-color:var(--line-strong) !important; color:#71364a; }
 [data-theme='rose'] .vakit-chips .chip.active { background:#844355 !important; color:#fff !important; border-color:#844355 !important; box-shadow:none !important; }
+
+/* Açık temalarda dua sonu notu ve âyetler yeterli kontrastla okunur. */
+[data-theme='light'] .rizik-endnote { background:#fff8ea; border-color:#c5a565; }
+[data-theme='light'] .ren-line { color:#49391e; }
+[data-theme='light'] .ren-ayah { background:#f1e5ce; color:#35291c; }
+[data-theme='light'] .ren-num { background:#75551d; color:#fff; }
+[data-theme='rose'] .rizik-endnote { background:#fff6f2; border-color:#d4a7ae; }
+[data-theme='rose'] .ren-line { color:#54303c; }
+[data-theme='rose'] .ren-ayah { background:#f3e3e3; color:#4b2835; }
+[data-theme='rose'] .ren-num { background:#844355; color:#fff; }
+
+/* Tema seçenekleri dar ekranlarda gizli yatay şerit yerine iki satırdan fazla olsa da görünür. */
+.splash-theme,
+.settings-screen .settings-theme-chips {
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:6px;
+  width:100%;
+  overflow:visible;
+}
+.settings-screen .set-row .grow { min-width:0; }
+.splash-theme .theme-chip,
+.settings-screen .settings-theme-chips .chip {
+  width:100%;
+  min-width:0;
+  min-height:44px;
+  justify-content:center;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  text-align:center;
+  line-height:1.25;
+}

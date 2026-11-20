@@ -148,3 +148,63 @@ test('long surahs grow to the same size as short Arabic prayers', async ({ page 
     await page.evaluate(() => localStorage.removeItem('tesbihat.fontScale'))
   }
 })
+
+for (const theme of ['rose', 'light']) {
+  test(`provision prayer end note is legible in ${theme} theme`, async ({ page }) => {
+    await page.addInitScript((value) => {
+      localStorage.setItem('tesbihat.settings', JSON.stringify({ onboarded: true, permissionsSetup: true, theme: value }))
+    }, theme)
+    await page.goto('./')
+    await page.locator('.bottom-vakit-chips').getByRole('button', { name: 'Akşam', exact: true }).click()
+    await page.getByRole('button', { name: 'Tesbihata Başla' }).click()
+    await page.getByRole('button', { name: 'Adım listesini aç' }).click()
+    await page.getByRole('dialog', { name: 'Adım Listesi' }).getByRole('button', { name: /Vâkıa Suresi/ }).click()
+    await page.getByRole('button', { name: /Rızık Duasını Oku/ }).click()
+    const note = page.locator('.rizik-endnote')
+    await expect(note).toBeVisible()
+    await expect(note.locator('.ren-ayah')).toHaveCount(2)
+    // Compare the computed foreground and solid background colors using WCAG contrast.
+    for (const selector of ['.ren-line', '.ren-ayah', '.ren-num']) {
+      const ratio = await note.locator(selector).first().evaluate((el, selector) => {
+        const parse = (color) => color.match(/[\d.]+/g).slice(0, 3).map(Number)
+        const luminance = (rgb) => rgb.map((c) => {
+          c /= 255
+          return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+        }).reduce((sum, c, i) => sum + c * [0.2126, 0.7152, 0.0722][i], 0)
+        const style = window.getComputedStyle(el)
+        const bg = selector === '.ren-line' ? window.getComputedStyle(el.parentElement).backgroundColor : style.backgroundColor
+        const a = luminance(parse(style.color)), b = luminance(parse(bg))
+        return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05)
+      }, selector)
+      expect(ratio).toBeGreaterThanOrEqual(4.5)
+    }
+  })
+}
+
+test('all theme options fit on onboarding and settings without horizontal scrolling', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 })
+  await page.goto('./')
+  const onboarding = page.locator('.splash-theme')
+  await expect(onboarding.getByRole('button')).toHaveCount(5)
+  const checkFits = async (group) => {
+    const fits = await group.evaluate((container) => {
+      const parent = container.getBoundingClientRect()
+      return container.scrollWidth <= container.clientWidth && [...container.querySelectorAll('button')].every((button) => {
+        const rect = button.getBoundingClientRect()
+        return rect.left >= parent.left - 1 && rect.right <= parent.right + 1 && button.scrollWidth <= button.clientWidth
+      })
+    })
+    expect(fits).toBe(true)
+  }
+  await checkFits(onboarding)
+  await onboarding.getByRole('button', { name: 'Gül Kurusu' }).click()
+  await page.getByRole('button', { name: 'Başla', exact: true }).click()
+  await page.getByRole('button', { name: 'Ayarlar', exact: true }).click()
+  const settings = page.locator('.settings-theme-chips')
+  await expect(settings.getByRole('button')).toHaveCount(5)
+  await checkFits(settings)
+  await expect(settings.getByRole('button', { name: 'Gül Kurusu' })).toHaveAttribute('aria-pressed', 'true')
+  await page.getByRole('button', { name: /العربية/ }).click()
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl')
+  await checkFits(settings)
+})
