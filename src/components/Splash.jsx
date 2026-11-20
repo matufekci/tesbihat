@@ -26,22 +26,16 @@ export default function Splash({ onDone, onboard = false, theme = 'dark', themeC
 
   useEffect(() => {
     if (onboard) return undefined
+    // Let the emblem and title animations complete before fading out. The
+    // underlying screen must not receive the tap that dismisses the splash.
     let finishTimer
-    let leavingStarted = false
-    const finish = () => onDoneRef.current?.()
-    const beginExit = () => {
-      if (leavingStarted) return
-      leavingStarted = true
-      clearTimeout(exitTimer)
+    const exitTimer = setTimeout(() => {
       setLeaving(true)
-      finishTimer = setTimeout(finish, 250)
-    }
-    const exitTimer = setTimeout(beginExit, 350)
-    window.addEventListener('pointerdown', beginExit, { once: true })
+      finishTimer = setTimeout(() => onDoneRef.current?.(), 550)
+    }, 2200)
     return () => {
       clearTimeout(exitTimer)
       clearTimeout(finishTimer)
-      window.removeEventListener('pointerdown', beginExit)
     }
   }, [onboard])
 

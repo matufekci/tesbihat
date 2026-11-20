@@ -6,6 +6,7 @@ async function ready(page) {
   })
   await page.goto('./')
   await expect(page.getByRole('button', { name: 'Tesbihata Başla' })).toBeVisible({ timeout: 15000 })
+  await expect(page.locator('.splash')).toHaveCount(0, { timeout: 15000 })
 }
 
 test('settings and step navigation survive reload', async ({ page }) => {
@@ -258,4 +259,22 @@ test('counter and check rings have matching size and stroke', async ({ page }) =
   expect(counterBox.height).toBe(doneBox.height)
   expect(geometry.radius * 2 + geometry.strokeWidth).toBe(doneBox.width)
   expect(geometry.strokeWidth).toBe(parseFloat(await done.evaluate((el) => window.getComputedStyle(el).borderTopWidth)))
+})
+
+test('returning users see the splash emblem before the app opens', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('tesbihat.settings', JSON.stringify({ onboarded: true, permissionsSetup: true })))
+  await page.clock.install()
+  await page.goto('./')
+  const splash = page.locator('.splash')
+  await expect(splash).toBeVisible()
+  const emblem = splash.locator('img.splash-star')
+  await expect(emblem).toBeVisible()
+  await expect.poll(() => emblem.evaluate((img) => img.complete && img.naturalWidth > 0)).toBe(true)
+  await page.clock.fastForward(1500)
+  await expect(splash).not.toHaveClass(/is-leaving/)
+  await page.clock.fastForward(700)
+  await expect(splash).toHaveClass(/is-leaving/)
+  await page.clock.fastForward(550)
+  await expect(splash).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Tesbihata Başla' })).toBeVisible()
 })
