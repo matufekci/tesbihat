@@ -21,3 +21,9 @@ Run this checklist on representative Android devices before a release; automate 
 - [ ] Test compact phone, large phone, tablet, and foldable open/closed; resize/rotate while open and confirm content stays reachable and controls do not overlap.
 - [ ] Run through the main prayer flow, settings, city/GPS selection, notifications on/off, PWA install prompt, and offline-to-online recovery.
 - [ ] Complete a full prayer dhikr: the screen-wide celebration starts at the completion star and radiates outward; it plays once only at final completion. Intermediate-step checks and reopening an already-completed prayer do not replay it. With reduced motion enabled, only a static glow centered on the star is shown.
+
+### Android açılış ekranı
+- Güncel APK'yı yükleyip uygulamayı zorla durdurun; başlatıcıdan açınca hilal ve tespihli ekranın görünerek ana ekrana geçtiğini doğrulayın (soğuk açılış).
+- Uygulamayı arka plana alın, yeniden başlatıcıdan ve son uygulamalar ekranından açın; açılış ekranını ve önceki durumun korunduğunu doğrulayın (sıcak açılış).
+- İlk kurulumda karşılama ve izin seçeneklerinin, açılış ekranı kaybolduktan sonra kullanılabildiğini; izin/ayar ekranından dönüşte uygulamanın çalışmaya devam ettiğini doğrulayın.
+- Android 11 ve Android 12+ cihazlarda açık/koyu tema, ekran döndürme ve erişilebilirlik ayarlarıyla kontrol edin.
