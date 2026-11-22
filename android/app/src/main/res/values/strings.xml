@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Tesbihat</string>
-    <string name="title_activity_main">Tesbihat</string>
+    <string name="app_name">Ruhi Tesbihat</string>
+    <string name="title_activity_main">Ruhi Tesbihat</string>
     <string name="package_name">com.matufekci.tesbihat</string>
     <string name="custom_url_scheme">com.matufekci.tesbihat</string>
 </resources>

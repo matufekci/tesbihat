@@ -49,7 +49,7 @@ export default function Splash({ onDone, onboard = false, theme = 'dark', themeC
         <img className="splash-star" src={splashEmblem} width="184" height="184" alt="" onLoad={() => setEmblemReady(true)} onError={() => setEmblemReady(true)} />
       </div>
       <div className="splash-eyebrow">{t('eyebrow')}</div>
-      <h1 className="splash-title">{t('appTitle')}</h1>
+      <h1 className="splash-title" dir="ltr">{t('appTitle')}</h1>
       <div className="splash-divider"><span /><i>◆</i><span /></div>
       <div className="splash-ar" lang="ar" dir="rtl">أذكار السيد محمد روحي القادري</div>
 
@@ -109,7 +109,7 @@ export default function Splash({ onDone, onboard = false, theme = 'dark', themeC
       ) : (
         <>
           <div className="splash-bar"><span /></div>
-          <div className="splash-foot">TESBİHAT</div>
+          <div className="splash-foot" dir="ltr">RUHİ TESBİHAT</div>
         </>
       )}
     </div>

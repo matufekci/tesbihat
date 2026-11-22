@@ -30,7 +30,7 @@ export async function notificationPermission() {
 }
 
 /** Mevcut zamanlanmışları iptal eder ve events listesini (Date[]) zamanlar. */
-export function scheduleReminders(events, { title = 'Tesbihat', body } = {}) {
+export function scheduleReminders(events, { title = 'Ruhi Tesbihat', body } = {}) {
   return enqueue(() => scheduleRemindersNow(events, { title, body }))
 }
 

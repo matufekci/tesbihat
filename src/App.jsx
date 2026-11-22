@@ -222,7 +222,7 @@ export default function App() {
         </div>
         <div className="app-title">
           <div className="app-title-eyebrow">{t('eyebrow')}</div>
-          <h1 className="app-title-main">{t('appTitle')}</h1>
+          <h1 className="app-title-main" dir="ltr">{t('appTitle')}</h1>
           <div className="app-title-ar" lang="ar" dir="rtl">أذكار السيد محمد روحي القادري بعد الصلوات الخمس</div>
           <button className="gear-btn" onClick={() => setTab(tab === 'settings' ? 'vird' : 'settings')} aria-label={tab === 'settings' ? t('back') : t('settingsHeading')} title={tab === 'settings' ? t('back') : t('settingsHeading')}>
             {tab === 'settings' ? (

@@ -299,3 +299,15 @@ test('animated startup appears before the application JavaScript is ready', asyn
   await expect(page.locator('.splash')).toHaveCount(0, { timeout: 15000 })
   await expect(page.getByRole('button', { name: 'Tesbihata Başla' })).toBeVisible()
 })
+
+test('Ruhi Tesbihat brand is shown on startup and in the app', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('tesbihat.settings', JSON.stringify({ onboarded: true, permissionsSetup: true })))
+  await page.goto('./')
+  await expect(page.locator('.splash-title')).toHaveText('Ruhi Tesbihat')
+  await expect(page.locator('.splash-foot')).toHaveText('RUHİ TESBİHAT')
+  await expect(page.locator('.splash')).toHaveCount(0, { timeout: 15000 })
+  await expect(page.locator('.app-title-main')).toHaveText('Ruhi Tesbihat')
+  await expect(page).toHaveTitle(/Ruhi Tesbihat/)
+  await page.getByRole('button', { name: 'Ayarlar', exact: true }).click()
+  await expect(page.getByText(/Ruhi Tesbihat · Sürüm/)).toBeVisible()
+})

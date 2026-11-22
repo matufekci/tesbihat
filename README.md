@@ -1,4 +1,4 @@
-# Tesbihat — Namaz Sonrası Zikir
+# Ruhi Tesbihat — Namaz Sonrası Zikir
 
 Beş vaktin ardından okunan zikir, salavât, dua ve sureler için sayaçlı, anlık rehber. Web/PWA; Android'de ana ekrana eklenebilir, Capacitor + GitHub Actions ile APK üretilebilir.
 
