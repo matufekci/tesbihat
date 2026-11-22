@@ -1,3 +1,5 @@
+import { diyanetAyah } from './quran.js'
+
 // Vird (zikir) adımlarının dile göre yerelleştirilmiş metinleri.
 // Arapça metin ve latin okunuş aynen korunur; burada yalnızca başlık/anlam/not çevirileri tutulur.
 // TR taban metinler vird.js içinde kaynak olarak durur; eksik anahtarda oraya düşülür.
@@ -61,7 +63,7 @@ export const VIRD_I18N = {
       },
       yasin: {
         title: 'Sūrat Yāsīn (36)',
-        note: 'When you reach verse 58, repeat this verse 12 times: سَلَامٌ قَوْلًا مِنْ رَبٍّ رَحِيمٍ — Salāmun qawlan min rabbin raḥīm.',
+        note: `When you reach verse 58, repeat this verse 12 times: ${diyanetAyah(36, 58)} — Salāmun qawlan min rabbin raḥīm.`,
       },
       'hasr-sabah': {
         title: 'The Last Five Verses of Sūrat al-Ḥashr',
@@ -80,7 +82,7 @@ export const VIRD_I18N = {
       },
       vakia: {
         title: 'Sūrat al-Wāqiʿa (56)',
-        note: 'When you reach verse 76, tap the “Recite the Supplication of Provision” button below the verse — the supplication opens in a new window. After it ends, continue two verses earlier (verse 74: فَسَبِّحۡ بِٱسۡمِ رَبِّكَ ٱلۡعَظِيمِ) and recite to the end of the sūra.',
+        note: `When you reach verse 76, tap the “Recite the Supplication of Provision” button below the verse — the supplication opens in a new window. After it ends, continue two verses earlier (verse 74: ${diyanetAyah(56, 74)}) and recite to the end of the sūra.`,
       },
       'esma-7': {
         title: 'The Most Beautiful Names (7)',
@@ -205,7 +207,7 @@ export const VIRD_I18N = {
       },
       yasin: {
         title: 'Sūrat Yāsīn (36)',
-        note: 'Beim Vers 58 wiederholt man diesen Vers 12-mal: سَلَامٌ قَوْلًا مِنْ رَبٍّ رَحِيمٍ — Salāmun qawlan min rabbin raḥīm.',
+        note: `Beim Vers 58 wiederholt man diesen Vers 12-mal: ${diyanetAyah(36, 58)} — Salāmun qawlan min rabbin raḥīm.`,
       },
       'hasr-sabah': {
         title: 'Die letzten fünf Verse der Sūrat al-Ḥašr',
@@ -224,7 +226,7 @@ export const VIRD_I18N = {
       },
       vakia: {
         title: 'Sūrat al-Wāqiʿa (56)',
-        note: 'Wenn du Vers 76 erreichst, tippe auf die Schaltfläche „Rizq-Gebet rezitieren“ unter dem Vers — das Gebet öffnet sich in einem neuen Fenster. Nach dem Ende des Gebets fahre zwei Verse vorher fort (Vers 74: فَسَبِّحۡ بِٱسۡمِ رَبِّكَ ٱلۡعَظِيمِ) und rezitiere bis zum Ende der Sure.',
+        note: `Wenn du Vers 76 erreichst, tippe auf die Schaltfläche „Rizq-Gebet rezitieren“ unter dem Vers — das Gebet öffnet sich in einem neuen Fenster. Nach dem Ende des Gebets fahre zwei Verse vorher fort (Vers 74: ${diyanetAyah(56, 74)}) und rezitiere bis zum Ende der Sure.`,
       },
       'esma-7': {
         title: 'Die schönsten Namen (7)',
@@ -349,7 +351,7 @@ export const VIRD_I18N = {
       },
       yasin: {
         title: 'Sourate Yāsīn (36)',
-        note: 'Lorsqu’on arrive au verset 58, on répète ce verset 12 fois : سَلَامٌ قَوْلًا مِنْ رَبٍّ رَحِيمٍ — Salāmun qawlan min rabbin raḥīm.',
+        note: `Lorsqu’on arrive au verset 58, on répète ce verset 12 fois : ${diyanetAyah(36, 58)} — Salāmun qawlan min rabbin raḥīm.`,
       },
       'hasr-sabah': {
         title: 'Les cinq derniers versets de la sourate al-Ḥashr',
@@ -368,7 +370,7 @@ export const VIRD_I18N = {
       },
       vakia: {
         title: 'Sourate al-Wāqiʿa (56)',
-        note: 'Lorsque vous atteignez le verset 76, touchez le bouton « Lire la prière du rizq » sous le verset — la prière s’ouvre dans une nouvelle fenêtre. Après la fin de la prière, reprenez deux versets plus tôt (verset 74 : فَسَبِّحۡ بِٱسۡمِ رَبِّكَ ٱلۡعَظِيمِ) et récitez jusqu’à la fin de la sourate.',
+        note: `Lorsque vous atteignez le verset 76, touchez le bouton « Lire la prière du rizq » sous le verset — la prière s’ouvre dans une nouvelle fenêtre. Après la fin de la prière, reprenez deux versets plus tôt (verset 74 : ${diyanetAyah(56, 74)}) et récitez jusqu’à la fin de la sourate.`,
       },
       'esma-7': {
         title: 'Les plus beaux noms (7)',
@@ -493,7 +495,7 @@ export const VIRD_I18N = {
       },
       yasin: {
         title: 'سورة يس (36)',
-        note: 'عند الوصول إلى الآية 58 تُكرر هذه الآية 12 مرة: سَلَامٌ قَوْلًا مِنْ رَبٍّ رَحِيمٍ — سلام قولًا من رب رحيم.',
+        note: `عند الوصول إلى الآية 58 تُكرر هذه الآية 12 مرة: ${diyanetAyah(36, 58)} — سلام قولًا من رب رحيم.`,
       },
       'hasr-sabah': {
         title: 'آخر خمس آيات من سورة الحشر',
@@ -512,7 +514,7 @@ export const VIRD_I18N = {
       },
       vakia: {
         title: 'سورة الواقعة (56)',
-        note: 'عند الوصول إلى الآية 76 اضغط على زر «اقرأ دعاء الرزق» أسفل الآية — يُفتح الدعاء في نافذة جديدة. وبعد الانتهاء من الدعاء تابع من الآيتين قبلها (الآية 74: فَسَبِّحۡ بِٱسۡمِ رَبِّكَ ٱلۡعَظِيمِ) حتى نهاية السورة.',
+        note: `عند الوصول إلى الآية 76 اضغط على زر «اقرأ دعاء الرزق» أسفل الآية — يُفتح الدعاء في نافذة جديدة. وبعد الانتهاء من الدعاء تابع من الآيتين قبلها (الآية 74: ${diyanetAyah(56, 74)}) حتى نهاية السورة.`,
       },
       'esma-7': {
         title: 'الأسماء الحسنى (7)',

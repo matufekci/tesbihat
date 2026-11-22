@@ -43,4 +43,4 @@ Yerelde (Android SDK'lı makine): `npm run build && npx cap sync android && cd a
 
 ## Künye
 
-Kur’ân metinleri Ḥafṣ rivâyetiyle, Tanzil Project’in kodladığı vakıf işaretleriyle gelir (CC-BY-3.0). Türkçe meal Diyanet İşleri Başkanlığı’na aittir (Tanzil.net üzerinden derlenmiştir).
+Kur’ân ayetlerinin Arapça yazımı, [Diyanet mushaf verisinin Unicode aktarımından](https://github.com/alperenugus/Kuran) alınmıştır; kaynak ve doğrulama sınırları için [ayet kaynağı notlarına](tests/QURAN_SOURCES.md) bakın. Türkçe meal değiştirilmemiştir; Diyanet İşleri Başkanlığı’na atıfla Tanzil.net üzerinden derlenmiştir. Dua metinleri ayrı kaynaklardan gelir.

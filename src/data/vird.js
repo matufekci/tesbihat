@@ -1,5 +1,6 @@
 // Namaz sonrası zikir, salavât, dua ve sureler — her vakit için ortak bölüm + vakte özel katman + kapanış.
 import { localizeStep, localizedHizbMeaning, localizedDuaNotes, localizedRizik } from './vird-i18n.js'
+import { BASMALA, diyanetAyah } from './quran.js'
 
 export const NAMAZ_IDS = ['sabah', 'ogle', 'ikindi', 'aksam', 'yatsi']
 
@@ -12,14 +13,14 @@ export const NAMAZ_META = {
 }
 
 const AYETUL_KURSI = {
-  arabic: 'اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ',
+  arabic: diyanetAyah(2, 255),
   latin: 'Allâhü lâ ilâhe illâ Hüve’l-Hayyü’l-Kayyûm. Lâ te’huzühû sinetün velâ nevm. Lehû mâ fissemâvâti vemâ fil-ard. Menzellezî yeşfeu indehû illâ bi’iznih. Ya’lemü mâ beyne eydîhim vemâ halfehüm. Velâ yühîtûne bişey’im min ilmihî illâ bimâ şâe. Vesi’a kürsiyyühüssemâvâti vel-ard. Velâ yeûdühû hıfzuhümâ ve hüvel-aliyyü’l-azîm.',
   note: 'Bakara Suresi’nin 255. ayeti.',
   meaning: 'Allah — O’ndan başka ilâh yoktur; diridir, kayyûmdur. O’nu ne bir uyuklama tutar ne de uyku. Göklerde ve yerde ne varsa O’nundur. O’nun izni olmaksızın katında kim şefaat edebilir? O, önlerindekini ve arkalarındakini bilir. O’nun ilminden — dilediği kadarı hariç — hiçbir şey kavrayamazlar. Kürsüsü gökleri ve yeri kaplamıştır; onların korunması O’na ağır gelmez. O yücedir, büyüktür. (Bakara 2:255)',
 }
 
 // İmam en-Nevevî'ye nisbet edilen Hıfz (korunma) Hizbi — yalnız sabah ve akşam namazlarından sonra okunur.
-// Metin, kullanıcının Drive'a yüklediği kaynak baskıdan (WhatsApp Image 2026-10-29) aynen aktarılmıştır; ayet dışı kısımlar kaynaktır.
+// Dua metni kullanıcının sağladığı baskıdan aktarılmıştır; tam İhlâs sûresi Diyanet mushaf yazımıyla gösterilir.
 const HIZB_AL_HIFZ = {
   arabic: [
     'بِسْمِ اللهِ الرَّحْمَٰنِ الرَّحِيمِ',
@@ -35,10 +36,10 @@ const HIZB_AL_HIFZ = {
     'بِكَ اللَّهُمَّ أَعُوذُ مِنْ شَرِّ نَفْسِي، وَمِنْ شَرِّ غَيْرِي، وَمِنْ شَرِّ مَا خَلَقَ رَبِّي وَذَرْءًا وَبَرْءًا',
     'وَبِكَ اللَّهُمَّ أَحْتَرِزُ مِنْهُمْ',
     'وَبِكَ اللَّهُمَّ أَعُوذُ مِنْ شُرُورِهِمْ',
-    'وَبِكَ اللَّهُمَّ أَدْرَأُ فِي نُحُورِهِمْ، وَأُقَدِّمُ بَيْنَ يَدَيَّ وَأَيْدِيهِمْ: [بِسْمِ اللهِ الرَّحْمَٰنِ الرَّحِيمِ قُلْ هُوَ اللهُ أَحَدٌ اللهُ الصَّمَدُ لَمْ يَلِدْ وَلَمْ يُولَدْ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ (٣)]',
+    `وَبِكَ اللَّهُمَّ أَدْرَأُ فِي نُحُورِهِمْ، وَأُقَدِّمُ بَيْنَ يَدَيَّ وَأَيْدِيهِمْ: [${BASMALA} ${[1, 2, 3, 4].map((n) => diyanetAyah(112, n)).join(' ')} (٣)]`,
     'وَمِثْلُ ذَلِكَ عَنْ يَمِينِي وَعَنْ أَيْمَانِهِمْ، وَمِثْلُ ذَلِكَ عَنْ شَمَالِي وَعَنْ شَمَائِلِهِمْ، وَمِثْلُ ذَلِكَ عَنْ أَمَامِي وَأَمَامِهِمْ، وَمِثْلُ ذَلِكَ مِنْ خَلْفِي وَمِنْ خَلْفِهِمْ، وَمِثْلُ ذَلِكَ مِنْ فَوْقِي وَمِنْ فَوْقِهِمْ، وَمِثْلُ ذَلِكَ مِنْ تَحْتِي وَمِنْ تَحْتِهِمْ، وَمِثْلُ ذَلِكَ مُحِيطٌ بِي وَبِهِمْ',
     'اللَّهُمَّ إِنِّي أَسْأَلُكَ لِي وَلَهُمْ مِنْ خَيْرِكَ بِخَيْرِكَ الَّذِي لَا يَمْلِكُهُ غَيْرُكَ',
-    'اللَّهُمَّ اجْعَلْنِي وَإِيَّاهُمْ فِي عِبَادِكَ وَعِيَاذِكَ وَعِيَالِكَ وَجِوَارِكَ وَأَمَانَتِكَ وَحِزْرِكَ وَحِزْبِكَ وَكَنَفِكَ، مِنْ كُلِّ شَيْطَانٍ وَإِنْسٍ وَجِنٍّ وَبَاغٍ وَحَاسِدٍ وَسَبْعٍ وَحَيَّةٍ وَعَقْرَبٍ، وَمِنْ كُلِّ دَابَّةٍ أَنْتَ ﴿آخِذٌ بِنَاصِيَتِهَا إِنَّ رَبِّي عَلَىٰ صِرَاطٍ مُّسْتَقِيمٍ﴾',
+    `اللَّهُمَّ اجْعَلْنِي وَإِيَّاهُمْ فِي عِبَادِكَ وَعِيَاذِكَ وَعِيَالِكَ وَجِوَارِكَ وَأَمَانَتِكَ وَحِزْرِكَ وَحِزْبِكَ وَكَنَفِكَ، مِنْ كُلِّ شَيْطَانٍ وَإِنْسٍ وَجِنٍّ وَبَاغٍ وَحَاسِدٍ وَسَبْعٍ وَحَيَّةٍ وَعَقْرَبٍ، وَمِنْ كُلِّ دَابَّةٍ أَنْتَ ﴿${diyanetAyah(11, 56).slice(diyanetAyah(11, 56).indexOf("اٰخِذٌ"))}﴾`,
     'حَسْبِيَ الرَّبُّ مِنْ الْمَرْبُوبِينَ',
     'حَسْبِيَ الْخَالِقُ مِنْ الْمَخْلُوقِينَ',
     'حَسْبِيَ الرَّازِقُ مِنْ الْمَرْزُوقِينَ',
@@ -47,10 +48,10 @@ const HIZB_AL_HIFZ = {
     'حَسْبِيَ الْقَاهِرُ مِنْ الْمَقْهُورِينَ',
     'حَسْبِيَ الَّذِي هُوَ حَسْبِي',
     'حَسْبِي مَنْ لَمْ يَزَلْ حَسْبِي اللهُ وَنِعْمَ الْوَكِيلُ',
-    'حَسْبِي اللهُ مِنْ جَمِيعِ خَلْقِهِ ﴿إِنَّ وَلِيِّيَ اللهُ الَّذِي نَزَّلَ الْكِتَابَ وَهُوَ يَتَوَلَّى الصَّالِحِينَ﴾',
-    '﴿وَإِذَا قَرَأْتَ الْقُرْآنَ جَعَلْنَا بَيْنَكَ وَبَيْنَ الَّذِينَ لَا يُؤْمِنُونَ بِالْآخِرَةِ حِجَابًا مَّسْتُورًا﴾',
-    'وَجَعَلْنَا عَلَىٰ قُلُوبِهِمْ أَكِنَّةً أَن يَفْقَهُوهُ وَفِي آذَانِهِمْ وَقْرًا وَإِذَا ذَكَرْتَ رَبَّكَ فِي الْقُرْآنِ وَحْدَهُ وَلَّوْا عَلَىٰ أَدْبَارِهِمْ نُفُورًا',
-    '﴿حَسْبِيَ اللهُ لَا إِلَٰهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ﴾',
+    `حَسْبِي اللهُ مِنْ جَمِيعِ خَلْقِهِ ﴿${diyanetAyah(7, 196)}﴾`,
+    `﴿${diyanetAyah(17, 45)}﴾`,
+    `${diyanetAyah(17, 46)}`,
+    `﴿${diyanetAyah(9, 129).slice(diyanetAyah(9, 129).indexOf("حَسْبِیَ"))}﴾`,
     'وَ[لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ الْعَلِيِّ الْعَظِيمِ (٣)]',
     'خَبَأْتُ نَفْسِي فِي خَزَائِنِ ﴿بِسْمِ اللهِ الرَّحْمَٰنِ الرَّحِيمِ﴾ أَقْفَالُهَا ثِقْتِي بِاللهِ، مَفَاتِيحُهَا لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ',
     'أُدَافِعُ بِكَ اللَّهُمَّ عَنْ نَفْسِي مَا أُطِيقُ وَمَا لَا أُطِيقُ، لَا طَاقَةَ لِمَخْلُوقٍ مَعَ قُدْرَةِ الْخَالِقِ',
@@ -216,7 +217,7 @@ const PRAYER_STEPS = {
     {
       id: 'yasin', title: 'Yâsîn Suresi (36)', type: 'read',
       quran: { sura: 36 },
-      note: '58. ayetine gelindiğinde bu ayet 12 defa tekrar edilir: سَلَامٌ قَوْلًا مِنْ رَبٍّ رَحِيمٍ — Selâmün kavlen min rabbin rahîm.',
+      note: `58. ayetine gelindiğinde bu ayet 12 defa tekrar edilir: ${diyanetAyah(36, 58)} — Selâmün kavlen min rabbin rahîm.`,
     },
     HASR5_STEP('hasr-sabah'),
   ],
@@ -235,7 +236,7 @@ const PRAYER_STEPS = {
       id: 'vakia', title: 'Vâkıa Suresi (56)', type: 'read',
       quran: { sura: 56 },
       hotAyat: 76, hotStep: 'rizik-duasi', highlightAyat: [74, 75],
-      note: '76. ayete gelindiğinde ayetin altındaki “Rızık Duasını Oku” düğmesine dokun — dua yeni pencerede açılır. Dua bittikten sonra iki ayet geriden (74. ayet: فَسَبِّحۡ بِٱسۡمِ رَبِّكَ ٱلۡعَظِيمِ) devam et ve sûre sonuna kadar oku.',
+      note: `76. ayete gelindiğinde ayetin altındaki “Rızık Duasını Oku” düğmesine dokun — dua yeni pencerede açılır. Dua bittikten sonra iki ayet geriden (74. ayet: ${diyanetAyah(56, 74)}) devam et ve sûre sonuna kadar oku.`,
     },
     {
       id: 'esma-7', title: 'Esmâ-i Hüsnâ (7)', type: 'counter', target: 4,

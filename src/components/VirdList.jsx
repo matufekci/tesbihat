@@ -5,7 +5,7 @@ import { todayKey, loadVakitProgress, saveVakitProgress, resetVakitProgress } fr
 import QuranBlock from './QuranBlock.jsx'
 import CompletionCelebration from './CompletionCelebration.jsx'
 import MeaningDisclosure from './MeaningDisclosure.jsx'
-import { QURAN } from '../data/quran.js'
+import { QURAN, diyanetAyah } from '../data/quran.js'
 import { CITIES } from '../data/cities.js'
 import { useLang } from '../lib/i18n.js'
 import { mealsOf } from '../data/meals.js'
@@ -162,7 +162,7 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
     <main className={`screen vird-screen start-screen${quickExpanded ? ' sheet-expanded' : ''}`}>
       <div className="start-wrap">
         <div className="start-orn" aria-hidden="true"><span /><i>◆</i><span /></div>
-        <p className="start-verse" lang="ar" dir="rtl">فَإِذَا قَضَيْتُمُ الصَّلَاةَ فَاذْكُرُوا اللَّهَ قِيَامًا وَقُعُودًا وَعَلَىٰ جُنُوبِكُمْ ۚ فَإِذَا اطْمَأْنَنتُمْ فَأَقِيمُوا الصَّلَاةَ ۚ إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا</p>
+        <p className="start-verse" lang="ar" dir="rtl">{diyanetAyah(4, 103)}</p>
         <p className="start-verse-tr">{t('startVerseTr')}</p>
         <div className="vakit-line" aria-label={t('vakitLineAria')}>
           <span className="vl-name">{vlabel(vakit)}</span>
