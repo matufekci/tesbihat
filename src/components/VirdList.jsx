@@ -27,11 +27,11 @@ function EndNote({ note }) {
   )
 }
 
-function MeaningBlock({ meaning }) {
+function MeaningBlock({ meaning, meaningLanguage }) {
   const { t } = useLang()
   if (!meaning) return null
   return (
-    <MeaningDisclosure label={t('meaningToggle')}>
+    <MeaningDisclosure label={meaningLanguage === 'tr' ? 'Türkçe Anlamı' : t('meaningToggle')}>
       {Array.isArray(meaning) ? meaning.map((l, i) => <p key={i}>{l}</p>) : <p>{meaning}</p>}
     </MeaningDisclosure>
   )
@@ -491,7 +491,7 @@ function VirdFlow({ vakit, settings, onClose }) {
                 {quranMeanings(step.quran, lang).map(([n, tr]) => <p key={n}><b>{n}.</b> {tr}</p>)}
               </MeaningDisclosure>
             ))
-          : <MeaningBlock meaning={step.meaning} />}
+          : <MeaningBlock meaning={step.meaning} meaningLanguage={step.meaningLanguage} />}
         {step.endNote && <EndNote note={step.endNote} />}
 
         {isCounter && step.id === 'la-ilahe' && (

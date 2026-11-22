@@ -109,7 +109,7 @@ export const VIRD_I18N = {
     },
     duaNotes: {
       empty: 'Then make supplication.',
-      sabahAksam: 'After the dawn and evening prayers: the Ḥizb of Protection (ḥizb al-ḥifẓ) attributed to Imam al-Nawawī is recited. The bracketed numbers (٣) and (٧) show how many times that portion is repeated. In the other prayers this section is left empty; recite the supplication of your choice.',
+      sabahAksam: 'After the dawn and evening prayers: the Ḥizb of Protection (ḥizb al-ḥifẓ) attributed to Imam al-Nawawī is recited. The bracketed numbers (٣) and (٧) show how many times that portion is repeated. The meaning is currently available in Turkish. The Arabic line beginning “thumma yanfuthu” is an instruction to blow three times to the right, left, front and back, not part of the supplication.',
     },
     hizbMeaning: [
       'A free English rendering of the Ḥizb of Protection (ḥizb al-ḥifẓ) attributed to Imam al-Nawawī; the Qur’anic and prophetic portions follow their established meanings.',
@@ -253,7 +253,7 @@ export const VIRD_I18N = {
     },
     duaNotes: {
       empty: 'Dann spricht man das Bittgebet.',
-      sabahAksam: 'Nach dem Morgen- und Abendgebet: Das dem Imam an-Nawawī zugeschriebene Ḥizb al-Ḥifẓ (Schutz-Ḥizb) wird rezitiert. Die eingeklammerten Zahlen (٣) und (٧) geben an, wie oft der betreffende Abschnitt wiederholt wird. In den übrigen Gebeten bleibt dieser Abschnitt leer; rezitiere das Bittgebet deiner Wahl.',
+      sabahAksam: 'Nach dem Morgen- und Abendgebet: Das dem Imam an-Nawawī zugeschriebene Ḥizb al-Ḥifẓ (Schutz-Ḥizb) wird rezitiert. Die eingeklammerten Zahlen (٣) und (٧) geben an, wie oft der betreffende Abschnitt wiederholt wird. Die Bedeutung ist derzeit auf Türkisch verfügbar. Die arabische Zeile „thumma yanfuthu“ ist die Anweisung, je dreimal nach rechts, links, vorne und hinten zu pusten, kein Teil des Bittgebets.',
     },
     hizbMeaning: [
       'Freie deutsche Wiedergabe des dem Imam an-Nawawī zugeschriebenen Ḥizb al-Ḥifẓ (Schutz-Ḥizb); die qur’ānischen und prophetischen Abschnitte folgen ihrem Sinn.',
@@ -397,7 +397,7 @@ export const VIRD_I18N = {
     },
     duaNotes: {
       empty: 'Ensuite, on invoque.',
-      sabahAksam: 'Après les prières de l’aube et du soir : le Ḥizb de protection (ḥizb al-ḥifẓ) attribué à l’imam an-Nawawī est récité. Les nombres entre crochets (٣) et (٧) indiquent combien de fois ce passage est répété. Dans les autres prières, cette section est laissée vide ; récitez l’invocation de votre choix.',
+      sabahAksam: 'Après les prières de l’aube et du soir : le Ḥizb de protection (ḥizb al-ḥifẓ) attribué à l’imam an-Nawawī est récité. Les nombres entre crochets (٣) et (٧) indiquent combien de fois ce passage est répété. Le sens est actuellement disponible en turc. La ligne arabe « thumma yanfuthu » indique de souffler trois fois à droite, à gauche, devant et derrière ; elle ne fait pas partie de l’invocation.',
     },
     hizbMeaning: [
       'Traduction libre française du Ḥizb al-Ḥifẓ (ḥizb de protection) attribué à l’imam an-Nawawī ; les passages coraniques et prophétiques suivent leur sens établi.',
@@ -541,7 +541,7 @@ export const VIRD_I18N = {
     },
     duaNotes: {
       empty: 'ثم يُدعى.',
-      sabahAksam: 'بعد صلاتي الصبح والمغرب يُقرأ حزب الحفظ المنسوب إلى الإمام النووي. الأرقام الواردة بين قوسين (٣) و(٧) تدل على عدد مرات تكرار المقطع. وفي الصلوات الأخرى هذا القسم فارغ؛ فاقرأ ما شئت من الدعاء.',
+      sabahAksam: 'بعد صلاتي الصبح والمغرب يُقرأ حزب الحفظ المنسوب إلى الإمام النووي. الأرقام الواردة بين قوسين (٣) و(٧) تدل على عدد مرات تكرار المقطع. المعنى متاح حاليًا باللغة التركية. عبارة «ثم ينفث» تعليمات وليست من الدعاء.',
     },
     hizbMeaning: [
       'ترجمة ميسرة لمعنى حزب الحفظ المنسوب إلى الإمام النووي؛ أما المواضع القرآنية والحديثية فمعانيها على أصلها.',
