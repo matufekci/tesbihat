@@ -326,7 +326,12 @@ function VirdFlow({ vakit, settings, onClose }) {
   const target = step ? effectiveTarget(step) : 1
   const pct = state.done ? 100 : Math.round((idx / steps.length) * 100)
 
-  const sectionOf = (i) => (i < COMMON_STEPS.length ? t('sectionCommon') : i === steps.length - 1 ? t('sectionClosing') : t('specialSection', { vakit: vlabel(vakit) }))
+  const sectionOf = (i) => {
+    if (i < COMMON_STEPS.length) return t('sectionCommon')
+    if (i === steps.length - 1) return t('sectionClosing')
+    if (lang === 'tr') return t('specialSection' + vakit.charAt(0).toUpperCase() + vakit.slice(1))
+    return t('specialSection', { vakit: vlabel(vakit) })
+  }
 
   const goNext = () => {
     if (advancing.current) return

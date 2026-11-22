@@ -327,3 +327,16 @@ test('Turkish mushaf script is displayed in the Quran flow', async ({ page }) =>
   await expect(text).toHaveAttribute('dir', 'rtl')
   expect(await text.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true)
 })
+
+test('Turkish prayer section headings use the correct suffix', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 700 })
+  await ready(page)
+  for (const [prayer, expected] of [['Sabah', 'Sabah’a Özel'], ['Öğle', 'Öğle’ye Özel'], ['İkindi', 'İkindi’ye Özel'], ['Akşam', 'Akşam’a Özel'], ['Yatsı', 'Yatsı’ya Özel']]) {
+    await page.locator('.bottom-vakit-chips').getByRole('button', { name: prayer, exact: true }).click()
+    await page.getByRole('button', { name: 'Tesbihata Başla' }).click()
+    await page.getByRole('button', { name: 'Adım listesini aç' }).click()
+    await page.getByRole('dialog', { name: 'Adım Listesi' }).locator('li').nth(12).locator('button').click()
+    await expect(page.locator('.g-section')).toHaveText(expected)
+    await page.getByRole('button', { name: 'Kapat', exact: true }).click()
+  }
+})
