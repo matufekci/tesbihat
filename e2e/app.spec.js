@@ -544,3 +544,37 @@ test('a scheduled afternoon reminder does not interrupt an active noon counter',
   await expect.poll(() => page.evaluate(() => window.reminderCalls.map((call) => call.tag))).toContain('tesbihat-ikindi')
   await expect(page.getByRole('button', { name: 'Say', exact: true })).toContainText('2')
 })
+
+for (const [before, after, startTime, endTime] of [
+  ['Yatsı', 'Sabah', '2026-11-16T04:59:00Z', '2026-11-16T05:00:00Z'],
+  ['Sabah', 'Öğle', '2026-11-16T11:59:00Z', '2026-11-16T12:00:00Z'],
+  ['İkindi', 'Akşam', '2026-11-16T17:59:00Z', '2026-11-16T18:00:00Z'],
+  ['Akşam', 'Yatsı', '2026-11-16T19:29:00Z', '2026-11-16T19:30:00Z'],
+]) {
+  test(`active ${before} dhikr continues when ${after} begins`, async ({ page }) => {
+    await prepareClockAndPrayerTimes(page, startTime)
+    await expect(page.locator('.vl-name')).toHaveText(before)
+    await beginCounting(page)
+    const title = await page.locator('.g-title').innerText()
+    const step = await page.getByRole('button', { name: 'Adım listesini aç' }).innerText()
+    await changeClock(page, endTime)
+    await expect(page.locator('.g-title')).toHaveText(title)
+    await expect(page.getByRole('button', { name: 'Adım listesini aç' })).toHaveText(step)
+    await expect(page.getByRole('button', { name: 'Say', exact: true })).toContainText('2')
+    await page.getByRole('button', { name: 'Kapat', exact: true }).click()
+    await expect(page.locator('.vl-name')).toHaveText(after)
+  })
+}
+
+test('salawat highlights only the four changing Arabic and Latin words', async ({ page }) => {
+  await ready(page)
+  await page.getByRole('button', { name: 'Tesbihata Başla' }).click()
+  await page.getByRole('button', { name: 'Adım listesini aç' }).click()
+  await page.getByRole('dialog', { name: 'Adım Listesi' }).locator('li').filter({ hasText: 'Salâvat-ı Şerîfe' }).first().locator('button').click()
+  const arabic = page.locator('.guided-body .arabic')
+  const latin = page.locator('.guided-body .latin')
+  await expect(arabic.locator('strong')).toHaveText(['سَيِّدِنَا', 'حَبِيبِنَا', 'أَسْعَدِنَا', 'شَفِيعِنَا'])
+  await expect(latin.locator('strong')).toHaveText(['seyyidinâ', 'habîbinâ', 'es’adinâ', 'şefî’inâ'])
+  for (const el of await arabic.locator('strong').all()) await expect(el).toHaveCSS('font-weight', '700')
+  await expect(latin).toHaveText('Allâhümme salli ve sellim ve bârik ‘alâ … (seyyidinâ / habîbinâ / es’adinâ / şefî’inâ) Muhammedin ve ‘alâ âlihî ‘adede in’âmillâhi ve ifdâlih.')
+})

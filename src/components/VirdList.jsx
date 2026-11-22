@@ -14,6 +14,23 @@ function ayahText(sura, n) {
   return (QURAN[String(sura)] ?? []).find(([m]) => m === n)?.[1] ?? ''
 }
 
+// Highlight only the four changing words in this salawat; retain the exact text.
+const SALAVAT_ARABIC_WORDS = ['سَيِّدِنَا', 'حَبِيبِنَا', 'أَسْعَدِنَا', 'شَفِيعِنَا']
+const SALAVAT_LATIN_WORDS = ['seyyidinâ', 'habîbinâ', 'es’adinâ', 'şefî’inâ']
+function highlightSalavat(text, words) {
+  const pieces = []
+  let cursor = 0
+  while (cursor < text.length) {
+    const matches = words.map((word) => ({ word, index: text.indexOf(word, cursor) })).filter((match) => match.index !== -1)
+    if (!matches.length) { pieces.push(text.slice(cursor)); break }
+    matches.sort((a, b) => a.index - b.index)
+    const { word, index } = matches[0]
+    pieces.push(text.slice(cursor, index), <strong key={index} className="salavat-emphasis">{word}</strong>)
+    cursor = index + word.length
+  }
+  return pieces
+}
+
 function EndNote({ note }) {
   if (!note) return null
   return (
@@ -487,7 +504,7 @@ function VirdFlow({ vakit, initialProgress, initialTarget, dayKey, settings, onC
         {step.arabic && (
           <div className={`arabic ${arabicLong ? 'small' : ''}`} lang="ar" dir="rtl">
             {Array.isArray(step.arabic)
-              ? step.arabic.map((line, i) => <div key={i} style={{ marginBottom: 8 }}>{line}</div>)
+              ? step.arabic.map((line, i) => <div key={i} style={{ marginBottom: 8 }}>{step.id === 'salavat' ? highlightSalavat(line, SALAVAT_ARABIC_WORDS) : line}</div>)
               : step.arabic}
           </div>
         )}
@@ -502,7 +519,7 @@ function VirdFlow({ vakit, initialProgress, initialTarget, dayKey, settings, onC
         )}
         {step.latin && (Array.isArray(step.latin)
           ? step.latin.map((l, i) => <p key={i} className="latin">{l}</p>)
-          : <p className="latin">{step.latin}</p>)}
+          : <p className="latin">{step.id === 'salavat' ? highlightSalavat(step.latin, SALAVAT_LATIN_WORDS) : step.latin}</p>)}
         {step.quran
           ? (step.quran.sura !== 36 && step.quran.sura !== 56 && (
               <MeaningDisclosure label={t('meaningToggle')}>

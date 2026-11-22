@@ -1685,3 +1685,6 @@ html[dir='rtl'] .welcome-navigation .splash-continue svg { transform: scaleX(-1)
   .splash.is-onboard .splash-emblem .splash-star { width: 58px; height: 58px; }
   .splash.is-onboard .splash-eyebrow, .splash.is-onboard .splash-divider, .splash.is-onboard .splash-ar { display: none; }
 }
+
+/* Salavatın her tekrarında değişen hitaplar metin değiştirilmeden belirginleşir. */
+.salavat-emphasis { font-weight: 700; }
