@@ -94,7 +94,9 @@ function sanitizeProgress(value) {
       if (Number.isSafeInteger(count) && count >= 0 && count <= MAX_COUNT) counts[key] = count
     }
   }
-  return { idx, counts, done: value.done === true }
+  const progress = { idx, counts, done: value.done === true }
+  if ([20, 100, 200].includes(value.laTarget)) progress.laTarget = value.laTarget
+  return progress
 }
 
 export function loadVakitProgress(vakit) {
@@ -125,4 +127,28 @@ export function resetVakitProgress(vakit) {
   } catch {
     return false
   }
+}
+
+// An open flow is separate from daily progress: it must survive midnight,
+// prayer-time changes and a page/app reload until the user explicitly closes it.
+const ACTIVE_VAKIT_KEY = 'tesbihat.activeVakit'
+
+export function loadActiveVakit() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(ACTIVE_VAKIT_KEY) || 'null')
+    if (!isRecord(stored) || !VALID_VAKITS.has(stored.vakit) || !isRecord(stored.progress)) return null
+    return { vakit: stored.vakit, progress: sanitizeProgress(stored.progress), laTarget: [20, 100, 200].includes(stored.laTarget) ? stored.laTarget : 20 }
+  } catch { return null }
+}
+
+export function saveActiveVakit(vakit, progress, laTarget = 20) {
+  if (!VALID_VAKITS.has(vakit) || !isRecord(progress)) return false
+  try {
+    localStorage.setItem(ACTIVE_VAKIT_KEY, JSON.stringify({ vakit, progress: sanitizeProgress(progress), laTarget: [20, 100, 200].includes(laTarget) ? laTarget : 20 }))
+    return true
+  } catch { return false }
+}
+
+export function clearActiveVakit() {
+  try { localStorage.removeItem(ACTIVE_VAKIT_KEY); return true } catch { return false }
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { getStepsFor, COMMON_STEPS, getRizikDuasi } from '../data/vird.js'
 import { minutesOf, nowMinutes } from '../lib/prayer.js'
-import { todayKey, loadVakitProgress, saveVakitProgress, resetVakitProgress } from '../lib/store.js'
+import { todayKey, loadVakitProgress, saveVakitProgress, resetVakitProgress, loadActiveVakit, saveActiveVakit, clearActiveVakit } from '../lib/store.js'
 import QuranBlock from './QuranBlock.jsx'
 import CompletionCelebration from './CompletionCelebration.jsx'
 import MeaningDisclosure from './MeaningDisclosure.jsx'
@@ -87,7 +87,7 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
   const minuteStamp = Math.floor(nowMinutes(now))
   const detected = useMemo(() => detectVakit(timesData?.timings, minuteStamp), [timesData, minuteStamp])
   const [pinned, setPinned] = useState(null)
-  const [started, setStarted] = useState(false)
+  const [activeVakit, setActiveVakit] = useState(loadActiveVakit)
   const [gpsBusy, setGpsBusy] = useState(false)
   const [gpsError, setGpsError] = useState('')
   const [quickExpanded, setQuickExpanded] = useState(false)
@@ -97,6 +97,16 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
   const suppressHandleClick = useRef(false)
   const vakit = pinned ?? detected ?? 'aksam'
   const auto = pinned == null
+  const startFlow = () => {
+    const progress = loadVakitProgress(vakit)
+    const laTarget = progress.laTarget ?? 20
+    saveActiveVakit(vakit, progress, laTarget)
+    setActiveVakit({ vakit, progress, laTarget })
+  }
+  const closeFlow = () => {
+    clearActiveVakit()
+    setActiveVakit(null)
+  }
 
   const startSheetDrag = (event) => {
     if (event.button != null && event.button !== 0) return
@@ -167,7 +177,7 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
         <div className="vakit-line" aria-label={t('vakitLineAria')}>
           <span className="vl-name">{vlabel(vakit)}</span>
         </div>
-        <button className="start-cta" onClick={() => setStarted(true)}>{t('startCta')}</button>
+        <button className="start-cta" onClick={startFlow}>{t('startCta')}</button>
       </div>
 
       {settings && (
@@ -244,9 +254,9 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
       )}
     </main>
 
-    {started && (
+    {activeVakit && (
       <div className="flow-overlay" role="dialog" aria-modal="true" aria-label={t('appTitle')}>
-        <VirdFlow key={`${todayKey()}-${vakit}`} vakit={vakit} settings={settings} onClose={() => setStarted(false)} />
+        <VirdFlow vakit={activeVakit.vakit} initialProgress={activeVakit.progress} initialTarget={activeVakit.laTarget} dayKey={todayKey(now)} settings={settings} onClose={closeFlow} />
       </div>
     )}
     </>
@@ -263,16 +273,16 @@ function quranMeanings({ sura, from, to }, lang) {
   return all.filter(([n]) => n >= lo && n <= hi).map(([n, , tr]) => [n, override[n] ?? tr])
 }
 
-function VirdFlow({ vakit, settings, onClose }) {
+function VirdFlow({ vakit, initialProgress, initialTarget, dayKey, settings, onClose }) {
   const { t, lang } = useLang()
   const soundOn = settings?.soundEnabled !== false
   const vibrationOn = settings?.vibrationEnabled !== false
   const vlabel = (id) => t('vakit' + id.charAt(0).toUpperCase() + id.slice(1))
   const steps = useMemo(() => getStepsFor(vakit, lang), [vakit, lang])
-  const [state, setState] = useState(() => loadVakitProgress(vakit))
+  const [state, setState] = useState(() => initialProgress)
   const [celebrationId, setCelebrationId] = useState(0)
   const wasDone = useRef(state.done)
-  const [laTarget, setLaTarget] = useState(20)
+  const [laTarget, setLaTarget] = useState(initialTarget)
   const [extraWindow, setExtraWindow] = useState(null)
   const [stepListOpen, setStepListOpen] = useState(false)
   const [fontScale, setFontScale] = useState(() => {
@@ -291,7 +301,15 @@ function VirdFlow({ vakit, settings, onClose }) {
     return next
   })
 
-  useEffect(() => { saveVakitProgress(vakit, state) }, [vakit, state])
+  useEffect(() => {
+    saveVakitProgress(vakit, { ...state, laTarget })
+    saveActiveVakit(vakit, state, laTarget)
+  }, [vakit, state, dayKey, laTarget])
+
+  const closeFlow = () => {
+    saveVakitProgress(vakit, { ...state, laTarget })
+    onClose()
+  }
 
   useEffect(() => {
     if (state.done && !wasDone.current) setCelebrationId((id) => id + 1)
@@ -433,7 +451,7 @@ function VirdFlow({ vakit, settings, onClose }) {
           <h1 className="done-title">{t('doneTitle')}</h1>
           <p className="done-sub">{t('doneSub')}</p>
           <div className="done-actions">
-            <button className="btn-secondary" onClick={onClose}>{t('close')}</button>
+            <button className="btn-secondary" onClick={closeFlow}>{t('close')}</button>
             <button className="btn btn-primary" onClick={reset}>{t('restart')}</button>
           </div>
         </div>
@@ -454,7 +472,7 @@ function VirdFlow({ vakit, settings, onClose }) {
         <button ref={stepListButtonRef} className="g-step-label g-step-label-btn" onClick={() => setStepListOpen(true)} aria-label={t('stepListAria')} title={t('stepListAria')}>{idx + 1}/{steps.length}</button>
         <button className="font-btn" onClick={() => bumpFont(-0.15)} aria-label={t('fontSmall')} title={t('fontSmall')}>A−</button>
         <button className="font-btn" onClick={() => bumpFont(0.15)} aria-label={t('fontLarge')} title={t('fontLarge')}>A+</button>
-        <button className="icon-btn" onClick={onClose} aria-label={t('close')} title={t('close')}>
+        <button className="icon-btn" onClick={closeFlow} aria-label={t('close')} title={t('close')}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </button>
       </div>

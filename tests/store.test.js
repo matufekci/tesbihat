@@ -1,6 +1,6 @@
 import test, { beforeEach } from 'node:test'
 import assert from 'node:assert/strict'
-import { DEFAULT_SETTINGS, loadSettings, saveSettings, loadVakitProgress, saveVakitProgress, resetVakitProgress, todayKey } from '../src/lib/store.js'
+import { DEFAULT_SETTINGS, loadSettings, saveSettings, loadVakitProgress, saveVakitProgress, resetVakitProgress, todayKey, loadActiveVakit, saveActiveVakit, clearActiveVakit } from '../src/lib/store.js'
 
 class MemoryStorage {
   values = new Map()
@@ -86,4 +86,24 @@ test('sound and vibration settings persist independently and old settings get de
 test('dusty rose theme is accepted and persists', () => {
   assert.equal(saveSettings({ ...DEFAULT_SETTINGS, theme: 'rose' }), true)
   assert.equal(loadSettings().theme, 'rose')
+})
+
+
+test('active prayer session survives independently of daily progress until closed', () => {
+  assert.equal(loadActiveVakit(), null)
+  assert.equal(saveActiveVakit('yatsi', { idx: 3, counts: { tesbih: 17 }, done: false }, 100), true)
+  localStorage.setItem('tesbihat.day', JSON.stringify({ date: '2000-01-01', vakits: {} }))
+  assert.deepEqual(loadActiveVakit(), { vakit: 'yatsi', progress: { idx: 3, counts: { tesbih: 17 }, done: false }, laTarget: 100 })
+  assert.equal(clearActiveVakit(), true)
+  assert.equal(loadActiveVakit(), null)
+})
+
+test('active prayer session rejects malformed data and bounds values', () => {
+  localStorage.setItem('tesbihat.activeVakit', '{')
+  assert.equal(loadActiveVakit(), null)
+  localStorage.setItem('tesbihat.activeVakit', JSON.stringify({ vakit: 'invalid', progress: {} }))
+  assert.equal(loadActiveVakit(), null)
+  assert.equal(saveActiveVakit('invalid', {}), false)
+  localStorage.setItem('tesbihat.activeVakit', JSON.stringify({ vakit: 'ogle', laTarget: 999, progress: { idx: -5, counts: { x: -4, valid: 2 }, done: 1 } }))
+  assert.deepEqual(loadActiveVakit(), { vakit: 'ogle', laTarget: 20, progress: { idx: 0, counts: { valid: 2 }, done: false } })
 })

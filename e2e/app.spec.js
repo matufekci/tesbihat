@@ -61,9 +61,7 @@ test('settings and step navigation survive reload', async ({ page }) => {
   await expect(list).toHaveCount(0)
   await expect(page.getByRole('button', { name: 'Adım listesini aç' })).toBeFocused()
   await page.reload()
-  await expect(page.getByRole('button', { name: 'Tesbihata Başla' })).toBeVisible({ timeout: 15000 })
-  await page.getByRole('button', { name: 'Tesbihata Başla' }).click()
-  await expect(page.getByRole('button', { name: 'Adım listesini aç' })).toContainText('3/')
+  await expect(page.getByRole('button', { name: 'Adım listesini aç' })).toContainText('3/', { timeout: 15000 })
   expect(errors).toEqual([])
 })
 
@@ -96,8 +94,7 @@ test('counter keeps its value and disabled vibration is respected', async ({ pag
   await expect(counter).toContainText('1')
   expect(await page.evaluate(() => window.vibrationCalls || 0)).toBe(0)
   await page.reload()
-  await page.getByRole('button', { name: 'Tesbihata Başla' }).click()
-  await expect(page.getByRole('button', { name: 'Say', exact: true })).toContainText('1')
+  await expect(page.getByRole('button', { name: 'Say', exact: true })).toContainText('1', { timeout: 15000 })
 })
 
 test('first launch works on a compact screen and language switches to RTL', async ({ page }) => {
@@ -445,4 +442,105 @@ test('Arabic onboarding has translated steps and usable compact navigation', asy
   expect(box.y + box.height).toBeLessThanOrEqual(640)
   await page.getByRole('button', { name: 'متابعة', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'اختر المظهر' })).toBeVisible()
+})
+
+async function prepareClockAndPrayerTimes(page, time) {
+  await page.clock.setFixedTime(new Date(time))
+  await page.route('https://api.aladhan.com/**', (route) => route.fulfill({ json: { data: { timings: {
+    Imsak: '05:00', Sunrise: '06:30', Dhuhr: '12:00', Asr: '15:00', Maghrib: '18:00', Isha: '19:30',
+  } } } }))
+  await ready(page)
+}
+
+async function beginCounting(page) {
+  await page.getByRole('button', { name: 'Tesbihata Başla' }).click()
+  await page.getByRole('button', { name: 'Adım listesini aç' }).click()
+  await page.getByRole('dialog', { name: 'Adım Listesi' }).locator('button').filter({ hasText: /0\/\d+/ }).first().click()
+  await page.getByRole('button', { name: 'Say', exact: true }).click()
+  await page.getByRole('button', { name: 'Say', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Say', exact: true })).toContainText('2')
+}
+
+async function changeClock(page, time) {
+  await page.clock.setFixedTime(new Date(time))
+  await page.evaluate(() => document.dispatchEvent(new window.Event('visibilitychange')))
+}
+
+test('active night dhikr survives midnight, reload and explicit close', async ({ page }) => {
+  await prepareClockAndPrayerTimes(page, '2026-11-16T23:59:00Z')
+  await expect(page.locator('.vl-name')).toHaveText('Yatsı')
+  await beginCounting(page)
+  const title = await page.locator('.g-title').innerText()
+  const step = await page.getByRole('button', { name: 'Adım listesini aç' }).innerText()
+  await changeClock(page, '2026-11-17T00:01:00Z')
+  await expect(page.locator('.g-title')).toHaveText(title)
+  await expect(page.getByRole('button', { name: 'Adım listesini aç' })).toHaveText(step)
+  await expect(page.getByRole('button', { name: 'Say', exact: true })).toContainText('2')
+  await page.reload()
+  await expect(page.getByRole('button', { name: 'Say', exact: true })).toContainText('2', { timeout: 15000 })
+  await page.getByRole('button', { name: 'Kapat', exact: true }).click()
+  await page.getByRole('button', { name: 'Tesbihata Başla' }).click()
+  await expect(page.getByRole('button', { name: 'Say', exact: true })).toContainText('2')
+})
+
+test('active noon dhikr stays on its prayer at afternoon time and reminder time', async ({ page }) => {
+  await prepareClockAndPrayerTimes(page, '2026-11-16T14:59:00Z')
+  await expect(page.locator('.vl-name')).toHaveText('Öğle')
+  await beginCounting(page)
+  const title = await page.locator('.g-title').innerText()
+  const step = await page.getByRole('button', { name: 'Adım listesini aç' }).innerText()
+  await changeClock(page, '2026-11-16T15:00:00Z')
+  await expect(page.locator('.g-title')).toHaveText(title)
+  await expect(page.getByRole('button', { name: 'Adım listesini aç' })).toHaveText(step)
+  await expect(page.getByRole('button', { name: 'Say', exact: true })).toContainText('2')
+  await changeClock(page, '2026-11-16T15:15:00Z')
+  await expect(page.getByRole('button', { name: 'Say', exact: true })).toContainText('2')
+  await page.reload()
+  await expect(page.getByRole('button', { name: 'Say', exact: true })).toContainText('2', { timeout: 15000 })
+  await page.getByRole('button', { name: 'Kapat', exact: true }).click()
+  await expect(page.locator('.vl-name')).toHaveText('İkindi')
+  await page.locator('.bottom-vakit-chips').getByRole('button', { name: 'Öğle', exact: true }).click()
+  await page.getByRole('button', { name: 'Tesbihata Başla' }).click()
+  await expect(page.getByRole('button', { name: 'Say', exact: true })).toContainText('2')
+})
+
+
+test('chosen counter target and count are preserved when resuming an active session', async ({ page }) => {
+  await prepareClockAndPrayerTimes(page, '2026-11-16T23:58:00Z')
+  await page.getByRole('button', { name: 'Tesbihata Başla' }).click()
+  await page.getByRole('button', { name: 'Adım listesini aç' }).click()
+  await page.getByRole('dialog', { name: 'Adım Listesi' }).locator('li').filter({ hasText: 'Lâ ilâhe illallâh' }).first().locator('button').click()
+  await page.locator('.target-chips').getByRole('button', { name: '100×' }).click()
+  await page.getByRole('button', { name: 'Say', exact: true }).click()
+  await changeClock(page, '2026-11-17T00:01:00Z')
+  await page.reload()
+  await expect(page.getByRole('button', { name: 'Say', exact: true })).toContainText('1', { timeout: 15000 })
+  await expect(page.locator('.target-chips').getByRole('button', { name: '100×' })).toHaveClass(/active/)
+  await page.getByRole('button', { name: 'Kapat', exact: true }).click()
+  await page.getByRole('button', { name: 'Tesbihata Başla' }).click()
+  await expect(page.locator('.target-chips').getByRole('button', { name: '100×' })).toHaveClass(/active/)
+  await expect(page.getByRole('button', { name: 'Say', exact: true })).toContainText('1')
+})
+
+test('a scheduled afternoon reminder does not interrupt an active noon counter', async ({ page }) => {
+  await page.clock.install({ time: new Date('2026-11-16T15:14:30Z') })
+  await page.addInitScript(() => {
+    localStorage.setItem('tesbihat.settings', JSON.stringify({ onboarded: true, permissionsSetup: true, notifEnabled: true, reminderMin: 15, soundEnabled: false, vibrationEnabled: false }))
+    window.reminderCalls = []
+    Object.defineProperty(navigator.serviceWorker, 'getRegistration', { configurable: true, value: async () => ({
+      showNotification: async (title, options) => { window.reminderCalls.push({ title, tag: options.tag }) },
+    }) })
+  })
+  await page.route('https://api.aladhan.com/**', (route) => route.fulfill({ json: { data: { timings: {
+    Imsak: '05:00', Sunrise: '06:30', Dhuhr: '12:00', Asr: '15:00', Maghrib: '18:00', Isha: '19:30',
+  } } } }))
+  await page.goto('./')
+  await expect(page.locator('.splash')).toHaveCount(0, { timeout: 15000 })
+  await expect(page.locator('.vl-name')).toHaveText('İkindi')
+  await page.locator('.bottom-vakit-chips').getByRole('button', { name: 'Öğle', exact: true }).click()
+  await beginCounting(page)
+  await expect.poll(() => page.evaluate(() => window.__tesbihatTimers?.length ?? 0)).toBeGreaterThan(0)
+  await page.clock.fastForward('00:00:40')
+  await expect.poll(() => page.evaluate(() => window.reminderCalls.map((call) => call.tag))).toContain('tesbihat-ikindi')
+  await expect(page.getByRole('button', { name: 'Say', exact: true })).toContainText('2')
 })
