@@ -43,4 +43,4 @@ Yerelde (Android SDK'lı makine): `npm run build && npx cap sync android && cd a
 
 ## Künye
 
-Kur’ân ayetlerinin Arapça yazımı, [Diyanet mushaf verisinin Unicode aktarımından](https://github.com/alperenugus/Kuran) alınmıştır; kaynak ve doğrulama sınırları için [ayet kaynağı notlarına](tests/QURAN_SOURCES.md) bakın. Türkçe meal değiştirilmemiştir; Diyanet İşleri Başkanlığı’na atıfla Tanzil.net üzerinden derlenmiştir. Dua metinleri ayrı kaynaklardan gelir.
+Kur’ân ayetlerinin Arapça yazımı, Diyanet’in Word dosyasından Unicode aktarımıyla alınmıştır; kaynak ve doğrulama sınırları için [ayet kaynağı notlarına](tests/QURAN_SOURCES.md) bakın. Türkçe meal değiştirilmemiştir; Diyanet İşleri Başkanlığı’na atıfla Tanzil.net üzerinden derlenmiştir. Dua metinleri ayrı kaynaklardan gelir.

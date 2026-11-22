@@ -1,4 +1,4 @@
-// Arabic: Diyanet mushaf, Unicode transcription via alperenugus/Kuran, commit 6411a76f41e986521da4cfb99a42221f767cbc89.
+// Arabic: Diyanet Word edition, Unicode transcription; see tests/QURAN_SOURCES.md.
 // Turkish meanings are unchanged from the previous Tanzil/Diyanet dataset.
 import { DIYANET_ARABIC as arabic } from './diyanet-arabic.js'
 

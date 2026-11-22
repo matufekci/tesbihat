@@ -8,7 +8,7 @@ import { getStepsFor } from '../src/data/vird.js'
 const digest = (v) => createHash('sha256').update(JSON.stringify(v)).digest('hex')
 
 test('selected Diyanet transcription and unchanged Turkish meanings are intact', () => {
-  assert.equal(digest(DIYANET_ARABIC), '3a99728f2b8cc31eb6db85071b1de74051184f101ddba8c661c0d90ca54389a2')
+  assert.equal(digest(DIYANET_ARABIC), '750d2777be664e98fd00e1ff8a68a235494323f8a7ea208a2c0093e350f5e4ff')
   const meanings = Object.fromEntries(Object.entries(QURAN).map(([s, verses]) => [s, verses.map(([n, , tr]) => [n, tr])]))
   assert.equal(digest(meanings), 'da1bc9c8d6599ea63adfd4c87512ab3320b435669590eaed4d6a25c551cc796a')
   for (const [sura, verses] of Object.entries(QURAN)) {
