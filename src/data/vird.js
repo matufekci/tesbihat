@@ -283,7 +283,7 @@ const HIZB_MEANING = [
 ]
 
 const DUA_NOTE_EMPTY = 'Sonra dua edilir.'
-const DUA_NOTE_SABAH_AKSAM = 'Sabah ve akşam namazları sonrası: İmam Nevevî’ye nispet edilen Hıfz Hizbi. Köşeli parantezlerdeki sayılar tekrarları gösterir. “Sümme yenfüsü” kısmı dua değil, dört yöne üçer defa üfleme talimatıdır. Anlam, PDF’nin Arapça metninden hazırlanmış serbest bir çeviridir.'
+const DUA_NOTE_SABAH_AKSAM = 'Sabah ve akşam namazları sonrası: İmam Nevevî’ye nispet edilen Hıfz Hizbi. Köşeli parantezlerdeki sayılar tekrarları gösterir. “Sümme yenfüsü” kısmı dua değil, dört yöne üçer defa üfleme talimatıdır.'
 
 function duaStepFor(prayerId, lang = 'tr') {
   const notes = localizedDuaNotes(lang)
