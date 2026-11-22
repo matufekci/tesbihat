@@ -9,6 +9,29 @@ async function ready(page) {
   await expect(page.locator('.splash')).toHaveCount(0, { timeout: 15000 })
 }
 
+async function prepareOnboarding(page, { granted = false } = {}) {
+  await page.addInitScript(({ granted }) => {
+    window.permissionCalls = []
+    Object.defineProperty(window, 'Notification', { configurable: true, value: {
+      permission: 'default',
+      requestPermission: async () => { window.permissionCalls.push('notification'); return granted ? 'granted' : 'denied' },
+    } })
+    Object.defineProperty(navigator, 'geolocation', { configurable: true, value: {
+      getCurrentPosition: (success, failure) => {
+        window.permissionCalls.push('location')
+        if (granted) success({ coords: { latitude: 37.9, longitude: 40.2 } })
+        else failure({ code: 1 })
+      },
+    } })
+  }, { granted })
+}
+
+async function enterThemeStep(page) {
+  await page.getByRole('button', { name: 'Devam et', exact: true }).click()
+  await expect.poll(() => page.evaluate(() => window.permissionCalls)).toEqual(['notification', 'location'])
+  await page.getByRole('button', { name: 'Devam et', exact: true }).click()
+}
+
 test('settings and step navigation survive reload', async ({ page }) => {
   const errors = []
   page.on('pageerror', (error) => errors.push(error.message))
@@ -79,8 +102,10 @@ test('counter keeps its value and disabled vibration is respected', async ({ pag
 
 test('first launch works on a compact screen and language switches to RTL', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 640 })
+  await prepareOnboarding(page)
   await page.goto('./')
-  await expect(page.getByText('Başlamadan önce')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Dilini seç' })).toBeVisible()
+  await enterThemeStep(page)
   await page.getByRole('button', { name: 'Başla', exact: true }).click()
   await page.getByRole('button', { name: 'Ayarlar', exact: true }).click()
   await page.locator('summary').filter({ hasText: 'Dil Seçimi' }).click()
@@ -128,7 +153,9 @@ test('rose theme can be selected, persists and is readable in the prayer flow', 
 
 test('rose theme can be chosen during onboarding', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 700 })
+  await prepareOnboarding(page)
   await page.goto('./')
+  await enterThemeStep(page)
   await page.getByRole('button', { name: 'Gül Kurusu' }).click()
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'rose')
   await page.getByRole('button', { name: 'Başla', exact: true }).click()
@@ -189,7 +216,9 @@ for (const theme of ['rose', 'light']) {
 
 test('all theme options fit on onboarding and settings without horizontal scrolling', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 640 })
+  await prepareOnboarding(page)
   await page.goto('./')
+  await enterThemeStep(page)
   const onboarding = page.locator('.splash-theme')
   await expect(onboarding.getByRole('button')).toHaveCount(5)
   const checkFits = async (group) => {
@@ -339,4 +368,81 @@ test('Turkish prayer section headings use the correct suffix', async ({ page }) 
     await expect(page.locator('.g-section')).toHaveText(expected)
     await page.getByRole('button', { name: 'Kapat', exact: true }).click()
   }
+})
+
+
+test('onboarding requests permissions once in sequence and preserves selections', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 })
+  await prepareOnboarding(page, { granted: true })
+  await page.goto('./')
+  await expect(page.getByRole('heading', { name: 'Dilini seç' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Başla', exact: true })).toHaveCount(0)
+  await page.getByRole('button', { name: 'Devam et', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'Daha kişisel bir deneyim' })).toBeVisible()
+  await expect.poll(() => page.evaluate(() => window.permissionCalls)).toEqual(['notification', 'location'])
+  await expect(page.getByRole('button', { name: 'İzin verildi ✓' })).toHaveCount(2)
+  await page.getByRole('button', { name: 'Geri', exact: true }).click()
+  await page.getByRole('button', { name: 'Devam et', exact: true }).click()
+  expect(await page.evaluate(() => window.permissionCalls)).toEqual(['notification', 'location'])
+  await page.getByRole('button', { name: 'Devam et', exact: true }).click()
+  await page.getByRole('button', { name: 'Gül Kurusu' }).click()
+  await page.getByRole('button', { name: 'Başla', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Tesbihata Başla' })).toBeVisible()
+  const settings = await page.evaluate(() => JSON.parse(localStorage.getItem('tesbihat.settings')))
+  expect(settings.notifEnabled).toBe(true)
+  expect(settings.custom.lat).toBe(37.9)
+  expect(settings.theme).toBe('rose')
+  await page.reload()
+  await expect(page.locator('.splash.is-onboard')).toHaveCount(0)
+})
+
+test('permission prompts can be declined and onboarding remains optional', async ({ page }) => {
+  await prepareOnboarding(page)
+  await page.goto('./')
+  await page.getByRole('button', { name: 'Devam et', exact: true }).click()
+  await expect.poll(() => page.evaluate(() => window.permissionCalls)).toEqual(['notification', 'location'])
+  await expect(page.getByText('Bu adım isteğe bağlıdır. İzin vermeden de devam edebilirsiniz.')).toBeVisible()
+  await expect(page.locator('.welcome-permission-help')).toBeVisible()
+  await page.getByRole('button', { name: 'Devam et', exact: true }).click()
+  await page.getByRole('button', { name: 'Başla', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Tesbihata Başla' })).toBeVisible()
+})
+
+test('pending permissions do not trap the user or start a later prompt after skipping', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.permissionCalls = []
+    Object.defineProperty(window, 'Notification', { configurable: true, value: {
+      permission: 'default', requestPermission: () => {
+        window.permissionCalls.push('notification')
+        return new Promise((resolve) => { window.resolvePermission = resolve })
+      },
+    } })
+    Object.defineProperty(navigator, 'geolocation', { configurable: true, value: {
+      getCurrentPosition: () => { window.permissionCalls.push('location') },
+    } })
+  })
+  await page.goto('./')
+  await page.getByRole('button', { name: 'Devam et', exact: true }).click()
+  await expect(page.getByText('İsteniyor…')).toBeVisible()
+  await page.getByRole('button', { name: 'Devam et', exact: true }).click()
+  await page.evaluate(() => window.resolvePermission('denied'))
+  await expect(page.getByRole('heading', { name: 'Görünümünü seç' })).toBeVisible()
+  expect(await page.evaluate(() => window.permissionCalls)).toEqual(['notification'])
+  await page.getByRole('button', { name: 'Başla', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Tesbihata Başla' })).toBeVisible()
+})
+
+test('Arabic onboarding has translated steps and usable compact navigation', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 })
+  await prepareOnboarding(page)
+  await page.goto('./')
+  await page.getByRole('button', { name: /العربية/ }).click()
+  await expect(page.getByRole('heading', { name: 'اختر لغتك' })).toBeVisible()
+  await page.getByRole('button', { name: 'متابعة', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'تجربة أكثر ملاءمة لك' })).toBeVisible()
+  await expect.poll(() => page.evaluate(() => window.permissionCalls)).toEqual(['notification', 'location'])
+  const box = await page.getByRole('button', { name: 'متابعة', exact: true }).boundingBox()
+  expect(box.y + box.height).toBeLessThanOrEqual(640)
+  await page.getByRole('button', { name: 'متابعة', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'اختر المظهر' })).toBeVisible()
 })
