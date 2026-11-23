@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { useLang } from '../lib/i18n.js'
 import LangChips from './LangChips.jsx'
+import ThemeSelector from './ThemeSelector.jsx'
 
 const splashEmblem = `${import.meta.env.BASE_URL}icons/splash-emblem.png`
 
@@ -118,28 +119,7 @@ export default function Splash({ onDone, onboard = false, theme = 'dark', themeC
           {step === 2 && <section className="welcome-step" aria-labelledby="welcome-heading">
             <h2 id="welcome-heading" className="welcome-heading">{t('onboardThemeTitle')}</h2>
             <p className="welcome-copy">{t('onboardThemeSub')}</p>
-          <div className="splash-theme" role="group" aria-label={t('themeLabel')}>
-            <button type="button" className={`theme-chip${themeChoice === 'system' ? ' active' : ''}`} aria-pressed={themeChoice === 'system'} onClick={() => onThemeChange?.('system')}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-              {t('themeSystem')}
-            </button>
-            <button type="button" className={`theme-chip${themeChoice === 'dark' ? ' active' : ''}`} aria-pressed={themeChoice === 'dark'} onClick={() => onThemeChange?.('dark')}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
-              {t('themeDark')}
-            </button>
-            <button type="button" className={`theme-chip${themeChoice === 'light' ? ' active' : ''}`} aria-pressed={themeChoice === 'light'} onClick={() => onThemeChange?.('light')}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.4"/><path d="M12 2v2.6M12 19.4V22M2 12h2.6M19.4 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
-              {t('themeLight')}
-            </button>
-            <button type="button" className={`theme-chip${themeChoice === 'amoled' ? ' active' : ''}`} aria-pressed={themeChoice === 'amoled'} onClick={() => onThemeChange?.('amoled')}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg>
-              {t('themeAmoled')}
-            </button>
-            <button type="button" className={`theme-chip${themeChoice === 'rose' ? ' active' : ''}`} aria-pressed={themeChoice === 'rose'} onClick={() => onThemeChange?.('rose')}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 21s-7-4.3-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.7-7 10-7 10Z"/></svg>
-              {t('themeRose')}
-            </button>
-          </div>
+            <ThemeSelector className="splash-theme" value={themeChoice} onChange={onThemeChange} />
           </section>}
           <div className="welcome-navigation">
             {step > 0 && <button type="button" className="welcome-back" onClick={() => setStep(step - 1)}>{t('back')}</button>}

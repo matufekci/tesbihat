@@ -578,3 +578,50 @@ test('salawat highlights only the four changing Arabic and Latin words', async (
   for (const el of await arabic.locator('strong').all()) await expect(el).toHaveCSS('font-weight', '700')
   await expect(latin).toHaveText('Allâhümme salli ve sellim ve bârik ‘alâ … (seyyidinâ / habîbinâ / es’adinâ / şefî’inâ) Muhammedin ve ‘alâ âlihî ‘adede in’âmillâhi ve ifdâlih.')
 })
+
+test('settings theme choices match onboarding icons, styling and two-column layout', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'light' })
+  await prepareOnboarding(page)
+  await page.goto('./')
+  await enterThemeStep(page)
+  const onboarding = page.locator('.splash-theme')
+  const labels = ['Sistem', 'Koyu', 'Açık', 'AMOLED', 'Gül Kurusu']
+  const snapshots = {}
+  const styles = (group) => group.locator('button').evaluateAll((buttons) => buttons.map((button) => {
+    const style = window.getComputedStyle(button)
+    const rect = button.getBoundingClientRect()
+    return {
+      icon: button.querySelector('svg')?.outerHTML,
+      active: button.getAttribute('aria-pressed'),
+      background: style.backgroundImage, backgroundColor: style.backgroundColor, shadow: style.boxShadow, color: style.color, border: style.borderColor,
+      font: style.fontWeight, height: rect.height,
+    }
+  }))
+  for (const label of labels) {
+    await onboarding.getByRole('button', { name: label, exact: true }).click()
+    await page.mouse.move(0, 0)
+    await page.waitForTimeout(250) // let theme-colour transitions finish
+    snapshots[label] = await styles(onboarding)
+  }
+  await page.getByRole('button', { name: 'Başla', exact: true }).click()
+  await page.getByRole('button', { name: 'Ayarlar', exact: true }).click()
+  await page.locator('summary').filter({ hasText: 'Görünüm' }).click()
+  const settings = page.locator('.settings-theme-chips')
+  for (const label of labels) {
+    await settings.getByRole('button', { name: label, exact: true }).click()
+    await page.mouse.move(0, 0)
+    await expect.poll(() => styles(settings)).toEqual(snapshots[label])
+  }
+  const positions = await settings.locator('button').evaluateAll((buttons) => buttons.map((button) => {
+    const { left, top } = button.getBoundingClientRect()
+    return { left, top }
+  }))
+  expect(positions[0].top).toBe(positions[1].top)
+  expect(positions[2].top).toBe(positions[3].top)
+  expect(positions[0].left).toBe(positions[4].left)
+  await page.reload()
+  await page.getByRole('button', { name: 'Ayarlar', exact: true }).click()
+  await page.locator('summary').filter({ hasText: 'Görünüm' }).click()
+  await expect(settings.getByRole('button', { name: 'Gül Kurusu' })).toHaveAttribute('aria-pressed', 'true')
+})
