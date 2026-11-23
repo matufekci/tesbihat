@@ -675,3 +675,46 @@ test('decorative settings icons and controls remain usable in RTL', async ({ pag
   const fits = await summaries.evaluateAll((rows) => rows.every((row) => row.scrollWidth <= row.clientWidth))
   expect(fits).toBe(true)
 })
+
+test('Android reminder plan is configured, updated for location and cancelled', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-11-16T10:00:00Z'))
+  await page.addInitScript(() => {
+    localStorage.setItem('tesbihat.settings', JSON.stringify({ onboarded: true, permissionsSetup: true, notifEnabled: true, reminderMin: 15 }))
+    window.reminderBridgeCalls = []
+    window.CapacitorCustomPlatform = { name: 'android' }
+    window.Capacitor = {
+      isNativePlatform: () => true,
+      Plugins: { ReminderPlanner: {
+        configure: async (plan) => { window.reminderBridgeCalls.push({ type: 'configure', plan }) },
+        cancel: async () => { window.reminderBridgeCalls.push({ type: 'cancel' }) },
+      } },
+      PluginHeaders: [{ name: 'LocalNotifications', methods: [{ name: 'getPending', rtype: 'promise' }, { name: 'cancel', rtype: 'promise' }] }],
+      nativePromise: async (plugin, method) => {
+        window.reminderBridgeCalls.push({ type: `${plugin}.${method}` })
+        return method === 'getPending' ? { notifications: [{ id: 7 }] } : {}
+      },
+    }
+  })
+  await page.route('https://api.aladhan.com/**', (route) => route.fulfill({ json: { data: { timings: {
+    Imsak: '05:00', Sunrise: '06:30', Dhuhr: '12:00', Asr: '15:00', Maghrib: '18:00', Isha: '19:30',
+  } } } }))
+  await page.goto('./')
+  await expect.poll(() => page.evaluate(() => window.reminderBridgeCalls.filter((call) => call.type === 'configure').at(-1)?.plan.minutes)).toEqual([300, 720, 900, 1080, 1170])
+  let calls = await page.evaluate(() => window.reminderBridgeCalls)
+  let plan = calls.filter((call) => call.type === 'configure').at(-1).plan
+  expect(plan.date).toBe('2026-11-16')
+  expect(plan.bodies).toHaveLength(5)
+  expect(plan.delay).toBe(15)
+  expect(calls.some((call) => call.type === 'LocalNotifications.cancel')).toBe(true)
+  await page.getByRole('button', { name: 'Ayarlar', exact: true }).click()
+  await page.locator('summary').filter({ hasText: 'Konum' }).click()
+  const oldLat = plan.latitude
+  await page.locator('#city').selectOption('istanbul')
+  await expect.poll(() => page.evaluate(() => window.reminderBridgeCalls.filter((call) => call.type === 'configure').at(-1)?.plan.latitude)).not.toBe(oldLat)
+  calls = await page.evaluate(() => window.reminderBridgeCalls)
+  plan = calls.filter((call) => call.type === 'configure').at(-1).plan
+  expect(plan.minutes).toEqual([300, 720, 900, 1080, 1170])
+  await page.locator('summary').filter({ hasText: 'Ezan Sonrası Hatırlatma' }).click()
+  await page.locator('#notif-switch').click()
+  await expect.poll(() => page.evaluate(() => window.reminderBridgeCalls.some((call) => call.type === 'cancel'))).toBe(true)
+})

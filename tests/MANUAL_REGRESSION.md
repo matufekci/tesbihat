@@ -27,3 +27,13 @@ Run this checklist on representative Android devices before a release; automate 
 - Uygulamayı arka plana alın, yeniden başlatıcıdan ve son uygulamalar ekranından açın; tam ekran sabit görselin gösterilmediğini ve önceki durumun korunduğunu doğrulayın (sıcak açılış).
 - İlk kurulumda karşılama ve izin seçeneklerinin, açılış ekranı kaybolduktan sonra kullanılabildiğini; izin/ayar ekranından dönüşte uygulamanın çalışmaya devam ettiğini doğrulayın.
 - Android 11 ve Android 12+ cihazlarda açık/koyu tema, ekran döndürme ve erişilebilirlik ayarlarıyla kontrol edin.
+
+
+## Android tekrarlanan hatırlatmalar (henüz cihazda doğrulanmadı)
+- [ ] Mevcut bir sürümden güncelle, uygulamayı aç ve hatırlatmaları etkinleştir; eski planlanmış bildirimlerin çift uyarı oluşturmadığını kontrol et.
+- [ ] Ayarlanan vaktin ardından uygulamayı kapat; ilgili hatırlatma gelsin ve sonraki gün tekrar planlansın. En az birkaç gün uygulamayı açmadan doğrula.
+- [ ] Hatırlatmaları kapat; önceden planlanan ve sonraki günlere ait bildirimler gelmesin. Tekrar açıp konum, gecikme ve dili değiştir; eski planlar gelmesin.
+- [ ] Telefonu yeniden başlat; cihaz kilidini açtıktan sonra uygulamayı açmadan hatırlatmaların devamını kontrol et.
+- [ ] Saat ve saat dilimini değiştir; yeniden planlamayı, gece yarısını aşan gecikmeleri ve yaz saati geçişini kontrol et.
+- [ ] Android 12+ kesin alarm izni verilmiş/verilmemiş ve Android 13+ bildirim izni reddedilmiş/sonradan verilmiş durumlarını dene; tam izin yoksa gecikme olabileceğini doğrula.
+- [ ] Pil tasarrufu, Doze, üretici arka plan kısıtlamaları ve zorla durdurma sonrasında davranışı ayrı ayrı kaydet; zorla durdurmadan sonra uygulamayı tekrar aç.

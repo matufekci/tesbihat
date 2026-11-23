@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { CITIES } from './data/cities.js'
 import { fetchTimes, offlineTimes, hijriFromIntl, minutesOf } from './lib/prayer.js'
-import { loadSettings, saveSettings } from './lib/store.js'
+import { loadSettings, saveSettings, todayKey } from './lib/store.js'
 import { notificationPermission, scheduleReminders, cancelReminders } from './lib/notify.js'
 import VirdList from './components/VirdList.jsx'
 import Splash from './components/Splash.jsx'
@@ -13,7 +13,7 @@ function initialTimes(settings) {
   // API varsa anında onunla tazelenir.
   const loc = settings.custom ?? CITIES.find((c) => c.id === settings.cityId) ?? CITIES.find((c) => c.id === 'diyarbakir')
   const d = new Date()
-  return { timings: offlineTimes(d, loc.lat, loc.lng), hijri: '', source: 'offline' }
+  return { timings: offlineTimes(d, loc.lat, loc.lng), hijri: '', source: 'offline', locationKey: `${loc.lat},${loc.lng}`, dateKey: todayKey(d) }
 }
 
 function timeUntilVakitEnds(timings, date) {
@@ -137,16 +137,17 @@ export default function App() {
   const dayKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`
   useEffect(() => {
     let alive = true
-    fetchTimes({ lat: location.lat, lng: location.lng, date: new Date(), lang }).then((d) => {
-      if (alive) setTimesData(d)
+    const requestDate = new Date()
+    fetchTimes({ lat: location.lat, lng: location.lng, date: requestDate, lang }).then((d) => {
+      if (alive) setTimesData({ ...d, locationKey: `${location.lat},${location.lng}`, dateKey: todayKey(requestDate) })
     })
     return () => { alive = false }
   }, [location.lat, location.lng, dayKey, lang])
 
   // Ezan sonrası hatırlatmalar
   useEffect(() => {
-    if (!timesData?.timings || !settings.notifEnabled) return
     const today = new Date()
+    if (!timesData?.timings || !settings.notifEnabled || timesData.locationKey !== `${location.lat},${location.lng}` || timesData.dateKey !== todayKey(today)) return
     const events = []
     const plan = [
       { prayerId: 'sabah', at: timesData.timings.Imsak, vakitKey: 'vakitSabah' },
@@ -164,9 +165,14 @@ export default function App() {
         events.push({ when: remind, prayerId: p.prayerId, body: t('notifBody', { vakit: t(p.vakitKey) }) })
       }
     }
-    scheduleReminders(events, { title: t('notifTitle'), body: (e) => e.body }).catch(() => {})
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timesData, settings.notifEnabled, settings.reminderMin, lang])
+    const nativePlan = {
+      latitude: location.lat, longitude: location.lng, delay: settings.reminderMin, date: todayKey(today),
+      minutes: plan.map((p) => minutesOf(p.at)),
+      bodies: plan.map((p) => t('notifBody', { vakit: t(p.vakitKey) })),
+    }
+    scheduleReminders(events, { title: t('notifTitle'), body: (e) => e.body, nativePlan })
+      .catch(() => showToast(t('notifScheduleFailed')))
+  }, [timesData, settings.notifEnabled, settings.reminderMin, location.lat, location.lng, t, showToast])
 
   useEffect(() => {
     const h = (e) => { e.preventDefault(); deferredInstall.current = e; setInstallReady(true) }
@@ -186,8 +192,13 @@ export default function App() {
   const toggleNotif = useCallback(async (on) => {
     if (!on) {
       setSettings((s) => ({ ...s, notifEnabled: false }))
-      cancelReminders()
-      showToast(t('notifOffToast'))
+      try {
+        await cancelReminders()
+        showToast(t('notifOffToast'))
+      } catch {
+        setSettings((s) => ({ ...s, notifEnabled: true }))
+        showToast(t('notifScheduleFailed'))
+      }
       return
     }
     const perm = await notificationPermission()

@@ -5,12 +5,12 @@
 - `npm ci`, `npm run lint`, `npm test`: bağımlılıklar, statik kontrol ve birim/veri testleri.
 - `npx playwright install --with-deps chromium` ve `npm run test:e2e`: üretim derlemesinde açılış, küçük ekran, Arapça/RTL, ayarlar, adım listesi, sayaç kalıcılığı ve ilk çevrimiçi kurulumdan sonra çevrimdışı açılış.
 - `npm run cap:sync`: web paketini Android projesine taşır. Android APK için JDK 17 ve Android SDK ile `npm run apk:debug` kullanılabilir.
-- `.github/workflows/quality.yml` otomatik kontrolleri çalıştırır; APK iş akışı ayrıca debug APK derler. Manuel kontrol listesi: `tests/MANUAL_REGRESSION.md`.
+- `.github/workflows/quality.yml` otomatik kontrolleri çalıştırır; APK iş akışı Java hesaplama testlerini çalıştırır ve debug APK derler. Manuel kontrol listesi: `tests/MANUAL_REGRESSION.md`.
 
 ## Dağıtım öncesi açık konular
 
 - Gerçek Android cihaz/emülatörde kurulum, yükseltme, izinlerin reddi/geri alınması, bildirim kanalı, pil optimizasyonu, yeniden başlatma, tarih/saat dilimi değişimi, dokunma/titreşim ve TalkBack doğrulanmalıdır. Bu testler tarayıcı testleriyle ikame edilemez.
-- Hatırlatmalar yalnızca uygulama açıldığında hesaplanan günün kalan vakitleri için planlanır; uygulama günlerce açılmazsa gelecek günler otomatik planlanmaz. Web hatırlatmaları sekme açıkken çalışır. Android kesin alarm izni ve pil politikaları teslim zamanını etkileyebilir.
+- Android hatırlatmaları yerel alarm alıcısı tarafından sonraki vakit için tekrar planlanır; cihaz yeniden başlatıldığında ve saat/saat dilimi değiştiğinde yenilenir. Gelecek günlerin saatleri yaklaşık çevrimdışı hesaplanır; mevcut gün için uygulamanın aldığı vakitler kullanılır. Bildirim/alarm izni, Doze, üretici pil kısıtları ve kullanıcı uygulamayı zorla durdurursa Android davranışı teslimi etkileyebilir; kesin zaman garantisi yoktur. Yeniden kurulum/güncelleme sonrası planın kurulması için uygulamayı açmak gerekir. Web hatırlatmaları yalnızca sekme açıkken çalışır. Android cihaz/emülatörde alarmın tetiklenmesi, kapanma, yeniden başlatma, izinler ve pil koşulları ayrıca doğrulanmalıdır.
 - Çevrimdışı vakit hesabı yaklaşık astronomik hesaptır; resmi takvimlerin düzeltmeleriyle aynı olduğu doğrulanmamıştır. Hesap cihazın saat dilimini kullanır; seçilen konum başka bir saat dilimindeyse sonuçların doğruluğu garanti edilmez. Yüksek enlemlerde bazı vakitler hesaplanamayabilir. İbadet saatleri için yerel yetkili takvimle karşılaştırılmalıdır.
 - Dini metinlerin, meal atıflarının/lisanslarının ve çevirilerin uzman tarafından kaynaklarla birebir incelenmesi gerekir; otomatik kontroller bunların doğruluğunu veya lisans uygunluğunu kanıtlamaz.
 - Üretim imzası, güvenli anahtar saklama, uygulama sürümleme/yükseltme, gizlilik politikası, veri güvenliği beyanları ve güncel mağaza hedef SDK koşulları ayrıca hazırlanmalıdır. Debug APK mağaza için uygun değildir. Hiçbir anahtar depoya eklenmemelidir.
