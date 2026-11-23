@@ -1643,7 +1643,7 @@ html { text-size-adjust:100%; -webkit-text-size-adjust:100%; }
 .settings-group-summary::-webkit-details-marker { display:none; }
 .settings-group-summary span { min-width:0; overflow-wrap:anywhere; }
 .settings-group-summary svg { flex:0 0 auto; transition:transform .2s ease; }
-.settings-group[open] > .settings-group-summary svg { transform:rotate(180deg); }
+.settings-group[open] > .settings-group-summary > .settings-chevron { transform:rotate(180deg); }
 .settings-group-summary:focus-visible { outline:2px solid var(--gold-bright); outline-offset:-3px; border-radius:14px; }
 .settings-group-content { border-top:1px solid var(--line); }
 @media (prefers-reduced-motion:reduce) { .settings-group-summary svg { transition:none; } }
@@ -1693,3 +1693,24 @@ html[dir='rtl'] .welcome-navigation .splash-continue svg { transform: scaleX(-1)
 
 /* Salavatın her tekrarında değişen hitaplar metin değiştirilmeden belirginleşir. */
 .salavat-emphasis { font-weight: 700; }
+
+/* Hafif çizgi simgeleri: yalnızca yön bulmaya yardım eden yerlerde. */
+.settings-group-heading { display:flex; align-items:center; flex:1 1 auto; gap:11px; text-align:start; }
+.settings-group-icon { width:36px; height:36px; flex:0 0 36px; display:grid; place-items:center; border-radius:12px; color:var(--gold-bright); background:rgba(217,179,108,.11); border:1px solid rgba(217,179,108,.13); }
+.settings-group-summary .settings-group-icon svg { transition:none; }
+.settings-group-title { flex:1 1 auto; }
+.settings-group[open] > .settings-group-summary { background:rgba(217,179,108,.035); }
+[data-theme='light'] .settings-group-icon { background:rgba(138,106,36,.10); border-color:rgba(138,106,36,.14); color:#75551d; }
+[data-theme='rose'] .settings-group-icon { background:rgba(132,67,85,.09); border-color:rgba(132,67,85,.14); color:#844355; }
+.start-cta { display:inline-flex; justify-content:center; align-items:center; gap:9px; }
+.start-cta svg, .quick-sheet-label svg, .meaning-toggle-label svg, .step-list-head h2 svg { flex:0 0 auto; }
+.quick-sheet-label, .meaning-toggle-label { display:inline-flex; align-items:center; gap:8px; text-align:start; }
+.g-step-label-btn { display:inline-flex; align-items:center; justify-content:center; gap:4px; }
+.g-step-label-btn svg { flex:0 0 auto; }
+.step-list-head h2 { display:flex; align-items:center; gap:8px; }
+@media (max-width:360px) {
+  .settings-group-icon { width:32px; height:32px; flex-basis:32px; border-radius:10px; }
+  .settings-group-heading { gap:8px; }
+  .g-step-label-btn { gap:2px; padding-inline:2px; }
+}
+@media (max-width:360px) { .guided-top.inflow { gap:4px; } }

@@ -5,6 +5,7 @@ import { todayKey, loadVakitProgress, saveVakitProgress, resetVakitProgress, loa
 import QuranBlock from './QuranBlock.jsx'
 import CompletionCelebration from './CompletionCelebration.jsx'
 import MeaningDisclosure from './MeaningDisclosure.jsx'
+import AppIcon from './AppIcon.jsx'
 import { QURAN, diyanetAyah } from '../data/quran.js'
 import { CITIES } from '../data/cities.js'
 import { useLang } from '../lib/i18n.js'
@@ -194,7 +195,7 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
         <div className="vakit-line" aria-label={t('vakitLineAria')}>
           <span className="vl-name">{vlabel(vakit)}</span>
         </div>
-        <button className="start-cta" onClick={startFlow}>{t('startCta')}</button>
+        <button className="start-cta" onClick={startFlow}><AppIcon name="beads" size={20} /><span>{t('startCta')}</span></button>
       </div>
 
       {settings && (
@@ -216,7 +217,7 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
           >
             <span className="quick-sheet-grabber" aria-hidden="true" />
             <span className="quick-sheet-headline">
-              <span>{t('quickSettings')}</span>
+              <span className="quick-sheet-label"><AppIcon name="sliders" size={15} />{t('quickSettings')}</span>
               <span className="quick-sheet-current">{vlabel(vakit)}</span>
               <svg className={quickExpanded ? 'open' : ''} width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
             </span>
@@ -486,7 +487,7 @@ function VirdFlow({ vakit, initialProgress, initialTarget, dayKey, settings, onC
         <button className="icon-btn step-next-btn" onClick={goNext} aria-label={t('nextStep')} title={t('nextStep')}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
         </button>
-        <button ref={stepListButtonRef} className="g-step-label g-step-label-btn" onClick={() => setStepListOpen(true)} aria-label={t('stepListAria')} title={t('stepListAria')}>{idx + 1}/{steps.length}</button>
+        <button ref={stepListButtonRef} className="g-step-label g-step-label-btn" onClick={() => setStepListOpen(true)} aria-label={t('stepListAria')} title={t('stepListAria')}><AppIcon name="list" size={15} /><span>{idx + 1}/{steps.length}</span></button>
         <button className="font-btn" onClick={() => bumpFont(-0.15)} aria-label={t('fontSmall')} title={t('fontSmall')}>A−</button>
         <button className="font-btn" onClick={() => bumpFont(0.15)} aria-label={t('fontLarge')} title={t('fontLarge')}>A+</button>
         <button className="icon-btn" onClick={closeFlow} aria-label={t('close')} title={t('close')}>
@@ -604,7 +605,7 @@ function VirdFlow({ vakit, initialProgress, initialTarget, dayKey, settings, onC
         <div className="step-list-overlay" role="dialog" aria-modal="true" aria-label={t('stepList')} onKeyDown={handleStepListKeyDown}>
           <div className="step-list-panel">
             <div className="step-list-head">
-              <h2>{t('stepList')}</h2>
+              <h2><AppIcon name="list" size={18} />{t('stepList')}</h2>
               <button className="icon-btn" autoFocus onClick={closeStepList} aria-label={t('close')} title={t('close')}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
               </button>

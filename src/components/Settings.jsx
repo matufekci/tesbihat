@@ -3,6 +3,7 @@ import { CITIES } from '../data/cities.js'
 import { useLang } from '../lib/i18n.js'
 import LangChips from './LangChips.jsx'
 import ThemeSelector from './ThemeSelector.jsx'
+import AppIcon from './AppIcon.jsx'
 
 const REMINDER_OPTIONS = [5, 10, 15, 20, 30, 45, 60]
 const APP_VERSION = '1.21.2'
@@ -12,10 +13,10 @@ const LANGUAGE_TITLES = [
   ['fr', 'Choix de la langue'], ['en', 'Language selection'],
 ]
 
-function SettingsGroup({ title, children }) {
+function SettingsGroup({ title, icon, children }) {
   return (
     <details className="settings-group">
-      <summary className="settings-group-summary"><span>{title}</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
+      <summary className="settings-group-summary"><span className="settings-group-heading"><span className="settings-group-icon"><AppIcon name={icon} /></span><span className="settings-group-title">{title}</span></span><svg className="settings-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></summary>
       <div className="settings-group-content">{children}</div>
     </details>
   )
@@ -62,7 +63,7 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
       </header>
 
       {/* Dil */}
-      <SettingsGroup title={<LanguageTitle />}>
+      <SettingsGroup title={<LanguageTitle />} icon="language">
         <div className="set-row">
           <div className="grow">
             <small className="settings-description">{t('languageSmall')}</small>
@@ -72,7 +73,7 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
       </SettingsGroup>
 
       {/* Konum */}
-      <SettingsGroup title={t('locationGroup')}>
+      <SettingsGroup title={t('locationGroup')} icon="location">
         <div className="set-row">
           <div className="grow">
             <label htmlFor="city">{t('cityLabel')}</label>
@@ -93,7 +94,7 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
       </SettingsGroup>
 
       {/* Hatırlatmalar */}
-      <SettingsGroup title={t('notifGroup')}>
+      <SettingsGroup title={t('notifGroup')} icon="bell">
         <div className="set-row">
           <div className="grow">
             <label htmlFor="notif-switch">{t('notifLabel')}</label>
@@ -119,7 +120,7 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
       </SettingsGroup>
 
       {/* Ses ve Titreşim */}
-      <SettingsGroup title={t('soundGroup')}>
+      <SettingsGroup title={t('soundGroup')} icon="sound">
         <div className="set-row">
           <div className="grow">
             <label htmlFor="sound-switch">{t('soundLabel')}</label>
@@ -137,7 +138,7 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
       </SettingsGroup>
 
       {/* Görünüm */}
-      <SettingsGroup title={t('appearanceGroup')}>
+      <SettingsGroup title={t('appearanceGroup')} icon="appearance">
         <div className="set-row">
           <div className="grow">
             <label>{t('themeLabel')}</label>
