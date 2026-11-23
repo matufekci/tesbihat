@@ -5,8 +5,8 @@ Beş vaktin ardından okunan zikir, salavât, dua ve sureler için sayaçlı, an
 ## İndir / Canlı Site
 
 - 🌐 **Canlı site:** https://matufekci.github.io/tesbihat/
-- 📱 **Son APK (debug):** https://github.com/matufekci/tesbihat/actions/runs/45119734163/artifacts/14793007414
-  - Derleme: https://github.com/matufekci/tesbihat/actions/runs/45119734163 (commit `6aaa9ec`)
+- 📱 **Son APK (debug):** https://github.com/matufekci/tesbihat/actions/runs/45122310829/artifacts/14794027943
+  - Derleme: https://github.com/matufekci/tesbihat/actions/runs/45122310829 (commit `1f50b20`)
   - Artifact adı: `tesbihat-debug-apk` (~8,5 MB, 30 gün saklanır)
 
 ## Özellikler
@@ -17,7 +17,7 @@ Beş vaktin ardından okunan zikir, salavât, dua ve sureler için sayaçlı, an
 - 🔎 A−/A+ düğmeleriyle metin boyu; kısa sureler ve dualar için altta katlanabilir Türkçe anlam (Diyanet İşleri meal)
 - 🔤 Arapça metin + okunuş (yerel yazılar)
 - 📍 Vakitler: çevrimdışı astronomik hesap (anında) + internet varsa Diyanet metoduyla güncelleme
-- 🔔 Ezan sonrası hatırlatma bildirimi (web: uygulama açıkken; APK: gerçek alarm)
+- 🔔 Ezan sonrası hatırlatma bildirimi (web: sekme açıkken; Android: sonraki günleri otomatik planlayan yerel alarm; çevrimdışı vakitler yaklaşıktır)
 - 🌙 Koyu / açık / AMOLED / gül kurusu temalar · PWA kurulabilir · Android APK hazır
 
 ## Geliştirme
