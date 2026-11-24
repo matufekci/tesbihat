@@ -12,9 +12,9 @@ public class ReminderTimeCalculatorTest {
         Calendar c = new GregorianCalendar(zone); c.clear(); c.set(year, month - 1, day, hour, minute, 0); return c;
     }
     @Test public void offlineCalculationMatchesWebFixtures() {
-        assertArrayEquals(new Integer[] {361, 748, 942, 1042, 1129}, PrayerTimeCalculator.calculate(at(TR, 2026, 1, 15, 12, 0), 37.9144, 40.2306));
-        assertArrayEquals(new Integer[] {181, 739, 1048, 1182, 1290}, PrayerTimeCalculator.calculate(at(TR, 2026, 6, 15, 12, 0), 37.9144, 40.2306));
-        assertArrayEquals(new Integer[] {329, 724, 929, 1028, 1114}, PrayerTimeCalculator.calculate(at(TR, 2026, 11, 16, 12, 0), 37.9144, 40.2306));
+        assertArrayEquals(new Integer[] {361, 753, 907, 1049, 1129}, PrayerTimeCalculator.calculate(at(TR, 2026, 1, 15, 12, 0), 37.9144, 40.2306));
+        assertArrayEquals(new Integer[] {181, 744, 977, 1189, 1290}, PrayerTimeCalculator.calculate(at(TR, 2026, 6, 15, 12, 0), 37.9144, 40.2306));
+        assertArrayEquals(new Integer[] {329, 729, 891, 1035, 1114}, PrayerTimeCalculator.calculate(at(TR, 2026, 11, 16, 12, 0), 37.9144, 40.2306));
     }
     @Test public void todayUsesSuppliedTimesAndTomorrowUsesOffline() {
         Integer[] today = {300, 720, 900, 1080, 1200};

@@ -1714,3 +1714,9 @@ html[dir='rtl'] .welcome-navigation .splash-continue svg { transform: scaleX(-1)
   .g-step-label-btn { gap:2px; padding-inline:2px; }
 }
 @media (max-width:360px) { .guided-top.inflow { gap:4px; } }
+
+.time-source { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.15rem 0.65rem; margin: 0 auto; padding: 0 0.5rem; text-align: center; font-size: 0.7rem; opacity: 0.8; line-height: 1.35; }
+
+@media (max-height: 700px) {
+  .app-title { padding-top: 4px !important; padding-bottom: 5px !important; }
+}

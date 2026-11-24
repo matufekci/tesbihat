@@ -31,29 +31,31 @@ function hourAngleDeg(lat, declRad, altitudeDeg) {
 }
 
 function asrHourAngleDeg(lat, declRad, factor) {
-  // Hanefî/Diyanet: gölge boyunun ikisinin bir nesne boyuna eklenmesi (iki gölge)
+  // Standart (asr-ı evvel): Diyanet takvimleriyle karşılaştırılan yöntem.
   const latR = toRad(lat)
   const alt = Math.atan(1 / (factor + Math.tan(Math.abs(latR - declRad))))
   return hourAngleDeg(lat, declRad, toDeg(alt))
 }
 
 export function offlineTimes(date, lat, lng) {
-  const tzOff = -date.getTimezoneOffset() / 60 // yerel saat dilimi (saat)
+  const localNoon = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12)
+  const tzOff = -localNoon.getTimezoneOffset() / 60 // that date’s noon, including DST
   const anchor = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0))
   const { eqTime, decl } = solarParams(anchor)
   const noon = 720 - 4 * lng - eqTime + tzOff * 60
   const fajrHA = hourAngleDeg(lat, decl, -18)
   const sunHA = hourAngleDeg(lat, decl, -0.833)
-  const asrHA = asrHourAngleDeg(lat, decl, 2)
+  const asrHA = asrHourAngleDeg(lat, decl, 1)
   const ishaHA = hourAngleDeg(lat, decl, -17)
   const t = {
     Imsak: fajrHA != null ? noon - fajrHA * 4 : null,
-    Sunrise: sunHA != null ? noon - sunHA * 4 : null,
-    Dhuhr: noon,
-    Asr: asrHA != null ? noon + asrHA * 4 : null,
-    Maghrib: sunHA != null ? noon + sunHA * 4 : null,
+    Sunrise: sunHA != null ? noon - sunHA * 4 - 7 : null,
+    Dhuhr: noon + 5,
+    Asr: asrHA != null ? noon + asrHA * 4 + 4 : null,
+    Maghrib: sunHA != null ? noon + sunHA * 4 + 7 : null,
     Isha: ishaHA != null ? noon + ishaHA * 4 : null,
   }
+  // AlAdhan method 13 offsets, approximate; not an official calendar.
   const out = {}
   for (const k of Object.keys(t)) out[k] = t[k] != null ? fmtHM(t[k]) : null
   out.Sunset = out.Maghrib
@@ -94,7 +96,7 @@ function cleanTime(s) {
 export async function fetchTimes({ lat, lng, date = new Date(), lang = 'tr' }) {
   const dd = pad(date.getDate())
   const mm = pad(date.getMonth() + 1)
-  const url = `https://api.aladhan.com/v1/timings/${dd}-${mm}-${date.getFullYear()}?latitude=${lat}&longitude=${lng}&method=13`
+  const url = `https://api.aladhan.com/v1/timings/${dd}-${mm}-${date.getFullYear()}?latitude=${lat}&longitude=${lng}&method=13&school=0`
   const ctrl = new AbortController()
   const timer = setTimeout(() => ctrl.abort(), 6000)
   try {
@@ -103,7 +105,7 @@ export async function fetchTimes({ lat, lng, date = new Date(), lang = 'tr' }) {
     const json = await res.json()
     const t = json?.data?.timings ?? {}
     const timings = {
-      Imsak: cleanTime(t.Imsak) ?? cleanTime(t.Fajr),
+      Imsak: cleanTime(t.Fajr),
       Sunrise: cleanTime(t.Sunrise),
       Dhuhr: cleanTime(t.Dhuhr),
       Asr: cleanTime(t.Asr),
@@ -155,5 +157,30 @@ export function prayerState(timings, date = new Date()) {
   }
   const nextInMin = next?.at != null ? next.at - now : null
   return { current, next, nextInMin }
+}
+
+
+export function timeUntilVakitEnds(timings, tomorrowTimings, date) {
+  if (!timings) return null
+  const now = date.getHours() * 60 + date.getMinutes() + date.getSeconds() / 60
+  const { Imsak, Sunrise, Dhuhr, Asr, Maghrib, Isha } = Object.fromEntries(
+    ['Imsak', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].map((key) => [key, minutesOf(timings[key])])
+  )
+  if ([Imsak, Sunrise, Dhuhr, Asr, Maghrib, Isha].some((v) => v == null)) return null
+  // Between sunrise and noon the morning prayer has ended; it is not a prayer window.
+  if (now >= Sunrise && now < Dhuhr) return 'afterSunrise'
+  let end
+  if (now < Imsak) end = Imsak
+  else if (now < Sunrise) end = Sunrise
+  else if (now < Asr) end = Asr
+  else if (now < Maghrib) end = Maghrib
+  else if (now < Isha) end = Isha
+  else {
+    const next = minutesOf(tomorrowTimings?.Imsak)
+    end = next == null ? null : next + 1440
+  }
+  if (end == null) return null
+  const minutes = Math.max(0, Math.floor(end - now))
+  return `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`
 }
 

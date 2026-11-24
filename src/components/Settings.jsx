@@ -28,7 +28,7 @@ function LanguageTitle() {
   ))
 }
 
-export default function Settings({ settings, setSettings, onToggleNotif, onToast }) {
+export default function Settings({ settings, setSettings, onToggleNotif, onToast, timesData, location, lastUpdate, timeZone }) {
   const { t } = useLang()
   const [gpsError, setGpsError] = useState('')
   const [gpsBusy, setGpsBusy] = useState(false)
@@ -147,6 +147,11 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
         </div>
       </SettingsGroup>
 
+      <p className="source-line settings-source-line" role="status">
+        {location?.name} · {timesData?.source === 'aladhan' ? t('sourceOnline') : t('sourceOffline')}<br />
+        {t('timeUpdated', { time: lastUpdate })} · {timeZone}<br />
+        {t('timeAccuracyHint')}
+      </p>
       <p className="source-line settings-source-line">
         {t('versionLine', { v: APP_VERSION })}<br />
         {t('sourceLine')}

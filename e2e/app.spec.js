@@ -447,7 +447,7 @@ test('Arabic onboarding has translated steps and usable compact navigation', asy
 async function prepareClockAndPrayerTimes(page, time) {
   await page.clock.setFixedTime(new Date(time))
   await page.route('https://api.aladhan.com/**', (route) => route.fulfill({ json: { data: { timings: {
-    Imsak: '05:00', Sunrise: '06:30', Dhuhr: '12:00', Asr: '15:00', Maghrib: '18:00', Isha: '19:30',
+    Imsak: '04:50', Fajr: '05:00', Sunrise: '06:30', Dhuhr: '12:00', Asr: '15:00', Maghrib: '18:00', Isha: '19:30',
   } } } }))
   await ready(page)
 }
@@ -532,7 +532,7 @@ test('a scheduled afternoon reminder does not interrupt an active noon counter',
     }) })
   })
   await page.route('https://api.aladhan.com/**', (route) => route.fulfill({ json: { data: { timings: {
-    Imsak: '05:00', Sunrise: '06:30', Dhuhr: '12:00', Asr: '15:00', Maghrib: '18:00', Isha: '19:30',
+    Imsak: '04:50', Fajr: '05:00', Sunrise: '06:30', Dhuhr: '12:00', Asr: '15:00', Maghrib: '18:00', Isha: '19:30',
   } } } }))
   await page.goto('./')
   await expect(page.locator('.splash')).toHaveCount(0, { timeout: 15000 })
@@ -696,7 +696,7 @@ test('Android reminder plan is configured, updated for location and cancelled', 
     }
   })
   await page.route('https://api.aladhan.com/**', (route) => route.fulfill({ json: { data: { timings: {
-    Imsak: '05:00', Sunrise: '06:30', Dhuhr: '12:00', Asr: '15:00', Maghrib: '18:00', Isha: '19:30',
+    Imsak: '04:50', Fajr: '05:00', Sunrise: '06:30', Dhuhr: '12:00', Asr: '15:00', Maghrib: '18:00', Isha: '19:30',
   } } } }))
   await page.goto('./')
   await expect.poll(() => page.evaluate(() => window.reminderBridgeCalls.filter((call) => call.type === 'configure').at(-1)?.plan.minutes)).toEqual([300, 720, 900, 1080, 1170])
@@ -711,10 +711,22 @@ test('Android reminder plan is configured, updated for location and cancelled', 
   const oldLat = plan.latitude
   await page.locator('#city').selectOption('istanbul')
   await expect.poll(() => page.evaluate(() => window.reminderBridgeCalls.filter((call) => call.type === 'configure').at(-1)?.plan.latitude)).not.toBe(oldLat)
+  await expect.poll(() => page.evaluate(() => window.reminderBridgeCalls.filter((call) => call.type === 'configure').at(-1)?.plan.minutes)).toEqual([300, 720, 900, 1080, 1170])
   calls = await page.evaluate(() => window.reminderBridgeCalls)
   plan = calls.filter((call) => call.type === 'configure').at(-1).plan
-  expect(plan.minutes).toEqual([300, 720, 900, 1080, 1170])
+  expect(plan.latitude).not.toBe(oldLat)
   await page.locator('summary').filter({ hasText: 'Ezan Sonrası Hatırlatma' }).click()
   await page.locator('#notif-switch').click()
   await expect.poll(() => page.evaluate(() => window.reminderBridgeCalls.some((call) => call.type === 'cancel'))).toBe(true)
+})
+
+test('sunrise ends the prayer countdown and source is visible', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-11-16T06:30:00Z'))
+  await page.addInitScript(() => localStorage.setItem('tesbihat.settings', JSON.stringify({ onboarded: true, permissionsSetup: true })))
+  await page.route('https://api.aladhan.com/**', (route) => route.fulfill({ json: { data: { timings: {
+    Imsak: '04:50', Fajr: '05:00', Sunrise: '06:30', Dhuhr: '12:00', Asr: '15:00', Maghrib: '18:00', Isha: '19:30',
+  } } } }))
+  await page.goto('./')
+  await expect(page.locator('.time-source')).toContainText('AlAdhan çevrimiçi hesap')
+  await expect(page.locator('.date-countdown')).toContainText('Sabah namazı vakti güneşle sona erdi')
 })

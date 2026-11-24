@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { CITIES } from './data/cities.js'
-import { fetchTimes, offlineTimes, hijriFromIntl, minutesOf } from './lib/prayer.js'
+import { fetchTimes, offlineTimes, hijriFromIntl, minutesOf, timeUntilVakitEnds } from './lib/prayer.js'
 import { loadSettings, saveSettings, todayKey } from './lib/store.js'
 import { notificationPermission, scheduleReminders, cancelReminders } from './lib/notify.js'
 import VirdList from './components/VirdList.jsx'
@@ -13,24 +13,9 @@ function initialTimes(settings) {
   // API varsa anında onunla tazelenir.
   const loc = settings.custom ?? CITIES.find((c) => c.id === settings.cityId) ?? CITIES.find((c) => c.id === 'diyarbakir')
   const d = new Date()
-  return { timings: offlineTimes(d, loc.lat, loc.lng), hijri: '', source: 'offline', locationKey: `${loc.lat},${loc.lng}`, dateKey: todayKey(d) }
+  return { timings: offlineTimes(d, loc.lat, loc.lng), hijri: '', source: 'offline', locationKey: `${loc.lat},${loc.lng}`, dateKey: todayKey(d), updatedAt: d.getTime() }
 }
 
-function timeUntilVakitEnds(timings, date) {
-  if (!timings) return '00.00'
-  const boundaries = ['Imsak', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
-    .map((key) => minutesOf(timings[key]))
-    .filter(Number.isFinite)
-    .sort((a, b) => a - b)
-  if (!boundaries.length) return '00.00'
-  const nowSeconds = date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds()
-  let nextBoundary = boundaries.find((minute) => minute * 60 > nowSeconds)
-  if (nextBoundary == null) nextBoundary = boundaries[0] + 1440
-  const remainingMinutes = Math.max(0, Math.floor((nextBoundary * 60 - nowSeconds) / 60))
-  const hours = String(Math.floor(remainingMinutes / 60)).padStart(2, '0')
-  const minutes = String(remainingMinutes % 60).padStart(2, '0')
-  return `${hours}.${minutes}`
-}
 
 export default function App() {
   const { t, lang } = useLang()
@@ -135,11 +120,20 @@ export default function App() {
   }, [settings.custom, settings.cityId])
 
   const dayKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`
+  const currentTimes = useMemo(() => {
+    if (timesData.locationKey === `${location.lat},${location.lng}` && timesData.dateKey === todayKey(now)) return timesData
+    return { timings: offlineTimes(now, location.lat, location.lng), source: 'offline', updatedAt: now.getTime(), locationKey: `${location.lat},${location.lng}`, dateKey: todayKey(now) }
+  }, [timesData, location.lat, location.lng, dayKey]) // eslint-disable-line react-hooks/exhaustive-deps
+  const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 12)
+  const tomorrowTimes = offlineTimes(tomorrow, location.lat, location.lng)
+  const remaining = timeUntilVakitEnds(currentTimes.timings, tomorrowTimes, now)
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || ''
+  const lastUpdate = new Intl.DateTimeFormat(langById(lang).intl, { hour: '2-digit', minute: '2-digit' }).format(currentTimes.updatedAt)
   useEffect(() => {
     let alive = true
     const requestDate = new Date()
     fetchTimes({ lat: location.lat, lng: location.lng, date: requestDate, lang }).then((d) => {
-      if (alive) setTimesData({ ...d, locationKey: `${location.lat},${location.lng}`, dateKey: todayKey(requestDate) })
+      if (alive) setTimesData({ ...d, locationKey: `${location.lat},${location.lng}`, dateKey: todayKey(requestDate), updatedAt: Date.now() })
     })
     return () => { alive = false }
   }, [location.lat, location.lng, dayKey, lang])
@@ -147,14 +141,14 @@ export default function App() {
   // Ezan sonrası hatırlatmalar
   useEffect(() => {
     const today = new Date()
-    if (!timesData?.timings || !settings.notifEnabled || timesData.locationKey !== `${location.lat},${location.lng}` || timesData.dateKey !== todayKey(today)) return
+    if (!currentTimes?.timings || !settings.notifEnabled || currentTimes.locationKey !== `${location.lat},${location.lng}` || currentTimes.dateKey !== todayKey(today)) return
     const events = []
     const plan = [
-      { prayerId: 'sabah', at: timesData.timings.Imsak, vakitKey: 'vakitSabah' },
-      { prayerId: 'ogle', at: timesData.timings.Dhuhr, vakitKey: 'vakitOgle' },
-      { prayerId: 'ikindi', at: timesData.timings.Asr, vakitKey: 'vakitIkindi' },
-      { prayerId: 'aksam', at: timesData.timings.Maghrib, vakitKey: 'vakitAksam' },
-      { prayerId: 'yatsi', at: timesData.timings.Isha, vakitKey: 'vakitYatsi' },
+      { prayerId: 'sabah', at: currentTimes.timings.Imsak, vakitKey: 'vakitSabah' },
+      { prayerId: 'ogle', at: currentTimes.timings.Dhuhr, vakitKey: 'vakitOgle' },
+      { prayerId: 'ikindi', at: currentTimes.timings.Asr, vakitKey: 'vakitIkindi' },
+      { prayerId: 'aksam', at: currentTimes.timings.Maghrib, vakitKey: 'vakitAksam' },
+      { prayerId: 'yatsi', at: currentTimes.timings.Isha, vakitKey: 'vakitYatsi' },
     ]
     for (const p of plan) {
       const m = minutesOf(p.at)
@@ -172,7 +166,7 @@ export default function App() {
     }
     scheduleReminders(events, { title: t('notifTitle'), body: (e) => e.body, nativePlan })
       .catch(() => showToast(t('notifScheduleFailed')))
-  }, [timesData, settings.notifEnabled, settings.reminderMin, location.lat, location.lng, t, showToast])
+  }, [currentTimes, settings.notifEnabled, settings.reminderMin, location.lat, location.lng, t, showToast])
 
   useEffect(() => {
     const h = (e) => { e.preventDefault(); deferredInstall.current = e; setInstallReady(true) }
@@ -228,8 +222,11 @@ export default function App() {
         )}
         <div className="date-row">
           <b className="date-hijri">{hijri}</b>
-          <span className="date-countdown">{t('timeUntilPrayerEnd', { time: timeUntilVakitEnds(timesData?.timings, now) })}</span>
+          <span className="date-countdown">{remaining === 'afterSunrise' ? t('noPrayerCountdown') : remaining ? t('timeUntilPrayerEnd', { time: remaining }) : t('timeUnavailable')}</span>
           <span className="date-gregorian">{greg}</span>
+        </div>
+        <div className="time-source" role="status">
+          <span>{currentTimes.source === 'aladhan' ? t('sourceOnline') : t('sourceOffline')}</span>
         </div>
         <div className="app-title">
           <div className="app-title-eyebrow">{t('eyebrow')}</div>
@@ -243,13 +240,17 @@ export default function App() {
             )}
           </button>
         </div>
-        {tab === 'vird' && <VirdList now={now} timesData={timesData} settings={settings} setSettings={setSettings} onToggleNotif={toggleNotif} onToast={showToast} />}
+        {tab === 'vird' && <VirdList now={now} timesData={currentTimes} settings={settings} setSettings={setSettings} onToggleNotif={toggleNotif} onToast={showToast} />}
         {tab === 'settings' && (
           <Settings
             settings={settings}
             setSettings={setSettings}
             onToggleNotif={toggleNotif}
             onToast={showToast}
+            timesData={currentTimes}
+            location={location}
+            lastUpdate={lastUpdate}
+            timeZone={timeZone}
           />
         )}
 

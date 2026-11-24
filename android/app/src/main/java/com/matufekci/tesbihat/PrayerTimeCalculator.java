@@ -28,10 +28,10 @@ public final class PrayerTimeCalculator {
         double noon = 720 - 4 * lng - eqTime + tz * 60;
         Double fajr = hourAngle(lat, decl, -18), sun = hourAngle(lat, decl, -0.833), isha = hourAngle(lat, decl, -17);
         double latRad = Math.toRadians(lat);
-        double asrAltitude = Math.toDegrees(Math.atan(1 / (2 + Math.tan(Math.abs(latRad - decl)))));
+        double asrAltitude = Math.toDegrees(Math.atan(1 / (1 + Math.tan(Math.abs(latRad - decl)))));
         Double asr = hourAngle(lat, decl, asrAltitude);
-        return new Integer[] { minute(fajr == null ? null : noon - fajr * 4), minute(noon),
-                minute(asr == null ? null : noon + asr * 4), minute(sun == null ? null : noon + sun * 4),
+        return new Integer[] { minute(fajr == null ? null : noon - fajr * 4), minute(noon + 5),
+                minute(asr == null ? null : noon + asr * 4 + 4), minute(sun == null ? null : noon + sun * 4 + 7),
                 minute(isha == null ? null : noon + isha * 4) };
     }
 
