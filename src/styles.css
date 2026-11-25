@@ -1739,3 +1739,9 @@ html[dir='rtl'] .welcome-navigation .splash-continue svg { transform: scaleX(-1)
 .time-source-button { color: inherit; font: inherit; border: 0; background: transparent; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
 .time-source-button:focus-visible { outline: 2px solid var(--gold-bright); }
 .time-source-button { max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+@media (max-height: 700px) {
+  .start-screen .start-wrap { gap: 5px !important; }
+  .start-screen .start-verse { line-height: 1.55; }
+  .start-screen .start-verse-tr { line-height: 1.4; }
+  .start-screen .start-cta { padding-block: 10px; font-size: 18px; }
+}
