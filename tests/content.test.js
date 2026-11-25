@@ -22,3 +22,14 @@ test('all prayer flows and languages have consistent unique steps and available 
     }
   }
 })
+
+
+test('tahlil uses a read confirmation rather than a counter in every prayer and language', () => {
+  for (const prayer of NAMAZ_IDS) {
+    for (const lang of ['tr', 'en', 'de', 'fr', 'ar']) {
+      const step = getStepsFor(prayer, lang).find((item) => item.id === 'tahlil')
+      assert.equal(step?.type, 'read', `${prayer}/${lang}`)
+      assert.equal(step.target, undefined, `${prayer}/${lang}`)
+    }
+  }
+})

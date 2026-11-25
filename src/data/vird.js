@@ -140,7 +140,7 @@ export const COMMON_STEPS = [
     meaning: 'Allah her şeyden yücedir, en büyüktür.',
   },
   {
-    id: 'tahlil', title: 'Tahlil', type: 'counter', target: 1,
+    id: 'tahlil', title: 'Tahlil', type: 'read',
     arabic: 'لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ، وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',
     latin: 'Lâ ilâhe illallâhü vahdehû lâ şerîke leh, lehü’l-mülkü ve lehü’l-hamdü ve hüve ‘alâ külli şey’in kadîr.',
     meaning: 'Allah’tan başka ilâh yoktur; O birdir, ortağı yoktur. Mülk O’nundur, hamd O’nadır; O her şeye hakkıyla gücü yetendir.',

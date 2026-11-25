@@ -834,3 +834,27 @@ test('all themes give settings cards and quick panel visible elevation', async (
     await expect(page.locator('.prayer-overview')).not.toHaveCSS('box-shadow', 'none')
   }
 })
+
+
+test('tahlil has a check confirmation instead of a counter and resumes correctly', async ({ page }) => {
+  await ready(page)
+  await page.getByRole('button', { name: 'Tesbihata Başla' }).click()
+  await page.getByRole('button', { name: 'Adım listesini aç' }).click()
+  const list = page.getByRole('dialog', { name: 'Adım Listesi' })
+  const tahlil = list.locator('li').filter({ hasText: 'Tahlil' })
+  await expect(tahlil.locator('.step-list-meta')).toBeEmpty()
+  await tahlil.getByRole('button').click()
+  await expect(page.locator('.g-title')).toHaveText('Tahlil')
+  await expect(page.getByRole('button', { name: 'Say', exact: true })).toHaveCount(0)
+  await expect(page.locator('.counter-ring')).toHaveCount(0)
+  const confirm = page.getByRole('button', { name: 'Okudum — Devam' })
+  await expect(confirm).toHaveClass(/done-ring/)
+  await expect(confirm.locator('svg path')).toHaveCount(1)
+  await page.reload()
+  await expect(page.locator('.g-title')).toHaveText('Tahlil', { timeout: 15000 })
+  await page.getByRole('button', { name: 'Okudum — Devam' }).click()
+  await expect(page.locator('.g-title')).toHaveText('Dua')
+  await page.getByRole('button', { name: 'Geri', exact: true }).click()
+  await expect(page.locator('.g-title')).toHaveText('Tahlil')
+  await expect(page.getByRole('button', { name: 'Okudum — Devam' })).toBeVisible()
+})
