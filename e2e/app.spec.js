@@ -720,15 +720,24 @@ test('Android reminder plan is configured, updated for location and cancelled', 
   await expect.poll(() => page.evaluate(() => window.reminderBridgeCalls.some((call) => call.type === 'cancel'))).toBe(true)
 })
 
-test('sunrise ends the prayer countdown and source is visible', async ({ page }) => {
+test('sunrise ends the prayer countdown and source is in the collapsed overview', async ({ page }) => {
   await page.clock.setFixedTime(new Date('2026-11-16T06:30:00Z'))
   await page.addInitScript(() => localStorage.setItem('tesbihat.settings', JSON.stringify({ onboarded: true, permissionsSetup: true })))
   await page.route('https://api.aladhan.com/**', (route) => route.fulfill({ json: { data: { timings: {
     Imsak: '04:50', Fajr: '05:00', Sunrise: '06:30', Dhuhr: '12:00', Asr: '15:00', Maghrib: '18:00', Isha: '19:30',
   } } } }))
   await page.goto('./')
-  await expect(page.locator('.time-source')).toContainText('AlAdhan çevrimiçi hesap')
   await expect(page.locator('.date-countdown')).toContainText('Sabah namazı vakti güneşle sona erdi')
+  await expect(page.getByText('AlAdhan çevrimiçi hesap', { exact: false })).toHaveCount(0)
+  await page.getByRole('button', { name: 'Ayarlar', exact: true }).click()
+  const overview = page.locator('.prayer-overview')
+  await expect(overview).not.toHaveAttribute('open', '')
+  await expect(page.locator('.settings-screen > :last-child')).toHaveClass('prayer-overview')
+  await overview.locator('summary').click()
+  await expect(overview).toContainText('AlAdhan çevrimiçi hesap')
+  await page.getByRole('button', { name: 'Geri', exact: true }).click()
+  await page.getByRole('button', { name: 'Ayarlar', exact: true }).click()
+  await expect(page.locator('.prayer-overview')).not.toHaveAttribute('open', '')
 })
 
 test('per-prayer settings persist, offline-only mode blocks requests, and health and time zone are visible', async ({ page }) => {
@@ -755,8 +764,9 @@ test('per-prayer settings persist, offline-only mode blocks requests, and health
     return route.fulfill({ json: { data: { timings: { Fajr: '05:00', Imsak: '04:50', Sunrise: '06:30', Dhuhr: '12:00', Asr: '15:00', Maghrib: '18:00', Isha: '19:30' } } } })
   })
   await page.goto('./')
-  await expect(page.locator('.time-source')).toContainText('AlAdhan')
   await page.getByRole('button', { name: 'Ayarlar', exact: true }).click()
+  await page.locator('.prayer-overview summary').click()
+  await expect(page.locator('.prayer-overview')).toContainText('AlAdhan')
   await expect(page.locator('.prayer-overview')).toContainText('Diyarbakır')
   await expect(page.locator('.prayer-overview')).toContainText('Sonraki vakit')
   await expect(page.locator('.zone-warning')).toContainText('Europe/Istanbul')
@@ -768,13 +778,13 @@ test('per-prayer settings persist, offline-only mode blocks requests, and health
   await page.getByText('Bildirim sağlığı', { exact: true }).click()
   await expect(page.locator('.reminder-health')).toContainText('Kesin alarm izni: Kapalı')
   await expect(page.locator('.reminder-health')).toContainText('Sonraki planlanan hatırlatma')
-  await page.locator('summary').filter({ hasText: 'Konum' }).last().click()
+  await page.locator('.settings-group > summary').filter({ hasText: 'Konum' }).click()
   await page.locator('#offline-only').click()
-  await expect(page.locator('.time-source')).toContainText('Çevrimdışı')
+  await expect(page.locator('.prayer-overview')).toContainText('Çevrimdışı')
   await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('tesbihat.settings')).offlineOnly)).toBe(true)
   const before = requests
   await page.reload()
-  await expect(page.locator('.time-source')).toContainText('Çevrimdışı')
+  await expect(page.locator('.time-source')).toHaveCount(0)
   await page.waitForTimeout(300)
   expect(requests).toBe(before)
   await page.getByRole('button', { name: 'Ayarlar', exact: true }).click()

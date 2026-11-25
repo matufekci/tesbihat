@@ -1715,7 +1715,6 @@ html[dir='rtl'] .welcome-navigation .splash-continue svg { transform: scaleX(-1)
 }
 @media (max-width:360px) { .guided-top.inflow { gap:4px; } }
 
-.time-source { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.15rem 0.65rem; margin: 0 auto; padding: 0 0.5rem; text-align: center; font-size: 0.7rem; opacity: 0.8; line-height: 1.35; }
 
 @media (max-height: 700px) {
   .app-title { padding-top: 4px !important; padding-bottom: 5px !important; }
@@ -1736,9 +1735,6 @@ html[dir='rtl'] .welcome-navigation .splash-continue svg { transform: scaleX(-1)
 .prayer-overview { border: 1px solid var(--line); border-radius: 14px; }
 .prayer-overview-summary { padding: 12px 14px; font-weight: 700; cursor: pointer; }
 .prayer-overview .settings-group-content { padding: 12px 14px; }
-.time-source-button { color: inherit; font: inherit; border: 0; background: transparent; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
-.time-source-button:focus-visible { outline: 2px solid var(--gold-bright); }
-.time-source-button { max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 @media (max-height: 700px) {
   .start-screen .start-wrap { gap: 5px !important; }
   .start-screen .start-verse { line-height: 1.55; }

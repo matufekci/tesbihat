@@ -84,21 +84,6 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
         <div className="greet">{t('preferences')}<strong>{t('settingsHeading')}</strong></div>
       </header>
 
-      <details className="prayer-overview" open>
-        <summary className="prayer-overview-summary">{t('overviewTitle')}</summary>
-        <div className="settings-group-content">
-          <p>{location?.name} · {timesData?.source === 'aladhan' ? t('sourceOnline') : t('sourceOffline')}</p>
-          <div className="prayer-overview-grid">
-            {PRAYER_IDS.map((id, i) => <div key={id}><span>{prayerLabels[i]}</span><strong>{timesData?.timings?.[prayerKeys[i]] ?? '—'}</strong></div>)}
-          </div>
-          <p>{t('nextPrayerLabel')}: {nextTime ? `${prayerLabels[nextKey]} ${nextTime}${nextIndex === -1 ? ` (${t('tomorrowApprox')})` : ''}` : t('timeUnavailable')}</p>
-          <small>{t('timeUpdated', { time: lastUpdate })} · {t('deviceZone')}: {timeZone}</small><br />
-          <small>{t('timeAccuracyHint')}</small>
-          {locationZone && locationZone !== timeZone && <p className="zone-warning" role="alert">{t('zoneMismatch', { location: locationZone, device: timeZone })}</p>}
-          {!locationZone && <p className="zone-warning">{t('zoneUnknown')}</p>}
-        </div>
-      </details>
-
       {/* Dil */}
       <SettingsGroup title={<LanguageTitle />} icon="language">
         <div className="set-row">
@@ -213,6 +198,21 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
         {t('versionLine', { v: APP_VERSION })}<br />
         {t('sourceLine')}
       </p>
+      <details className="prayer-overview">
+        <summary className="prayer-overview-summary">{t('overviewTitle')}</summary>
+        <div className="settings-group-content">
+          <p>{location?.name} · {timesData?.source === 'aladhan' ? t('sourceOnline') : t('sourceOffline')}</p>
+          <div className="prayer-overview-grid">
+            {PRAYER_IDS.map((id, i) => <div key={id}><span>{prayerLabels[i]}</span><strong>{timesData?.timings?.[prayerKeys[i]] ?? '—'}</strong></div>)}
+          </div>
+          <p>{t('nextPrayerLabel')}: {nextTime ? `${prayerLabels[nextKey]} ${nextTime}${nextIndex === -1 ? ` (${t('tomorrowApprox')})` : ''}` : t('timeUnavailable')}</p>
+          <small>{t('timeUpdated', { time: lastUpdate })} · {t('deviceZone')}: {timeZone}</small><br />
+          <small>{t('timeAccuracyHint')}</small>
+          {locationZone && locationZone !== timeZone && <p className="zone-warning" role="alert">{t('zoneMismatch', { location: locationZone, device: timeZone })}</p>}
+          {!locationZone && <p className="zone-warning">{t('zoneUnknown')}</p>}
+        </div>
+      </details>
+
     </main>
   )
 }

@@ -234,10 +234,6 @@ export default function App() {
           <span className="date-countdown">{remaining === 'afterSunrise' ? t('noPrayerCountdown') : remaining ? t('timeUntilPrayerEnd', { time: remaining }) : t('timeUnavailable')}</span>
           <span className="date-gregorian">{greg}</span>
         </div>
-        <div className="time-source" role="status">
-          <button type="button" className="time-source-button" onClick={() => setTab('settings')}>{currentTimes.source === 'aladhan' ? t('sourceOnline') : t('sourceOffline')} · {t('overviewTitle')}</button>
-          {locationZone && locationZone !== timeZone && <span title={t('zoneShort')} aria-label={t('zoneShort')}>⚠</span>}
-        </div>
         <div className="app-title">
           <div className="app-title-eyebrow">{t('eyebrow')}</div>
           <h1 className="app-title-main" dir="ltr">{t('appTitle')}</h1>
