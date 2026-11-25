@@ -189,15 +189,6 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
         </div>
       </SettingsGroup>
 
-      <p className="source-line settings-source-line" role="status">
-        {location?.name} · {timesData?.source === 'aladhan' ? t('sourceOnline') : t('sourceOffline')}<br />
-        {t('timeUpdated', { time: lastUpdate })} · {timeZone}<br />
-        {t('timeAccuracyHint')}
-      </p>
-      <p className="source-line settings-source-line">
-        {t('versionLine', { v: APP_VERSION })}<br />
-        {t('sourceLine')}
-      </p>
       <details className="prayer-overview">
         <summary className="prayer-overview-summary">{t('overviewTitle')}</summary>
         <div className="settings-group-content">
@@ -213,6 +204,15 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
         </div>
       </details>
 
+      <p className="source-line settings-source-line" role="status">
+        {location?.name} · {timesData?.source === 'aladhan' ? t('sourceOnline') : t('sourceOffline')}<br />
+        {t('timeUpdated', { time: lastUpdate })} · {timeZone}<br />
+        {t('timeAccuracyHint')}
+      </p>
+      <p className="source-line settings-source-line">
+        {t('versionLine', { v: APP_VERSION })}<br />
+        {t('sourceLine')}
+      </p>
     </main>
   )
 }

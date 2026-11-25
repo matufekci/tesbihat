@@ -732,7 +732,7 @@ test('sunrise ends the prayer countdown and source is in the collapsed overview'
   await page.getByRole('button', { name: 'Ayarlar', exact: true }).click()
   const overview = page.locator('.prayer-overview')
   await expect(overview).not.toHaveAttribute('open', '')
-  await expect(page.locator('.settings-screen > :last-child')).toHaveClass('prayer-overview')
+  await expect(page.locator('.settings-group').filter({ hasText: 'Görünüm' }).locator('+ .prayer-overview')).toHaveCount(1)
   await overview.locator('summary').click()
   await expect(overview).toContainText('AlAdhan çevrimiçi hesap')
   await page.getByRole('button', { name: 'Geri', exact: true }).click()
