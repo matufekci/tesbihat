@@ -8,3 +8,9 @@
 - Türkçe ve diğer dillerdeki mealler değiştirilmemiştir. Türkçe meal daha önce Tanzil üzerinden Diyanet'e atıfla derlenmiştir.
 - Mevcut SIL OFL lisanslı Scheherazade New fontunun Arapça alt kümesi kullanılır. Seçilen 400, 600 ve 700 ağırlıklarındaki fontlarda seçili âyet karakterlerinin glif eşlemesi kontrol edilmiştir; bu, cihazlarda şekillendirme ve dini içerik doğruluğunu garanti etmez.
 - Harf/hareke dönüşümü ve dua içindeki kısmi alıntılar, yetkin bir okuyucu tarafından Diyanet mushafı ve gerçek Android cihaz üzerinde ayrıca kontrol edilmelidir.
+
+
+## Latin harfli Fâtiha okunuşu
+
+- Fâtiha okunuşu, Diyanet'e bağlı ilçe müftülüklerinin [Namaz Sureleri](https://webdosyasp.diyanet.gov.tr/muftuluk/UserFiles/zonguldak/Ilceler/gokcebey/UserFiles/Files/NAMAZ%20SURELERI_aefce231-e0e8-4b22-b5ef-ac9dea4b480d.pdf) ve [Namaz Sureleri (Polatlı)](https://webdosyasp.diyanet.gov.tr/muftuluk/UserFiles/ankara/Ilceler/polatli/UserFiles/Files/Namaz-Sureleri_841c5dfa-9269-4ebf-8c57-9050f1a224da.pdf) materyalleri karşılaştırılarak Türkçe okunurluk için boşluk ve noktalaması düzenlenerek verilmiştir; besmele Fâtiha'nın ilk ayeti olarak başa eklenmiştir. PDF metin çıkarımındaki açık karakter hataları Arapça ayetle karşılaştırılarak düzeltilmiştir. Diyanet Latin harflerinin Arapça telaffuzu tam karşılamadığını vurgular: [Kur’an’ı Latin harfleriyle okumak](https://www.diyanethaber.com.tr/kurani-latin-harfleriyle-okuyarak-hatim-etmek-caiz-midir).
+- Bu çalışma diğer uzun sure ve ayetlerin Latin okunuşlarını içermemektedir. Onlar için Diyanet'e ait doğrulanabilir tam Latin kaynak bulunamamıştır; bulunmadan kaynak atfı yapılmamalıdır. Latin yazım Arapça tilavetin yerini tutmaz ve yetkin okuyucu incelemesi önerilir.

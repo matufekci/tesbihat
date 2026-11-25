@@ -858,3 +858,16 @@ test('tahlil has a check confirmation instead of a counter and resumes correctly
   await expect(page.locator('.g-title')).toHaveText('Tahlil')
   await expect(page.getByRole('button', { name: 'Okudum — Devam' })).toBeVisible()
 })
+
+
+test('closing Fatiha displays the Latin reading without changing the Arabic or meaning', async ({ page }) => {
+  await ready(page)
+  await page.getByRole('button', { name: 'Tesbihata Başla' }).click()
+  await page.getByRole('button', { name: 'Adım listesini aç' }).click()
+  await page.getByRole('dialog', { name: 'Adım Listesi' }).getByRole('button', { name: /Fâtiha-i Şerîfe/ }).click()
+  await expect(page.locator('.quran-text')).toBeVisible()
+  await expect(page.locator('.guided-body .latin')).toContainText('Bismillâhirrahmânirrahîm')
+  await expect(page.locator('.guided-body .latin')).toContainText('leddâllîn')
+  await page.getByRole('button', { name: 'Türkçe Anlamı' }).click()
+  await expect(page.locator('.guided-body')).toContainText('Rahman ve Rahim olan Allah')
+})

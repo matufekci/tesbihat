@@ -248,6 +248,8 @@ const PRAYER_STEPS = {
 export const CLOSING_STEP = {
   id: 'fatiha-ruh', title: 'Fâtiha-i Şerîfe', type: 'read',
   quran: { sura: 1 },
+  // Fâtiha okunuşu: Diyanet ilçe müftülükleri namaz sureleri materyali; kaynak ve yazım notları tests/QURAN_SOURCES.md.
+  latin: 'Bismillâhirrahmânirrahîm. Elhamdülillâhi rabbi’l-âlemîn. Errahmânirrahîm. Mâliki yevmiddîn. İyyâke na‘büdü ve iyyâke neste‘în. İhdinessırâtel müstakîm. Sırâtallezîne en‘amte aleyhim, gayril mağdûbi aleyhim ve leddâllîn.',
   note: 'Efendimiz ﷺ’in ruhuna, Ehl-i Beyt’e, Sahabe’ye, Kadiri silsilesine, Şeyh Abdülkadir Geylânî (k.s.) Hz.’nin ve tüm mümin ve müminatın ruhlarına okunur.',
 }
 

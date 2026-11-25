@@ -33,3 +33,12 @@ test('tahlil uses a read confirmation rather than a counter in every prayer and 
     }
   }
 })
+
+
+test('closing Fatiha includes its Latin reading for every prayer and language', () => {
+  for (const prayer of NAMAZ_IDS) for (const lang of ['tr', 'en', 'de', 'fr', 'ar']) {
+    const step = getStepsFor(prayer, lang).find((item) => item.id === 'fatiha-ruh')
+    assert.match(step.latin, /^Bismillâhirrahmânirrahîm\./)
+    assert.match(step.latin, /led dâllîn|leddâllîn/)
+  }
+})
