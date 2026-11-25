@@ -45,3 +45,5 @@ Yerelde (Android SDK'lı makine): `npm run build && npx cap sync android && cd a
 ## Künye
 
 Kur’ân ayetlerinin Arapça yazımı, Diyanet’in Word dosyasından Unicode aktarımıyla alınmıştır; kaynak ve doğrulama sınırları için [ayet kaynağı notlarına](tests/QURAN_SOURCES.md) bakın. Türkçe meal değiştirilmemiştir; Diyanet İşleri Başkanlığı’na atıfla Tanzil.net üzerinden derlenmiştir. Dua metinleri ayrı kaynaklardan gelir.
+
+Fâtiha dışında Kur’an pasajlarının Latin okunuşları [Açık Kuran](https://acikkuran.com) kaynaklıdır, [Hafız Defteri](https://github.com/ekowaryans-cmd/hafiz-defteri) veri arşivinden alınmıştır; [CC BY-NC-SA 4.0](licenses/acik-kuran-CC-BY-NC-SA-4.0.txt) ile yalnız ticari olmayan kullanım için sunulur. Ayet harf iskeletleri Diyanet mushafı ile karşılaştırılmıştır; bu karşılaştırma Latin telaffuzunun onayı değildir. Latin yazı Arapça telaffuzun yerini tutmaz. Ayrıntılar [kaynak notlarında](tests/QURAN_SOURCES.md).

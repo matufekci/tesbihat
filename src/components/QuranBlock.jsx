@@ -1,5 +1,6 @@
 import React from 'react'
 import { QURAN, BASMALA } from '../data/quran.js'
+import transliterations from '../data/quran-transliteration.json'
 import { useLang } from '../lib/i18n.js'
 
 const AR_DIGITS = '٠١٢٣٤٥٦٧٨٩'
@@ -16,6 +17,7 @@ export default function QuranBlock({ sura, from = 1, to, hotAyat, hotLabel, high
   const isFullSurah = !isExcerpt && sura !== 1
   const density = ayats.length > 70 ? 'xs' : ayats.length > 30 ? 'sm' : ''
   const highlight = new Set(highlightAyat ?? [])
+  const latin = transliterations[String(sura)]
   const interactive = hotAyat != null && typeof onHotAyat === 'function'
 
   return (
@@ -45,6 +47,22 @@ export default function QuranBlock({ sura, from = 1, to, hotAyat, hotLabel, high
           return <React.Fragment key={n}>{text}{mark} </React.Fragment>
         })}
       </p>
+      {latin && (
+        <section className="quran-reading" aria-label={t('latinReading')}>
+          <h3>{t('latinReading')}</h3>
+          <p className="quran-reading-note">{t('latinReadingNote')} <a href="https://acikkuran.com" target="_blank" rel="noreferrer">Açık Kuran</a> · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noreferrer">CC BY-NC-SA 4.0</a></p>
+          {isFullSurah && <p className="quran-reading-basmala" lang="tr" dir="ltr">Bismillâhirrahmânirrahîm.</p>}
+          <ol className="quran-reading-verses" lang="tr" dir="ltr">
+            {ayats.map(([n]) => (
+              <li key={n} value={n}>
+                <span className="quran-reading-number" aria-hidden="true">{n}.</span>
+                <span>{latin[n]}</span>
+                {interactive && n === hotAyat && <button type="button" className="quran-reading-hotspot" onClick={onHotAyat}>{hotLabel ?? t('openContinue')}</button>}
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
     </div>
   )
 }

@@ -1772,3 +1772,17 @@ html[dir='rtl'] .welcome-navigation .splash-continue svg { transform: scaleX(-1)
 [data-theme='rose'] .start-cta {
   box-shadow: 0 12px 28px rgba(92, 46, 59, .38), inset 0 1px 0 rgba(255, 255, 255, .3) !important;
 }
+
+/* Verse-numbered Turkish reading is an aid, kept separate from the Arabic text. */
+.quran-reading { margin-top:22px; padding-top:15px; border-top:1px solid var(--line-strong); }
+.quran-reading h3 { color:var(--gold-bright); font-size:14px; margin:0 0 6px; }
+.quran-reading-note { color:var(--cream-dim); font-size:11px; line-height:1.5; margin:0 0 12px; }
+.quran-reading-note a { color:var(--gold-bright); }
+.quran-reading-basmala, .quran-reading-verses { direction:ltr; text-align:left; font-size:calc(14px * var(--qs, 1)); line-height:1.7; }
+.quran-reading-basmala { text-align:center; font-style:italic; }
+.quran-reading-verses { list-style:none; padding:0; margin:0; }
+.quran-reading-verses li { display:flex; flex-wrap:wrap; gap:0 8px; margin:0 0 9px; }
+.quran-reading-verses li > span:nth-child(2) { flex:1; min-width:0; }
+.quran-reading-number { color:var(--gold-bright); font-weight:700; min-width:2em; }
+.quran-reading-hotspot { margin:6px 0 4px 2.5em; padding:8px 12px; border-radius:10px; border:1px solid var(--line-strong); background:var(--card-solid); color:var(--gold-bright); font:inherit; cursor:pointer; }
+.quran-reading-hotspot:focus-visible { outline:2px solid var(--gold-bright); outline-offset:2px; }

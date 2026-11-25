@@ -189,7 +189,7 @@ for (const theme of ['rose', 'light']) {
     await page.getByRole('button', { name: 'Tesbihata Başla' }).click()
     await page.getByRole('button', { name: 'Adım listesini aç' }).click()
     await page.getByRole('dialog', { name: 'Adım Listesi' }).getByRole('button', { name: /Vâkıa Suresi/ }).click()
-    await page.getByRole('button', { name: /Rızık Duasını Oku/ }).click()
+    await page.locator('.ayah-hotspot').click()
     const note = page.locator('.rizik-endnote')
     await expect(note).toBeVisible()
     await expect(note.locator('.ren-ayah')).toHaveCount(2)
@@ -871,3 +871,38 @@ test('closing Fatiha displays the Latin reading without changing the Arabic or m
   await page.getByRole('button', { name: 'Türkçe Anlamı' }).click()
   await expect(page.locator('.guided-body')).toContainText('Rahman ve Rahim olan Allah')
 })
+
+
+for (const [prayer, title, first, last, total] of [
+  ['Sabah', 'Yâsîn Suresi', 1, 83, 83],
+  ['Sabah', 'Haşr Suresi', 20, 24, 5],
+  ['Öğle', 'Nuh Suresi', 1, 28, 28],
+  ['İkindi', 'Nebe Suresi', 1, 40, 40],
+  ['Akşam', 'Vâkıa Suresi', 1, 96, 96],
+  ['Yatsı', 'Mülk Suresi', 1, 30, 30],
+  ['Yatsı', 'Âmenerrasûlü', 285, 286, 2],
+]) {
+  test(`${title} shows the complete verse-numbered Latin reading`, async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 700 })
+    await ready(page)
+    await page.locator('.bottom-vakit-chips').getByRole('button', { name: prayer, exact: true }).click()
+    await page.getByRole('button', { name: 'Tesbihata Başla' }).click()
+    await page.getByRole('button', { name: 'Adım listesini aç' }).click()
+    await page.getByRole('dialog', { name: 'Adım Listesi' }).getByRole('button', { name: new RegExp(title) }).click()
+    const reading = page.locator('.quran-reading')
+    const verses = reading.locator('li')
+    await expect(verses).toHaveCount(total)
+    await expect(verses.first()).toHaveAttribute('value', String(first))
+    await expect(verses.last()).toHaveAttribute('value', String(last))
+    await expect(reading.locator('ol')).toHaveAttribute('dir', 'ltr')
+    await expect(reading.getByRole('link', { name: 'Açık Kuran' })).toHaveAttribute('href', 'https://acikkuran.com')
+    if (first > 1) await expect(reading.locator('.quran-reading-basmala')).toHaveCount(0)
+    else await expect(reading.locator('.quran-reading-basmala')).toBeVisible()
+    if (prayer === 'Akşam') {
+      await reading.locator('li[value="76"] button').click()
+      await expect(page.getByRole('dialog', { name: 'Rızık Duası' })).toBeVisible()
+      await page.getByRole('button', { name: 'Kapat — Vâkıa 74. ayetten devam et' }).click()
+      await expect(reading.locator('li[value="74"]')).toBeVisible()
+    }
+  })
+}
