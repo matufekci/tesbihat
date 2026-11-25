@@ -431,14 +431,14 @@ select:focus, input:focus { border-color: var(--gold); }
   width: min(320px, 100%); padding: 21px 26px; border-radius: 22px; border: 0; cursor: pointer;
   background: linear-gradient(180deg, var(--gold-bright), var(--gold) 55%, var(--gold-deep));
   color: #241a06; font-family: var(--font-display); font-size: 23px; font-weight: 700; letter-spacing: .03em;
-  box-shadow: 0 14px 44px rgba(217,179,108,.28), inset 0 1px 0 rgba(255,255,255,.5);
+  box-shadow: 0 12px 30px rgba(0,0,0,.38), 0 14px 44px rgba(217,179,108,.32), inset 0 1px 0 rgba(255,255,255,.5);
   transition: transform .15s ease, box-shadow .3s ease;
   animation: ctaBreathe 2.8s ease-in-out infinite;
 }
 .start-cta:active { transform: scale(.97); }
 @keyframes ctaBreathe {
-  0%, 100% { box-shadow: 0 14px 44px rgba(217,179,108,.28), inset 0 1px 0 rgba(255,255,255,.5); }
-  50% { box-shadow: 0 14px 60px rgba(236,201,126,.45), inset 0 1px 0 rgba(255,255,255,.6); }
+  0%, 100% { box-shadow: 0 12px 30px rgba(0,0,0,.38), 0 14px 44px rgba(217,179,108,.32), inset 0 1px 0 rgba(255,255,255,.5); }
+  50% { box-shadow: 0 12px 30px rgba(0,0,0,.38), 0 14px 60px rgba(236,201,126,.48), inset 0 1px 0 rgba(255,255,255,.6); }
 }
 
 /* ── tam ekran akış katmanı (başlık/tarih/çip görünmez) ── */
@@ -809,8 +809,8 @@ html[dir='rtl'] .splash-continue svg { transform: scaleX(-1); }
   box-shadow: 0 9px 24px rgba(137,103,33,.2), inset 0 1px 0 rgba(255,255,255,.75);
 }
 @keyframes ctaBreatheLight {
-  0%, 100% { box-shadow: 0 9px 24px rgba(137,103,33,.19), inset 0 1px 0 rgba(255,255,255,.75); }
-  50% { box-shadow: 0 12px 30px rgba(137,103,33,.28), inset 0 1px 0 rgba(255,255,255,.85); }
+  0%, 100% { box-shadow: 0 10px 26px rgba(80,65,30,.28), 0 5px 10px rgba(137,103,33,.18), inset 0 1px 0 rgba(255,255,255,.75); }
+  50% { box-shadow: 0 12px 30px rgba(80,65,30,.34), 0 5px 12px rgba(137,103,33,.24), inset 0 1px 0 rgba(255,255,255,.85); }
 }
 [data-theme='light'] .start-cta { animation-name: ctaBreatheLight; }
 [data-theme='light'] .start-hint { color: #716d60; }
@@ -1740,4 +1740,33 @@ html[dir='rtl'] .welcome-navigation .splash-continue svg { transform: scaleX(-1)
   .start-screen .start-verse { line-height: 1.55; }
   .start-screen .start-verse-tr { line-height: 1.4; }
   .start-screen .start-cta { padding-block: 10px; font-size: 18px; }
+}
+
+/* Stronger layered elevation while keeping each theme's palette and contrast. */
+:root {
+  --elevation-card: 0 10px 24px rgba(0, 0, 0, .34), 0 3px 8px rgba(0, 0, 0, .25), inset 0 1px 0 rgba(255, 255, 255, .055);
+  --elevation-control: 0 5px 12px rgba(0, 0, 0, .30), inset 0 1px 0 rgba(255, 255, 255, .07);
+  --elevation-sheet: 0 -12px 36px rgba(0, 0, 0, .48), 0 -3px 10px rgba(0, 0, 0, .26), inset 0 1px 0 rgba(255, 255, 255, .07);
+}
+[data-theme='light'] {
+  --elevation-card: 0 10px 24px rgba(80, 65, 30, .19), 0 3px 8px rgba(80, 65, 30, .13), inset 0 1px 0 rgba(255, 255, 255, .85);
+  --elevation-control: 0 5px 12px rgba(80, 65, 30, .18), inset 0 1px 0 rgba(255, 255, 255, .8);
+  --elevation-sheet: 0 -12px 36px rgba(80, 65, 30, .27), 0 -3px 10px rgba(80, 65, 30, .16), inset 0 1px 0 rgba(255, 255, 255, .92);
+}
+[data-theme='rose'] {
+  --elevation-card: 0 10px 24px rgba(92, 46, 59, .20), 0 3px 8px rgba(92, 46, 59, .13), inset 0 1px 0 rgba(255, 255, 255, .88);
+  --elevation-control: 0 5px 12px rgba(92, 46, 59, .18), inset 0 1px 0 rgba(255, 255, 255, .8);
+  --elevation-sheet: 0 -12px 36px rgba(92, 46, 59, .27), 0 -3px 10px rgba(92, 46, 59, .16), inset 0 1px 0 rgba(255, 255, 255, .9);
+}
+.settings-group, .prayer-overview, .reader-card, .quran-block, .welcome-benefit {
+  box-shadow: var(--elevation-card);
+}
+.quick-sheet, [data-theme='light'] .quick-sheet, [data-theme='rose'] .quick-sheet {
+  box-shadow: var(--elevation-sheet);
+}
+.theme-chip:not(.active), .lang-chip:not(.active), .quick-gps, .gps-btn, .switch, .counter-ring {
+  box-shadow: var(--elevation-control);
+}
+[data-theme='rose'] .start-cta {
+  box-shadow: 0 12px 28px rgba(92, 46, 59, .38), inset 0 1px 0 rgba(255, 255, 255, .3) !important;
 }

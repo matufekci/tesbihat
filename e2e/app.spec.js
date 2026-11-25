@@ -820,3 +820,17 @@ test('first-run location disclosure precedes online prayer requests', async ({ p
   await page.waitForTimeout(300)
   expect(requests).toBe(0)
 })
+
+test('all themes give settings cards and quick panel visible elevation', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await ready(page)
+  await expect(page.locator('.quick-sheet')).not.toHaveCSS('box-shadow', 'none')
+  await page.getByRole('button', { name: 'Ayarlar', exact: true }).click()
+  const group = page.locator('.settings-group').filter({ hasText: 'Görünüm' })
+  await group.locator('summary').click()
+  for (const theme of ['Koyu', 'Açık', 'AMOLED', 'Gül Kurusu', 'Sistem']) {
+    await group.getByRole('button', { name: theme, exact: true }).click()
+    await expect(group).not.toHaveCSS('box-shadow', 'none')
+    await expect(page.locator('.prayer-overview')).not.toHaveCSS('box-shadow', 'none')
+  }
+})
