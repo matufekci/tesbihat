@@ -1,7 +1,7 @@
 {
   "name": "tesbihat",
   "private": true,
-  "version": "1.21.2",
+  "version": "1.22.0",
   "type": "module",
   "description": "Ruhi Tesbihat — beş vaktin ardından okunan zikir, salavât, dua ve sureler; her vakit için sayaçlı rehber",
   "scripts": {
@@ -22,7 +22,8 @@
     "@fontsource/scheherazade-new": "^5.3.0",
     "flag-icons": "^7.6.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "tz-lookup": "^6.1.25"
   },
   "devDependencies": {
     "@capacitor/cli": "^6.2.0",

@@ -259,9 +259,9 @@ test('settings sections collapse and language heading is multilingual without te
   await expect(language.getByRole('button', { name: /English/ })).toBeVisible()
   await page.keyboard.press('Enter')
   await expect(language).not.toHaveAttribute('open', '')
-  for (let i = 1; i < 5; i++) await groups.nth(i).locator('summary').click()
+  for (let i = 1; i < 5; i++) await groups.nth(i).locator(':scope > summary').click()
   await expect(page.getByRole('button', { name: /^(Test et|Önizle)$/ })).toHaveCount(0)
-  await expect(page.locator('#reminder')).toBeVisible()
+  await expect(page.locator('#prayer-switch-sabah')).toBeVisible()
   await expect(page.locator('#sound-switch')).toBeVisible()
 })
 
@@ -707,7 +707,7 @@ test('Android reminder plan is configured, updated for location and cancelled', 
   expect(plan.delay).toBe(15)
   expect(calls.some((call) => call.type === 'LocalNotifications.cancel')).toBe(true)
   await page.getByRole('button', { name: 'Ayarlar', exact: true }).click()
-  await page.locator('summary').filter({ hasText: 'Konum' }).click()
+  await page.locator('.settings-group > summary').filter({ hasText: 'Konum' }).click()
   const oldLat = plan.latitude
   await page.locator('#city').selectOption('istanbul')
   await expect.poll(() => page.evaluate(() => window.reminderBridgeCalls.filter((call) => call.type === 'configure').at(-1)?.plan.latitude)).not.toBe(oldLat)
@@ -729,4 +729,84 @@ test('sunrise ends the prayer countdown and source is visible', async ({ page })
   await page.goto('./')
   await expect(page.locator('.time-source')).toContainText('AlAdhan çevrimiçi hesap')
   await expect(page.locator('.date-countdown')).toContainText('Sabah namazı vakti güneşle sona erdi')
+})
+
+test('per-prayer settings persist, offline-only mode blocks requests, and health and time zone are visible', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 800 })
+  await page.clock.setFixedTime(new Date('2026-11-16T10:00:00Z'))
+  await page.addInitScript(() => {
+    if (!localStorage.getItem('tesbihat.settings')) localStorage.setItem('tesbihat.settings', JSON.stringify({ onboarded: true, permissionsSetup: true, notifEnabled: true }))
+    window.reminderBridgeCalls = []
+    window.CapacitorCustomPlatform = { name: 'android' }
+    window.Capacitor = {
+      isNativePlatform: () => true,
+      Plugins: { ReminderPlanner: {
+        configure: async (plan) => { window.reminderBridgeCalls.push(plan) },
+        cancel: async () => {},
+        status: async () => ({ notificationsEnabled: true, channelEnabled: true, exactAllowed: false, batteryUnrestricted: false, nextAt: 1794834000000 }),
+      } },
+      PluginHeaders: [{ name: 'LocalNotifications', methods: [{ name: 'getPending', rtype: 'promise' }, { name: 'cancel', rtype: 'promise' }] }],
+      nativePromise: async (_plugin, method) => method === 'getPending' ? { notifications: [] } : {},
+    }
+  })
+  let requests = 0
+  await page.route('https://api.aladhan.com/**', (route) => {
+    requests++
+    return route.fulfill({ json: { data: { timings: { Fajr: '05:00', Imsak: '04:50', Sunrise: '06:30', Dhuhr: '12:00', Asr: '15:00', Maghrib: '18:00', Isha: '19:30' } } } })
+  })
+  await page.goto('./')
+  await expect(page.locator('.time-source')).toContainText('AlAdhan')
+  await page.getByRole('button', { name: 'Ayarlar', exact: true }).click()
+  await expect(page.locator('.prayer-overview')).toContainText('Diyarbakır')
+  await expect(page.locator('.prayer-overview')).toContainText('Sonraki vakit')
+  await expect(page.locator('.zone-warning')).toContainText('Europe/Istanbul')
+  await page.locator('summary').filter({ hasText: 'Ezan Sonrası Hatırlatma' }).click()
+  await page.locator('#prayer-switch-ogle').click()
+  await page.getByRole('combobox', { name: 'Sabah · Kaç dakika sonra hatırlat?' }).selectOption('30')
+  await expect.poll(() => page.evaluate(() => window.reminderBridgeCalls.at(-1)?.enabled)).toEqual([true, false, true, true, true])
+  await expect.poll(() => page.evaluate(() => window.reminderBridgeCalls.at(-1)?.delays)).toEqual([30, 15, 15, 15, 15])
+  await page.getByText('Bildirim sağlığı', { exact: true }).click()
+  await expect(page.locator('.reminder-health')).toContainText('Kesin alarm izni: Kapalı')
+  await expect(page.locator('.reminder-health')).toContainText('Sonraki planlanan hatırlatma')
+  await page.locator('summary').filter({ hasText: 'Konum' }).last().click()
+  await page.locator('#offline-only').click()
+  await expect(page.locator('.time-source')).toContainText('Çevrimdışı')
+  await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('tesbihat.settings')).offlineOnly)).toBe(true)
+  const before = requests
+  await page.reload()
+  await expect(page.locator('.time-source')).toContainText('Çevrimdışı')
+  await page.waitForTimeout(300)
+  expect(requests).toBe(before)
+  await page.getByRole('button', { name: 'Ayarlar', exact: true }).click()
+  await page.locator('summary').filter({ hasText: 'Ezan Sonrası Hatırlatma' }).click()
+  await expect(page.locator('#prayer-switch-ogle')).toHaveAttribute('aria-checked', 'false')
+  await expect(page.getByRole('combobox', { name: 'Sabah · Kaç dakika sonra hatırlat?' })).toHaveValue('30')
+})
+
+test('web reminders respect the saved prayer switches and individual delays', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-11-16T04:00:00Z'))
+  await page.addInitScript(() => {
+    localStorage.setItem('tesbihat.settings', JSON.stringify({ onboarded: true, permissionsSetup: true, notifEnabled: true,
+      reminders: { sabah: { enabled: true, delay: 30 }, ogle: { enabled: false, delay: 15 }, ikindi: { enabled: false, delay: 15 }, aksam: { enabled: true, delay: 5 }, yatsi: { enabled: false, delay: 15 } } }))
+    Object.defineProperty(window, 'Notification', { configurable: true, value: { permission: 'granted' } })
+  })
+  await page.route('https://api.aladhan.com/**', (route) => route.fulfill({ json: { data: { timings: {
+    Fajr: '05:00', Sunrise: '06:30', Dhuhr: '12:00', Asr: '15:00', Maghrib: '18:00', Isha: '19:30',
+  } } } }))
+  await page.goto('./')
+  await expect.poll(() => page.evaluate(() => window.__tesbihatNextEvents)).toEqual([
+    { prayerId: 'sabah', at: new Date('2026-11-16T05:30:00Z').getTime() },
+    { prayerId: 'aksam', at: new Date('2026-11-16T18:05:00Z').getTime() },
+  ])
+})
+
+test('first-run location disclosure precedes online prayer requests', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await prepareOnboarding(page)
+  let requests = 0
+  await page.route('https://api.aladhan.com/**', (route) => { requests++; return route.abort() })
+  await page.goto('./')
+  await expect(page.locator('.welcome-disclosure')).toContainText('AlAdhan')
+  await page.waitForTimeout(300)
+  expect(requests).toBe(0)
 })

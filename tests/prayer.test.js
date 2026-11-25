@@ -83,6 +83,8 @@ test('offline method approximates published reference timetables in Istanbul tim
   process.env.TZ = 'Europe/Istanbul'
   try {
     const cases = [
+      [2025, 12, 31, 41.01, 28.98, ['06:50', '08:22', '13:12', '15:31', '17:52', '19:19']],
+      [2026, 1, 1, 41.01, 28.98, ['06:50', '08:22', '13:12', '15:32', '17:53', '19:19']],
       [2026, 11, 16, 37.91, 40.24, ['05:29', '06:53', '12:09', '14:51', '17:14', '18:33']],
       [2026, 11, 16, 41.01, 28.98, ['06:17', '07:45', '12:54', '15:28', '17:52', '19:15']],
       [2026, 11, 16, 39.93, 32.86, ['06:01', '07:27', '12:38', '15:16', '17:39', '19:01']],
@@ -95,4 +97,21 @@ test('offline method approximates published reference timetables in Istanbul tim
       keys.forEach((key, i) => assert.ok(Math.abs(minutesOf(got[key]) - minutesOf(expected[i])) <= 2, `${y}-${month}-${day} ${lat} ${key}: ${got[key]} vs ${expected[i]}`))
     }
   } finally { if (prior === undefined) delete process.env.TZ; else process.env.TZ = prior }
+})
+
+test('offline-only mode never requests online prayer data', async () => {
+  const previousFetch = globalThis.fetch
+  globalThis.fetch = () => { throw new Error('network should not be called') }
+  try {
+    const result = await fetchTimes({ lat: 37.91, lng: 40.24, date: new Date(2026, 0, 15, 12), offlineOnly: true })
+    assert.equal(result.source, 'offline')
+    assert.match(result.timings.Imsak, /^\d{2}:\d{2}$/)
+  } finally { globalThis.fetch = previousFetch }
+})
+
+test('location time-zone lookup works offline and handles invalid coordinates', async () => {
+  const { locationTimeZone } = await import('../src/lib/prayer.js')
+  assert.equal(locationTimeZone(37.91, 40.24), 'Europe/Istanbul')
+  assert.equal(locationTimeZone(52.52, 13.405), 'Europe/Berlin')
+  assert.equal(locationTimeZone(1000, 0), null)
 })

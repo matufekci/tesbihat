@@ -16,6 +16,8 @@ export const DEFAULT_SETTINGS = Object.freeze({
   theme: 'dark',
   notifEnabled: false,
   reminderMin: 15,
+  reminders: null,
+  offlineOnly: false,
   soundEnabled: true,
   vibrationEnabled: true,
   onboarded: false,
@@ -34,6 +36,16 @@ function sanitizeCustomLocation(value) {
   return { id: 'custom', name, lat, lng }
 }
 
+export const PRAYER_IDS = ['sabah', 'ogle', 'ikindi', 'aksam', 'yatsi']
+export function reminderSettings(settings) {
+  const fallback = VALID_REMINDERS.has(settings.reminderMin) ? settings.reminderMin : 15
+  return Object.fromEntries(PRAYER_IDS.map((id) => {
+    const entry = isRecord(settings.reminders?.[id]) ? settings.reminders[id] : {}
+    return [id, { enabled: typeof entry.enabled === 'boolean' ? entry.enabled : true,
+      delay: VALID_REMINDERS.has(entry.delay) ? entry.delay : fallback }]
+  }))
+}
+
 function sanitizeSettings(value) {
   if (!isRecord(value)) return defaultSettings()
   return {
@@ -42,6 +54,8 @@ function sanitizeSettings(value) {
     theme: VALID_THEMES.has(value.theme) ? value.theme : DEFAULT_SETTINGS.theme,
     notifEnabled: typeof value.notifEnabled === 'boolean' ? value.notifEnabled : DEFAULT_SETTINGS.notifEnabled,
     reminderMin: VALID_REMINDERS.has(value.reminderMin) ? value.reminderMin : DEFAULT_SETTINGS.reminderMin,
+    reminders: isRecord(value.reminders) ? reminderSettings(value) : null,
+    offlineOnly: typeof value.offlineOnly === 'boolean' ? value.offlineOnly : false,
     soundEnabled: typeof value.soundEnabled === 'boolean' ? value.soundEnabled : DEFAULT_SETTINGS.soundEnabled,
     vibrationEnabled: typeof value.vibrationEnabled === 'boolean' ? value.vibrationEnabled : DEFAULT_SETTINGS.vibrationEnabled,
     onboarded: typeof value.onboarded === 'boolean' ? value.onboarded : DEFAULT_SETTINGS.onboarded,

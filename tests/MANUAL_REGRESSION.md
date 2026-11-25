@@ -37,3 +37,7 @@ Run this checklist on representative Android devices before a release; automate 
 - [ ] Saat ve saat dilimini değiştir; yeniden planlamayı, gece yarısını aşan gecikmeleri ve yaz saati geçişini kontrol et.
 - [ ] Android 12+ kesin alarm izni verilmiş/verilmemiş ve Android 13+ bildirim izni reddedilmiş/sonradan verilmiş durumlarını dene; tam izin yoksa gecikme olabileceğini doğrula.
 - [ ] Pil tasarrufu, Doze, üretici arka plan kısıtlamaları ve zorla durdurma sonrasında davranışı ayrı ayrı kaydet; zorla durdurmadan sonra uygulamayı tekrar aç.
+- [ ] Eski sürümde ortak gecikmeyi değiştirip yükseltin; beş vakit önceki gecikmeyi korusun. Tek tek aç/kapat, farklı gecikmeler ve tümünün kapalı olması durumlarını, uygulama kapalıyken ve yeniden başlatma sonrası doğrulayın.
+- [ ] Bildirim sağlık ekranını kanal kapalı, kesin alarm izni reddedilmiş/verilmiş, pil kısıtlı ve yeniden başlatma sonrası kontrol edin. Gösterilen planın gerçek alarm teslimi garantisi olmadığını doğrulayın.
+- [ ] Sadece çevrimdışı seçeneğini açıp kapatın, yeniden başlatın; açıkken AlAdhan istekleri yapılmadığını ve GPS'in yalnız istekle alındığını ağ ve cihaz araçlarıyla doğrulayın.
+- [ ] Farklı saat dilimlerinde seyahat, seçilen şehir ve cihaz saat dilimi değişimini, DST ve yüksek enlem koşullarını gerçek yerel takvimle karşılaştırın; saat dilimi uyarısının görünmesini doğrulayın.

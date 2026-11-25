@@ -55,6 +55,7 @@ async function scheduleRemindersNow(events, { title, body, nativePlan }) {
 
   window.__tesbihatTimers?.forEach((timer) => clearTimeout(timer))
   const upcoming = events.filter((event) => event.when.getTime() > Date.now())
+  window.__tesbihatNextEvents = upcoming.map((event) => ({ at: event.when.getTime(), prayerId: event.prayerId }))
   window.__tesbihatTimers = upcoming.map((event) =>
     setTimeout(() => fireWeb(title, body ? body(event) : event.body, event), event.when.getTime() - Date.now())
   )
@@ -74,6 +75,7 @@ async function cancelRemindersNow() {
   }
   window.__tesbihatTimers?.forEach((timer) => clearTimeout(timer))
   window.__tesbihatTimers = []
+  window.__tesbihatNextEvents = []
 }
 
 async function fireWeb(title, body, e) {
@@ -88,4 +90,26 @@ async function fireWeb(title, body, e) {
     }
     if (Notification.permission === 'granted') new Notification(title, { body, icon: './icons/icon-192.png' })
   } catch { /* kullanıcı bildirimi reddetmiş olabilir */ }
+}
+
+// Reports the scheduler's saved plan, not a guarantee of Android delivery.
+export function reminderHealth() {
+  return enqueue(async () => {
+    if (isNative()) {
+      const planner = window.Capacitor?.Plugins?.ReminderPlanner
+      if (!planner?.status) return { via: 'android', unavailable: true }
+      return { ...(await planner.status()), via: 'android' }
+    }
+    const events = (window.__tesbihatNextEvents ?? []).filter((e) => e.at > Date.now()).sort((a, b) => a.at - b.at)
+    return { via: 'web', notificationsEnabled: typeof Notification !== 'undefined' && Notification.permission === 'granted', nextAt: events[0]?.at ?? 0 }
+  })
+}
+
+export async function openReminderSystemSettings(type) {
+  if (!isNative()) return false
+  try {
+    if (type === 'alarm') await window.Capacitor.Plugins.ReminderPlanner.openAlarmSettings()
+    else await window.Capacitor.Plugins.SettingsLauncher.openAppSettings()
+    return true
+  } catch { return false }
 }

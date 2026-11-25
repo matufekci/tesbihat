@@ -10,6 +10,8 @@ AlAdhan method 13 (sağlayıcı tarafından deneysel olarak tanımlanır), `scho
 
 ## Sabit referans örnekleri
 
+31 Aralık 2025 / 1 Ocak 2026 İstanbul örnekleri de yıl ve kış geçişi için test edilir: sırasıyla 06:50, 08:22, 13:12, 15:31, 17:52, 19:19 ([Sabah](https://www.sabah.com.tr/istanbul-namaz-vakitleri?ysclid=llcddodx2u315646313)) ve 06:50, 08:22, 13:12, 15:32, 17:53, 19:19 ([Haber7](https://www.haber7.com/namaz-vakitleri/istanbul)). Bu iki yayın resmî kaynak olarak doğrulanmamış üçüncü taraf tablolarıdır; yalnızca sınırlı karşılaştırmadır.
+
 Testte saat dilimi Europe/Istanbul ve aşağıdaki tablolar için altı vakitte en fazla iki dakika tolerans kullanılır:
 
 - Diyarbakır, 16 Kasım 2026: 05:29, 06:53, 12:09, 14:51, 17:14, 18:33 — https://www.diyanethaber.com.tr/diyarbakir-diyarbakir-namaz-vakitleri

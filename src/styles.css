@@ -1720,3 +1720,22 @@ html[dir='rtl'] .welcome-navigation .splash-continue svg { transform: scaleX(-1)
 @media (max-height: 700px) {
   .app-title { padding-top: 4px !important; padding-bottom: 5px !important; }
 }
+.prayer-overview { margin: 8px 0 16px; }
+.prayer-overview .settings-group-content, .reminder-health { font-size: 0.85rem; line-height: 1.5; }
+.prayer-overview-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; text-align: center; }
+.prayer-overview-grid div { display: flex; flex-direction: column; overflow-wrap: anywhere; }
+.prayer-overview-grid strong { font-variant-numeric: tabular-nums; }
+.zone-warning { color: var(--gold-bright); font-weight: 700; }
+.reminder-prayer { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
+.reminder-prayer label { flex: 1; min-width: 0; }
+.reminder-prayer select { min-width: 0; max-width: 50%; }
+.reminder-health { margin: 12px 0; }
+.reminder-health summary { cursor: pointer; font-weight: 700; }
+.reminder-health p { margin: 6px 0; }
+.health-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.prayer-overview { border: 1px solid var(--line); border-radius: 14px; }
+.prayer-overview-summary { padding: 12px 14px; font-weight: 700; cursor: pointer; }
+.prayer-overview .settings-group-content { padding: 12px 14px; }
+.time-source-button { color: inherit; font: inherit; border: 0; background: transparent; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.time-source-button:focus-visible { outline: 2px solid var(--gold-bright); }
+.time-source-button { max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }

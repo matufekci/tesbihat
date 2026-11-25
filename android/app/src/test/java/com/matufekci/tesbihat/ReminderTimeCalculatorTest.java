@@ -56,4 +56,11 @@ public class ReminderTimeCalculatorTest {
         }
     }
 
+    @Test public void independentlySelectedDelaysApplyToDifferentPrayers() {
+        Integer[] today = {300, 720, 900, 1080, 1200};
+        long now = at(TR, 2026, 11, 16, 4, 0).getTimeInMillis();
+        assertEquals(at(TR, 2026, 11, 16, 5, 5).getTimeInMillis(), ReminderTimeCalculator.next(0, now, TR, 37.9144, 40.2306, 5, "2026-11-16", today));
+        assertEquals(at(TR, 2026, 11, 16, 19, 0).getTimeInMillis(), ReminderTimeCalculator.next(3, now, TR, 37.9144, 40.2306, 60, "2026-11-16", today));
+    }
+
 }

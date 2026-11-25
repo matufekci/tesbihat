@@ -39,24 +39,28 @@ public final class ReminderScheduler {
 
     static synchronized void configure(Context context, double lat, double lng, int delay, String date,
                                        JSONArray minutes, String title, JSONArray bodies, String channelName,
-                                       String channelDescription) throws JSONException {
+                                       String channelDescription, JSONArray enabled, JSONArray delays) throws JSONException {
         if ((Double.isNaN(lat) || Double.isInfinite(lat)) || lat < -90 || lat > 90 || (Double.isNaN(lng) || Double.isInfinite(lng)) || lng < -180 || lng > 180
                 || delay < 0 || delay > 1440 || minutes.length() != COUNT || bodies.length() != COUNT
                 || !date.matches("\\d{4}-\\d{2}-\\d{2}")) throw new IllegalArgumentException("Invalid reminder configuration");
+        if ((enabled != null && enabled.length() != COUNT) || (delays != null && delays.length() != COUNT)) throw new IllegalArgumentException("Invalid per-prayer settings");
         for (int i = 0; i < COUNT; i++) {
+            if (enabled != null && !(enabled.get(i) instanceof Boolean)) throw new IllegalArgumentException("Invalid enabled state");
+            if (delays != null && (delays.getInt(i) < 0 || delays.getInt(i) > 1440)) throw new IllegalArgumentException("Invalid delay");
             if (!minutes.isNull(i) && (minutes.getInt(i) < 0 || minutes.getInt(i) >= 1440)) throw new IllegalArgumentException("Invalid prayer time");
             if (bodies.getString(i).trim().isEmpty()) throw new IllegalArgumentException("Empty notification body");
         }
         cancelAlarms(context);
         SharedPreferences p = prefs(context);
         long generation = p.getLong("generation", 0) + 1;
-        if (!p.edit().putBoolean("enabled", true).putLong("generation", generation)
+        SharedPreferences.Editor editor = p.edit().putBoolean("enabled", true).putLong("generation", generation)
                 .putLong("lat", Double.doubleToRawLongBits(lat)).putLong("lng", Double.doubleToRawLongBits(lng))
                 .putInt("delay", delay).putString("date", date).putString("minutes", minutes.toString())
                 .putString("title", title).putString("bodies", bodies.toString())
-                .putString("channelName", channelName).putString("channelDescription", channelDescription).commit()) {
-            throw new IllegalStateException("Could not save reminder settings");
-        }
+                .putString("channelName", channelName).putString("channelDescription", channelDescription);
+        for (int i = 0; i < COUNT; i++) editor.putBoolean("prayer.enabled." + i, enabled == null || enabled.getBoolean(i))
+                .putInt("prayer.delay." + i, delays == null ? delay : delays.getInt(i));
+        if (!editor.commit()) throw new IllegalStateException("Could not save reminder settings");
         createChannel(context);
         scheduleAll(context, System.currentTimeMillis());
     }
@@ -81,15 +85,21 @@ public final class ReminderScheduler {
     static synchronized void scheduleAll(Context context, long now) {
         SharedPreferences p = prefs(context);
         if (!p.getBoolean("enabled", false)) return;
-        for (int i = 0; i < COUNT; i++) schedulePrayer(context, i, now);
-        scheduleRetry(context, now);
+        boolean anyEnabled = false;
+        for (int i = 0; i < COUNT; i++) {
+            schedulePrayer(context, i, now);
+            anyEnabled |= p.getBoolean("prayer.enabled." + i, true);
+        }
+        if (anyEnabled) scheduleRetry(context, now);
+        else ((AlarmManager) context.getSystemService(Context.ALARM_SERVICE)).cancel(alarmIntent(context, RETRY, 0, 0));
     }
 
     private static void schedulePrayer(Context context, int index, long now) {
         SharedPreferences p = prefs(context);
-        long next = nextPrayerTime(p, index, now);
+        long next = p.getBoolean("prayer.enabled." + index, true) ? nextPrayerTime(p, index, now) : 0;
         p.edit().putLong("scheduled." + index, next).apply();
         if (next > 0) setAlarm(context, index, next, p.getLong("generation", 0), true);
+        else ((AlarmManager) context.getSystemService(Context.ALARM_SERVICE)).cancel(alarmIntent(context, index, 0, 0));
     }
 
     // Retry missing high-latitude times every day; do not cancel the other five alarms.
@@ -129,7 +139,7 @@ public final class ReminderScheduler {
             }
         } catch (JSONException ignored) { }
         return ReminderTimeCalculator.next(index, now, TimeZone.getDefault(), lat, lng,
-                p.getInt("delay", 15), p.getString("date", ""), supplied);
+                p.getInt("prayer.delay." + index, p.getInt("delay", 15)), p.getString("date", ""), supplied);
     }
 
     static synchronized void onAlarm(Context context, int index, long scheduledAt, long generation) {
@@ -141,10 +151,21 @@ public final class ReminderScheduler {
             scheduleRetry(context, now);
             return;
         }
-        if (index < 0 || index >= COUNT || p.getLong("scheduled." + index, 0) != scheduledAt) return;
+        if (index < 0 || index >= COUNT || !p.getBoolean("prayer.enabled." + index, true) || p.getLong("scheduled." + index, 0) != scheduledAt) return;
         // Set up the next occurrence even when notification permission was later revoked.
         schedulePrayer(context, index, Math.max(now, scheduledAt));
         if (now - scheduledAt <= MAX_LATE_MS && now >= scheduledAt - 60000) showNotification(context, index);
+    }
+
+    static synchronized long nextScheduled(Context context, long now) {
+        SharedPreferences p = prefs(context);
+        if (!p.getBoolean("enabled", false)) return 0;
+        long next = Long.MAX_VALUE;
+        for (int i = 0; i < COUNT; i++) {
+            long at = p.getLong("scheduled." + i, 0);
+            if (p.getBoolean("prayer.enabled." + i, true) && at > now && at < next) next = at;
+        }
+        return next == Long.MAX_VALUE ? 0 : next;
     }
 
     private static void createChannel(Context context) {

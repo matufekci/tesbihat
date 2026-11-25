@@ -93,7 +93,7 @@ export default function Splash({ onDone, onboard = false, theme = 'dark', themeC
             <h2 id="welcome-heading" className="welcome-heading">{t('onboardLanguageTitle')}</h2>
             <p className="welcome-copy">{t('onboardLanguageSub')}</p>
             <LangChips large />
-            <p className="welcome-disclosure">{t('onboardPermissionNotice')}</p>
+            <p className="welcome-disclosure">{t('onboardPermissionNotice')} {t('onboardPrivacy')}</p>
           </section>}
           {step === 1 && <section className="welcome-step" aria-labelledby="welcome-heading">
             <h2 id="welcome-heading" className="welcome-heading">{t('onboardPermissionTitle')}</h2>

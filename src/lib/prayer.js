@@ -1,3 +1,5 @@
+import tzLookup from 'tz-lookup'
+
 // Namaz vakitleri: önce Aladhan API (Diyanet hesabı, method=13), düşerse çevrimdışı astronomik hesap.
 
 const toRad = (d) => (d * Math.PI) / 180
@@ -93,12 +95,16 @@ function cleanTime(s) {
 }
 
 /** Bugünün vakitlerini döner: { timings:{Imsak,Sunrise,Dhuhr,Asr,Maghrib,Isha}, hijri, source } */
-export async function fetchTimes({ lat, lng, date = new Date(), lang = 'tr' }) {
+export async function fetchTimes({ lat, lng, date = new Date(), lang = 'tr', offlineOnly = false, signal }) {
+  if (offlineOnly) return { timings: offlineTimes(date, lat, lng), hijri: hijriFromIntl(date, lang), source: 'offline' }
   const dd = pad(date.getDate())
   const mm = pad(date.getMonth() + 1)
   const url = `https://api.aladhan.com/v1/timings/${dd}-${mm}-${date.getFullYear()}?latitude=${lat}&longitude=${lng}&method=13&school=0`
   const ctrl = new AbortController()
   const timer = setTimeout(() => ctrl.abort(), 6000)
+  const abort = () => ctrl.abort()
+  if (signal?.aborted) ctrl.abort()
+  else signal?.addEventListener('abort', abort, { once: true })
   try {
     const res = await fetch(url, { signal: ctrl.signal })
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -120,6 +126,7 @@ export async function fetchTimes({ lat, lng, date = new Date(), lang = 'tr' }) {
     return { timings: offlineTimes(date, lat, lng), hijri: hijriFromIntl(date, lang), source: 'offline' }
   } finally {
     clearTimeout(timer)
+    signal?.removeEventListener('abort', abort)
   }
 }
 
@@ -184,3 +191,8 @@ export function timeUntilVakitEnds(timings, tomorrowTimings, date) {
   return `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`
 }
 
+
+// Offline polygon lookup is approximate near borders and cannot establish the user's physical location.
+export function locationTimeZone(lat, lng) {
+  try { return tzLookup(lat, lng) } catch { return null }
+}

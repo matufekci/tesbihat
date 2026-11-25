@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { CITIES } from '../data/cities.js'
 import { useLang } from '../lib/i18n.js'
 import LangChips from './LangChips.jsx'
 import ThemeSelector from './ThemeSelector.jsx'
 import AppIcon from './AppIcon.jsx'
+import { PRAYER_IDS, reminderSettings } from '../lib/store.js'
+import { minutesOf, nowMinutes } from '../lib/prayer.js'
+import { reminderHealth, openReminderSystemSettings } from '../lib/notify.js'
 
 const REMINDER_OPTIONS = [5, 10, 15, 20, 30, 45, 60]
-const APP_VERSION = '1.21.2'
+const APP_VERSION = '1.22.0'
 
 const LANGUAGE_TITLES = [
   ['tr', 'Dil Seçimi'], ['ar', 'اختيار اللغة'], ['de', 'Sprachauswahl'],
@@ -28,10 +31,29 @@ function LanguageTitle() {
   ))
 }
 
-export default function Settings({ settings, setSettings, onToggleNotif, onToast, timesData, location, lastUpdate, timeZone }) {
+export default function Settings({ settings, setSettings, onToggleNotif, onToast, timesData, location, lastUpdate, timeZone, locationZone, tomorrowTimes, now, scheduleRevision }) {
   const { t } = useLang()
   const [gpsError, setGpsError] = useState('')
   const [gpsBusy, setGpsBusy] = useState(false)
+  const [health, setHealth] = useState(null)
+  const [healthError, setHealthError] = useState(false)
+  const refreshHealth = useCallback(async () => {
+    try { setHealth(await reminderHealth()); setHealthError(false) }
+    catch { setHealthError(true) }
+  }, [])
+  useEffect(() => {
+    refreshHealth()
+    const onVisible = () => { if (document.visibilityState === 'visible') refreshHealth() }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => document.removeEventListener('visibilitychange', onVisible)
+  }, [refreshHealth, scheduleRevision])
+  const selectedReminders = reminderSettings(settings)
+  const prayerLabels = PRAYER_IDS.map((id) => t('vakit' + id.charAt(0).toUpperCase() + id.slice(1)))
+  const prayerKeys = ['Imsak', 'Dhuhr', 'Asr', 'Maghrib', 'Isha']
+  const nextIndex = prayerKeys.findIndex((key) => { const m = minutesOf(timesData?.timings?.[key]); return m != null && m > nowMinutes(now) })
+  const nextKey = nextIndex === -1 ? 0 : nextIndex
+  const nextTime = nextIndex === -1 ? tomorrowTimes?.Imsak : timesData?.timings?.[prayerKeys[nextKey]]
+  const setPrayer = (id, patch) => setSettings((s) => ({ ...s, reminders: { ...reminderSettings(s), [id]: { ...reminderSettings(s)[id], ...patch } } }))
 
   const set = (patch) => setSettings((s) => ({ ...s, ...patch }))
 
@@ -62,6 +84,21 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
         <div className="greet">{t('preferences')}<strong>{t('settingsHeading')}</strong></div>
       </header>
 
+      <details className="prayer-overview" open>
+        <summary className="prayer-overview-summary">{t('overviewTitle')}</summary>
+        <div className="settings-group-content">
+          <p>{location?.name} · {timesData?.source === 'aladhan' ? t('sourceOnline') : t('sourceOffline')}</p>
+          <div className="prayer-overview-grid">
+            {PRAYER_IDS.map((id, i) => <div key={id}><span>{prayerLabels[i]}</span><strong>{timesData?.timings?.[prayerKeys[i]] ?? '—'}</strong></div>)}
+          </div>
+          <p>{t('nextPrayerLabel')}: {nextTime ? `${prayerLabels[nextKey]} ${nextTime}${nextIndex === -1 ? ` (${t('tomorrowApprox')})` : ''}` : t('timeUnavailable')}</p>
+          <small>{t('timeUpdated', { time: lastUpdate })} · {t('deviceZone')}: {timeZone}</small><br />
+          <small>{t('timeAccuracyHint')}</small>
+          {locationZone && locationZone !== timeZone && <p className="zone-warning" role="alert">{t('zoneMismatch', { location: locationZone, device: timeZone })}</p>}
+          {!locationZone && <p className="zone-warning">{t('zoneUnknown')}</p>}
+        </div>
+      </details>
+
       {/* Dil */}
       <SettingsGroup title={<LanguageTitle />} icon="language">
         <div className="set-row">
@@ -89,6 +126,12 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
               {gpsBusy ? t('gpsBusy') : t('gpsButton')}
             </button>
             {gpsError && <div className="gps-error">{gpsError}</div>}
+            <p className="hint">{t('travelHint')}</p>
+            <div className="set-row">
+              <div className="grow"><label htmlFor="offline-only">{t('offlineOnly')}</label><small>{t('offlineOnlyHint')}</small></div>
+              <button id="offline-only" className="switch" role="switch" aria-checked={settings.offlineOnly} aria-label={t('offlineOnly')} onClick={() => set({ offlineOnly: !settings.offlineOnly })} />
+            </div>
+            <p className="hint">{t('privacyHint')}</p>
           </div>
         </div>
       </SettingsGroup>
@@ -102,20 +145,34 @@ export default function Settings({ settings, setSettings, onToggleNotif, onToast
           </div>
           <button id="notif-switch" className="switch" role="switch" aria-checked={settings.notifEnabled} aria-label={t('notifSwitchAria')} onClick={() => onToggleNotif(!settings.notifEnabled)} />
         </div>
-        {settings.notifEnabled && (
-          <>
-            <div className="set-row">
-              <div className="grow">
-                <label htmlFor="reminder">{t('reminderLabel')}</label>
-                <div className="settings-control">
-                  <select id="reminder" value={settings.reminderMin} onChange={(e) => set({ reminderMin: parseInt(e.target.value, 10) })}>
-                    {REMINDER_OPTIONS.map((m) => <option key={m} value={m}>{t('reminderOption', { m })}</option>)}
-                  </select>
-                </div>
-              </div>
-            </div>
-          </>
-        )}
+        {settings.notifEnabled && <div className="reminder-prayers">
+          <p className="hint">{t('perPrayerHint')}</p>
+          {PRAYER_IDS.map((id, i) => <div className="reminder-prayer" key={id}>
+            <label htmlFor={`prayer-switch-${id}`}>{prayerLabels[i]}</label>
+            <select aria-label={`${prayerLabels[i]} · ${t('reminderLabel')}`} disabled={!selectedReminders[id].enabled} value={selectedReminders[id].delay} onChange={(e) => setPrayer(id, { delay: Number(e.target.value) })}>
+              {REMINDER_OPTIONS.map((m) => <option key={m} value={m}>{t('reminderOption', { m })}</option>)}
+            </select>
+            <button id={`prayer-switch-${id}`} className="switch" role="switch" aria-label={`${prayerLabels[i]} · ${t('notifLabel')}`} aria-checked={selectedReminders[id].enabled} onClick={() => setPrayer(id, { enabled: !selectedReminders[id].enabled })} />
+          </div>)}
+        </div>}
+        <details className="reminder-health">
+          <summary>{t('healthTitle')}</summary>
+          {healthError || health?.unavailable ? <p role="status">{t('healthUnavailable')}</p> : !health ? <p>{t('healthLoading')}</p> : <div role="status">
+            <p>{t('notificationPermissionLabel')}: {health.notificationsEnabled ? t('healthOn') : t('healthOff')}</p>
+            {health.via === 'android' && <>
+              <p>{t('channelStatus')}: {health.channelEnabled ? t('healthOn') : t('healthOff')}</p>
+              <p>{t('exactStatus')}: {health.exactAllowed ? t('healthOn') : t('healthOff')}</p>
+              <p>{t('batteryStatus')}: {health.batteryUnrestricted ? t('batteryUnrestricted') : t('batteryRestricted')}</p>
+            </>}
+            <p>{t('nextReminder')}: {settings.notifEnabled && health.nextAt ? new Intl.DateTimeFormat(undefined, { dateStyle: 'short', timeStyle: 'short' }).format(new Date(health.nextAt)) : t('noneScheduled')}</p>
+            <p className="hint">{health.via === 'android' ? t('healthAndroidHint') : t('healthWebHint')}</p>
+          </div>}
+          <button type="button" className="gps-btn" onClick={refreshHealth}>{t('healthRefresh')}</button>
+          {health?.via === 'android' && <div className="health-actions">
+            <button type="button" className="gps-btn" onClick={() => openReminderSystemSettings('app').then((ok) => { if (!ok) onToast?.(t('healthUnavailable')) })}>{t('openDeviceSettings')}</button>
+            <button type="button" className="gps-btn" onClick={() => openReminderSystemSettings('alarm').then((ok) => { if (!ok) onToast?.(t('healthUnavailable')) })}>{t('openAlarmSettings')}</button>
+          </div>}
+        </details>
         <p className="hint">{t('notifHint')}</p>
       </SettingsGroup>
 

@@ -17,7 +17,8 @@ Beş vaktin ardından okunan zikir, salavât, dua ve sureler için sayaçlı, an
 - 🔎 A−/A+ düğmeleriyle metin boyu; kısa sureler ve dualar için altta katlanabilir Türkçe anlam (Diyanet İşleri meal)
 - 🔤 Arapça metin + okunuş (yerel yazılar)
 - 📍 Vakitler: yaklaşık çevrimdışı astronomik hesap (anında) + internet varsa AlAdhan deneysel Diyanet yöntemiyle güncelleme; yerel yetkili takvimle karşılaştırın
-- 🔔 Ezan sonrası hatırlatma bildirimi (web: sekme açıkken; Android: sonraki günleri otomatik planlayan yerel alarm; çevrimdışı vakitler yaklaşıktır)
+- 🔔 Vakit başına açılıp kapatılabilen ve gecikmesi seçilebilen hatırlatmalar; sağlık ekranı (web: sekme açıkken; Android: yerel alarm, teslimat garanti değildir)
+- 🔐 Yalnız çevrimdışı vakit hesabı seçeneği ve konum/saat dilimi uyarısı; çevrimiçi hesap seçili koordinatları AlAdhan’a gönderir. GPS yalnız istenirse alınır.
 - 🌙 Koyu / açık / AMOLED / gül kurusu temalar · PWA kurulabilir · Android APK hazır
 
 ## Geliştirme

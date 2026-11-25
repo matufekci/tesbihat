@@ -107,3 +107,18 @@ test('active prayer session rejects malformed data and bounds values', () => {
   localStorage.setItem('tesbihat.activeVakit', JSON.stringify({ vakit: 'ogle', laTarget: 999, progress: { idx: -5, counts: { x: -4, valid: 2 }, done: 1 } }))
   assert.deepEqual(loadActiveVakit(), { vakit: 'ogle', laTarget: 20, progress: { idx: 0, counts: { valid: 2 }, done: false } })
 })
+
+test('legacy global reminder delay migrates safely to each prayer and custom preferences persist', async () => {
+  const { reminderSettings } = await import('../src/lib/store.js')
+  localStorage.setItem('tesbihat.settings', JSON.stringify({ reminderMin: 30 }))
+  const old = loadSettings()
+  for (const preference of Object.values(reminderSettings(old))) assert.deepEqual(preference, { enabled: true, delay: 30 })
+  const reminders = { ...reminderSettings(old), sabah: { enabled: false, delay: 5 }, aksam: { enabled: true, delay: 60 } }
+  saveSettings({ ...old, reminders, offlineOnly: true })
+  const restored = loadSettings()
+  assert.deepEqual(restored.reminders.sabah, { enabled: false, delay: 5 })
+  assert.deepEqual(restored.reminders.aksam, { enabled: true, delay: 60 })
+  assert.equal(restored.offlineOnly, true)
+  localStorage.setItem('tesbihat.settings', JSON.stringify({ reminders: { sabah: { enabled: 'false', delay: 123 } } }))
+  assert.deepEqual(loadSettings().reminders.sabah, { enabled: true, delay: 15 })
+})

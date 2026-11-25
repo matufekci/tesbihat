@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { getStepsFor, COMMON_STEPS, getRizikDuasi } from '../data/vird.js'
 import { minutesOf, nowMinutes } from '../lib/prayer.js'
-import { todayKey, loadVakitProgress, saveVakitProgress, resetVakitProgress, loadActiveVakit, saveActiveVakit, clearActiveVakit } from '../lib/store.js'
+import { todayKey, loadVakitProgress, saveVakitProgress, resetVakitProgress, loadActiveVakit, saveActiveVakit, clearActiveVakit, reminderSettings } from '../lib/store.js'
 import QuranBlock from './QuranBlock.jsx'
 import CompletionCelebration from './CompletionCelebration.jsx'
 import MeaningDisclosure from './MeaningDisclosure.jsx'
@@ -260,7 +260,7 @@ export default function VirdList({ now, timesData, settings, setSettings, onTogg
               </label>
               <div className="quick-controls">
                 {settings.notifEnabled && (
-                  <select className="quick-select quick-min" aria-label={t('reminderLabel')} value={settings.reminderMin} onChange={(e) => setSettings?.((s) => ({ ...s, reminderMin: parseInt(e.target.value, 10) }))}>
+                  <select className="quick-select quick-min" aria-label={t('reminderLabel')} value={settings.reminderMin} onChange={(e) => setSettings?.((s) => { const delay = parseInt(e.target.value, 10); return { ...s, reminderMin: delay, reminders: Object.fromEntries(Object.entries(reminderSettings(s)).map(([id, item]) => [id, { ...item, delay }])) } })}>
                     {REMINDER_OPTIONS.map((m) => <option key={m} value={m}>{t('reminderOption', { m })}</option>)}
                   </select>
                 )}
