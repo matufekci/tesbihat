@@ -40,3 +40,12 @@ test('Namaz Zamanı readings retain representative verse boundaries', () => {
   assert.equal(readings['56']['76'], 'Ve innehu le kasemun lev ta’lemûne azîm(azîmun).')
   assert.equal(readings['56']['96'], 'Fe sebbih bismi rabbikel azîm(azîmi).')
 })
+
+
+test('selected Quran reading corrections preserve Arabic word boundaries', () => {
+  assert.match(readings['56']['6'], /munbessâ/)
+  assert.match(readings['56']['47'], /ve ızâmen e innâ/)
+  assert.match(readings['56']['60'], /mesbûkîn/)
+  assert.match(readings['56']['64'], /tezreûnehû/)
+  assert.match(readings['67']['30'], /bi mâin maîn/)
+})

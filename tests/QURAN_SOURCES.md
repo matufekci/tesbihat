@@ -25,6 +25,6 @@
 
 - Fâtiha, Bakara 285–286, Yâsîn 1–83, Vâkıa 1–96, Haşr 20–24, Mülk 1–30, Nûh 1–28 ve Nebe 1–40 Latin okunuşları [Namaz Zamanı](https://www.namazzamani.net/kuranmeali/) sayfalarından alınmıştır. Kullanıcının paylaştığı e-posta yanıtında Namaz Zamanı, Türkçe okunuşların uygulamada kullanılmasına izin vermiştir. Bu izin Açık Kuran lisansı değildir; siteye ait [kullanım koşulları](https://www.namazzamani.net/turkce/kullanim-kosullari.htm) ayrıca geçerlidir.
 
-- Namaz Zamanı Mülk 4, 9 ve 30 okunuşlarında farklı yazım ve 30. ayette tekrar bulunuyor; kaynak aynen aktarılmıştır, telaffuz doğruluğu ayrıca kontrol edilmelidir.
+- Mülk 30’da Arapça بِمَٓاءٍ مَع۪ينٍ iki ayrı kelimedir; önceki "tekrar" şüphesi doğru değildi. Uzun ünlü ayrımını göstermek için kaynak metindeki ilk "maîn" yazımı "mâin" olarak düzeltildi. Mülk 4 ve 9 farklı aktarım işaretleri içerir; sesli doğrulama yapılmadı.
 
-- Namaz Zamanı Vâkıa 6, 47, 60 ve 64 metinlerinde yazım veya kelime bölünmesi sorunları görülüyor; sayfadaki biçim aktarılmıştır ve telaffuz için ayrıca kontrol gereklidir.
+- Vâkıa 6, 47, 60 ve 64’te kaynakta kelime bölünmeleri düzeltilmiştir: munbessâ, ızâmen, mesbûkîn, tezreûnehû. Arapça ayetler ve [bağımsız Vâkıa okunuşu](https://www.islamveihsan.com/vakia-suresi.html) kontrol edildi. Bu, tüm ayetlerin bağımsız telaffuz denetimi değildir.
