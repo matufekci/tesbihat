@@ -899,7 +899,7 @@ for (const [prayer, title, first, last, total] of [
     if (first > 1) await expect(reading.locator('.quran-reading-basmala')).toHaveCount(0)
     else await expect(reading.locator('.quran-reading-basmala')).toBeVisible()
     if (prayer === 'İkindi') {
-      await expect(reading).toContainText('Nebe suresinde q')
+      await expect(reading).toContainText('Bu bölümde q')
       await expect(reading.locator('li[value="8"]')).toContainText('halaqnâkum')
       await expect(reading.locator('li[value="17"]')).toContainText('kâne mîqâtâ')
     }

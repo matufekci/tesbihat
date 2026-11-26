@@ -21,8 +21,8 @@ Bu bir **yazılı metin karşılaştırmasıdır**, sesli kıraat veya tecvid on
 
 Fâtiha dışındaki 284 ayetin numaraları İngilizce transliterasyon içeren [Quran JSON arşivi](https://github.com/oatmanelfarji/quran-cloud-json) ile eşleştirilerek ön tarama yapıldı. Arapça yazım, transliterasyon dili, vasl/vakıf ve karakter kuralları farklı olduğundan dizge benzerliği telaffuz doğruluğunu göstermez; otomatik sonuçlarla ayetler doğrulanmış sayılmamıştır. Başka bir JSON arşivinde sûre anahtarları ile metinlerin uyuşmadığı tespit edildiği için referans olarak kullanılmadı. Fâtiha ayrı metin alanında olduğundan bu taramanın kapsamına dahil değildir.
 
-## q/k gösterimi: Nebe pilotu
+## q/k gösterimi: Kur’an pasajları
 
-Kullanıcının isteğiyle, **yalnızca Nebe suresinde** Arapça ق harfine denk gelen seçili `k` yazımları `q` ile işaretlendi; ك harfi `k` kalır. Örneğin 78:8 `halaqnâkum`, 78:12 `fevqakum`, 78:17 `kâne mîqâtâ(mîqâten)` biçimindedir. Parantez içindeki alternatifler de aynı şekilde düzenlendi. Metin Namaz Zamanı kaynaklıdır ancak bu uygulamada uyarlanmıştır.
+Fâtiha, Bakara 285–286, Yâsîn, Vâkıa, Haşr 20–24, Mülk, Nûh ve Nebe Latin okunuşları, kaynak metin uyarlanarak ق için `q` ve ك için `k` gösterimine dönüştürülmüştür. Parantez içindeki seçeneklerde de aynı ayrım uygulanmıştır. Dua ve zikirlerde geçen başka alıntılar bu kapsamda dönüştürülmedi.
 
-Bu bir sınırlı yazılı denemedir: Fâtiha, Bakara, Yâsîn, Vâkıa, Haşr, Mülk, Nûh ve diğer dualar **henüz bu sisteme dönüştürülmedi**. Nebe'deki eşlemeler Diyanet Arapça metniyle kontrol edildi; sesli uzman incelemesi yapılmadı. Latin gösterim, vakıf/vasl ve diğer Arapça harflerin ses ayrımlarını eksiksiz karşılamaz. Özellikle duruş ve devamda telaffuz ayrımı ve metin kaynağındaki diğer şüpheli noktalar hâlâ ayrıca kontrol gerektirir.
+Fâtiha dışındaki 284 ayette Arapça ق sayısı, parantezler dışındaki q gruplarıyla otomatik olarak karşılaştırılmıştır. Bu sayım, her harfin doğru konumlandırıldığını, bütün telaffuzları veya duruş/devam seçeneklerini kanıtlamaz. Önceki açık sorular geçerlidir; sesli uzman incelemesi yapılmadı.

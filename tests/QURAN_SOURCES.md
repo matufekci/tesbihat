@@ -31,4 +31,4 @@
 
 - Devam eden bağımsız yazılı kontrol ve açık sorular: [okunuş inceleme notları](TRANSLITERATION_REVIEW.md).
 
-- Nebe Latin okunuşu, kaynak metinden uyarlanarak ق için q ve ك için k gösterimiyle düzenlenmiştir; diğer pasajların dönüşümü henüz yapılmamıştır. [Pilot kapsamı ve sınırları](TRANSLITERATION_REVIEW.md).
+- Kur’an bölümlerindeki Latin okunuşlar, kaynak metinden uyarlanarak ق için q ve ك için k gösterimiyle düzenlenmiştir; dua ve zikirlerde bu dönüşüm yapılmamıştır. [Kapsam ve sınırlar](TRANSLITERATION_REVIEW.md).

@@ -51,8 +51,8 @@ export default function QuranBlock({ sura, from = 1, to, hotAyat, hotLabel, high
       {latin && (
         <section className="quran-reading" aria-label={t('latinReading')}>
           <h3>{t('latinReading')}</h3>
-          <p className="quran-reading-note">{t('latinReadingNote')} <a href={`https://www.namazzamani.net/kuranmeali/${READING_SOURCES[sura]}-suresi.htm`} target="_blank" rel="noreferrer">Namaz Zamanı</a>{sura === 78 ? ' (q/k)' : null}</p>
-          {sura === 78 && <p className="quran-reading-note">{t('qReadingNote')}</p>}
+          <p className="quran-reading-note">{t('latinReadingNote')} <a href={`https://www.namazzamani.net/kuranmeali/${READING_SOURCES[sura]}-suresi.htm`} target="_blank" rel="noreferrer">Namaz Zamanı</a>{' (q/k)'}</p>
+          <p className="quran-reading-note">{t('qReadingNote')}</p>
           {isFullSurah && <p className="quran-reading-basmala" lang="tr" dir="ltr">Bismillâhirrahmânirrahîm.</p>}
           <ol className="quran-reading-verses" lang="tr" dir="ltr">
             {ayats.map(([n]) => (

@@ -40,5 +40,6 @@ test('closing Fatiha includes its Latin reading for every prayer and language', 
     const step = getStepsFor(prayer, lang).find((item) => item.id === 'fatiha-ruh')
     assert.match(step.latin, /^Bismillâhir rahmânir rahîm\./)
     assert.match(step.latin, /lâd dâllîn/)
+    assert.match(step.latin, /mustaqîm\(mustaqîme\)/)
   }
 })
