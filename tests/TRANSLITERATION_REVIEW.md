@@ -4,8 +4,8 @@ Bu bir **yazılı metin karşılaştırmasıdır**, sesli kıraat veya tecvid on
 
 ## Kaynakla karşılaştırılarak düzeltilen yerler
 
-- Yâsîn 13: جَٓاءَهَا الْمُرْسَلُونَ için `câe hel` yerine `câehâl` kullanıldı. [Ayet ve okunuş](https://www.kuranvemeali.com/yasin-suresi/13-ayeti-meali).
-- Yâsîn 80: اَخْضَرِ نَارًا sınırı `ahdari nâren` olarak ayrıldı. [Karşılaştırma](https://www.islamveihsan.com/yasin-suresi-turkce-okunusu.html).
+- Yâsîn 13: Daha önce جَٓاءَهَا الْمُرْسَلُونَ için `câehâl` kullanıldı; kullanıcı metniyle `câehel` olarak güncellendi. Arapçadaki هَا (hâ) nedeniyle bu fark tekrar kontrol edilmeli. [Ayet ve okunuş](https://www.kuranvemeali.com/yasin-suresi/13-ayeti-meali).
+- Yâsîn 80: Daha önce اَخْضَرِ نَارًا sınırı `ahdari nâren` olarak ayrıldı; kullanıcı metninde `ahdari nâran` kullanıldı. [Karşılaştırma](https://www.islamveihsan.com/yasin-suresi-turkce-okunusu.html).
 - Vâkıa 6: مُنْبَثًّا için parantez içindeki alternatif, eksik baş kısmı tamamlanarak `munbessen` olarak yazıldı. [Karşılaştırma](https://dinirehberim.com/vakia-suresi-arapca-ve-turkce-oku.html).
 - Vâkıa 83: الْحُلْقُومَ için duruş ve devam gösterimi `hulkûm(hulkûme)` olarak düzenlendi. [Karşılaştırma](https://dinirehberim.com/vakia-suresi-arapca-ve-turkce-oku.html).
 - Önceki kontrol: Vâkıa 6, 47, 60, 64 kelime bölünmeleri ve Mülk 30 uzun ünlü ayrımı için bkz. [kaynak notları](QURAN_SOURCES.md).
@@ -38,3 +38,7 @@ Fâtiha Latin okunuşu kullanıcı tarafından sağlanan metinle değiştirildi;
 ## Bakara 285–286 okunuşunun güncellenmesi
 
 İki ayetin okunuşu kullanıcının sağladığı metinle değiştirildi; q/k gösterimi korundu. Sesli uzman doğrulaması yapılmadı.
+
+## Yâsîn okunuşunun güncellenmesi
+
+Yâsîn 1–83 kullanıcının paylaştığı metinle değiştirildi, q/k ayrımı korundu. 13. ayetteki câehel/câehâl farkı açık bir kontrol konusudur; sesli uzman doğrulaması yapılmadı.

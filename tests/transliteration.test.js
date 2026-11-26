@@ -35,8 +35,8 @@ test('selected verse boundaries and the Vâkıa prayer point are retained', () =
 
 
 test('Readings retain representative verse boundaries', () => {
-  assert.equal(readings['36']['1'], 'Yâ sîn.')
-  assert.equal(readings['36']['83'], 'Fe subhânellezî bi yedihî melekûtu kulli şey’in ve ileyhi turceûn(turceûne).')
+  assert.equal(readings['36']['1'], 'Yâsîn.')
+  assert.equal(readings['36']['83'], 'Fesubhânellezî biyedihî melekûtu kulli şey’in ve ileyhi turceûn.')
   assert.equal(readings['56']['1'], 'İzâ veqa’atil vâqıah (vâqıatu).')
   assert.equal(readings['56']['76'], 'Ve innehû leqasemun lev ta’lemûne azîm (azîmun).')
   assert.equal(readings['56']['96'], 'Fesebbih bismi rabbikel azîm (azîmi).')
@@ -46,8 +46,8 @@ test('Readings retain representative verse boundaries', () => {
 test('selected Quran reading corrections preserve Arabic word boundaries', () => {
   assert.match(readings['56']['6'], /munbessâ\s*\(munbessen\)/)
   assert.match(readings['56']['83'], /hulqûm\s*\(hulqûme\)/)
-  assert.match(readings['36']['13'], /câehâl murselûn/)
-  assert.match(readings['36']['80'], /ahdari nâren/)
+  assert.match(readings['36']['13'], /câehel murselûn/)
+  assert.match(readings['36']['80'], /ahdari nâran/)
   assert.match(readings['56']['47'], /ve ızâmen e innâ/)
   assert.match(readings['56']['60'], /mesbûqîn/)
   assert.match(readings['56']['64'], /tezre’ûnehû/)
@@ -112,4 +112,13 @@ test('Mülk 4 and 9 use the user-provided readings with q/k distinction', () => 
 test('Bakara 285 and 286 use the readings supplied by the user', () => {
   assert.equal(readings['2']['285'], 'Âmenerrasûlu bimâ unzile ileyhi min rabbihî vel mu’minûn. Kullun âmene billâhi ve melâiketihî ve kutubihî ve rusulih. Lâ nuferriqu beyne ehadin min rusulih. Ve qâlû semi’nâ ve ata’nâ ğufrâneke rabbenâ ve ileykel masîr.')
   assert.equal(readings['2']['286'], 'Lâ yukellifullâhu nefsen illâ vus’ahâ. Lehâ mâ kesebet ve aleyhâ mektesebet. Rabbenâ lâ tuâhıznâ in nesînâ ev ahta’nâ. Rabbenâ ve lâ tahmil aleynâ ısran kemâ hameltehû alellezîne min qablinâ. Rabbenâ ve lâ tuhammilnâ mâ lâ tâqate lenâ bih. Va’fu annâ, vağfir lenâ, verhamnâ. Ente mevlânâ fensurnâ alel qavmil kâfirîn.')
+})
+
+
+test('all Yâsîn readings retain the user-supplied text except for q/k notation', () => {
+  const supplied = readFileSync(new URL('./fixtures/yasin-user-reading.txt', import.meta.url), 'utf8').trim().split('\n')
+  assert.equal(supplied.length, 83)
+  for (const [index, expected] of supplied.entries()) {
+    assert.equal(readings['36'][index + 1].replace(/q/g, 'k').replace(/Q/g, 'K'), expected, `36:${index + 1}`)
+  }
 })

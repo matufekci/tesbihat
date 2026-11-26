@@ -899,6 +899,10 @@ for (const [prayer, title, first, last, total] of [
       await expect(reading).toContainText('Kullanıcı tarafından paylaşılan okunuş')
       await expect(reading).toContainText('Parantez dışı durak')
       await expect(reading.locator('li[value="36"]')).toContainText('ebkârâ (ebkâren)')
+    } else if (title === 'Yâsîn Suresi') {
+      await expect(reading).toContainText('Kullanıcı tarafından paylaşılan okunuş')
+      await expect(reading.locator('li[value="1"]')).toContainText('Yâsîn.')
+      await expect(reading.locator('li[value="83"]')).toContainText('Fesubhânellezî')
     } else if (title === 'Âmenerrasûlü') {
       await expect(reading).toContainText('Kullanıcı tarafından paylaşılan okunuş')
       await expect(reading.locator('li[value="285"]')).toContainText('nuferriqu')
