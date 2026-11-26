@@ -102,3 +102,8 @@ test('q is consistent between the base word and its parenthesized reading', () =
     }
   }
 })
+
+test('Mülk 4 and 9 use the user-provided readings with q/k distinction', () => {
+  assert.equal(readings['67']['4'], 'Sümme’rci’il-basara kerrateyni yenqalib ileyke’l-basaru hâsien ve hüve hasîr.')
+  assert.equal(readings['67']['9'], 'Qâlû belâ qad câenâ nezîrun fe kezzebnâ ve qulnâ mâ nezzela’llâhu min şey’in in entüm illâ fî dalâlin kebîr.')
+})

@@ -12,7 +12,7 @@ Bu bir **yazılı metin karşılaştırmasıdır**, sesli kıraat veya tecvid on
 
 ## Kullanıcı / yetkin okuyucu araştırması için açık sorular
 
-1. **Mülk 4 ve 9:** Kaynak metinde diğer ayetlerden farklı akademik işaretler (`Ś`, `ḣ`, `ż`, `(A)` gibi) var. Bunların uygulamadaki Türkçe okunuş düzenine nasıl uyarlanacağı, özellikle duruş/devam ve bağlantılar, uzman okuyucuyla kontrol edilmeli. [Mülk 9 karşılaştırma](https://hayalhanem.com/mulk-suresi/).
+1. **Mülk 4 ve 9:** Kullanıcının paylaştığı okunuşlar, mevcut q/k ayrımına uyarlanarak kullanıldı. Önceki akademik işaretler kaldırıldı; duruş/devam ve sesli telaffuz uzman doğrulaması bekliyor.
 2. **Vâkıa 36:** Kaynaktaki `ebkârân(ebkâren)` yazımı ile başka okunuşlardaki `ebkârâ` veya `ebkâren` biçimleri farklı; duruş/devam ayrımı kontrol edilmeden metin değiştirilmedi. [Kaynak](https://www.namazzamani.net/kuranmeali/vakia-suresi-36.ayet.htm).
 3. **Yâsîn 40:** `Leş şemsu` ve `lel leylu` şeklinde geleneksel bitişik okunuşlar, diğer yazım sistemlerinde farklı gösterilebiliyor; uzunluk/bağlantı uzman tarafından dinlenerek kontrol edilmeli. [Arapça ve kelimeler](https://www.kuranmakaleleri.com/kuran-i-kerim/36-yasin-suresi-40-ayeti/).
 4. **Genel:** Parantezli duruş/devam gösterimi uygulamanın tamamında tutarlı ve kullanıcı için anlaşılır mı? Her ayetin sesli doğrulanması ayrıca gereklidir.
