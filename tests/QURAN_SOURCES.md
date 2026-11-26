@@ -28,3 +28,5 @@
 - Mülk 30’da Arapça بِمَٓاءٍ مَع۪ينٍ iki ayrı kelimedir; önceki "tekrar" şüphesi doğru değildi. Uzun ünlü ayrımını göstermek için kaynak metindeki ilk "maîn" yazımı "mâin" olarak düzeltildi. Mülk 4 ve 9 farklı aktarım işaretleri içerir; sesli doğrulama yapılmadı.
 
 - Vâkıa 6, 47, 60 ve 64’te kaynakta kelime bölünmeleri düzeltilmiştir: munbessâ, ızâmen, mesbûkîn, tezreûnehû. Arapça ayetler ve [bağımsız Vâkıa okunuşu](https://www.islamveihsan.com/vakia-suresi.html) kontrol edildi. Bu, tüm ayetlerin bağımsız telaffuz denetimi değildir.
+
+- Devam eden bağımsız yazılı kontrol ve açık sorular: [okunuş inceleme notları](TRANSLITERATION_REVIEW.md).
