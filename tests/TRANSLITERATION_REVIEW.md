@@ -42,3 +42,7 @@ Fâtiha Latin okunuşu kullanıcı tarafından sağlanan metinle değiştirildi;
 ## Yâsîn okunuşunun güncellenmesi
 
 Yâsîn 1–83 kullanıcının paylaştığı metinle değiştirildi, q/k ayrımı korundu. 13. ayetteki câehel/câehâl farkı açık bir kontrol konusudur; sesli uzman doğrulaması yapılmadı.
+
+## Haşr 20–24 okunuşunun güncellenmesi
+
+Beş ayetin Latin okunuşu kullanıcı tarafından sağlandı, q/k ayrımı korundu; sesli uzman doğrulaması yapılmadı.

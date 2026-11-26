@@ -88,7 +88,7 @@ test('selected qaf and kaf distinctions are retained in the same verse', () => {
   assert.match(readings['2']['285'], /Kullun.*nuferriqu.*qâlû/)
   assert.match(readings['36']['7'], /Leqad haqqal qavlu.*ekserihim/)
   assert.match(readings['56']['16'], /Muttekiîne.*muteqâbilîn\s*\(muteqâbilîne\)/)
-  assert.match(readings['59']['23'], /elmelikul quddûsus.*mutekebbir/)
+  assert.match(readings['59']['23'], /Elmelikul quddûsus.*mutekebbir/)
   assert.match(readings['67']['21'], /yerzuqukum in emseke rızqah\(rızqahu\)/)
   assert.match(readings['71']['14'], /qad halaqakum/)
 })
@@ -121,4 +121,16 @@ test('all Yâsîn readings retain the user-supplied text except for q/k notation
   for (const [index, expected] of supplied.entries()) {
     assert.equal(readings['36'][index + 1].replace(/q/g, 'k').replace(/Q/g, 'K'), expected, `36:${index + 1}`)
   }
+})
+
+
+test('Haşr 20–24 use the readings supplied by the user with q/k notation', () => {
+  const expected = [
+    'Lâ yestevî ashâbun nâri ve ashâbul cenneh. Ashâbul cenneti humul fâizûn.',
+    'Lev enzelnâ hâzel qur’âne alâ cebelin leraeytehû hâşian mutesaddian min haşyetillâh. Ve tilkel emsâlu nadribuhâ linnâsi leallehum yetefekkerûn.',
+    'Huvallâhullezî lâ ilâhe illâ hû. Âlimul ğaybi veşşehâdeh. Huverrahmânurrahîm.',
+    'Huvallâhullezî lâ ilâhe illâ hû. Elmelikul quddûsus selâmul mu’minul muheyminul azîzul cebbârul mutekebbir. Subhânallâhi ammâ yuşrikûn.',
+    'Huvallâhul hâliqul bâriul musavviru lehul esmâul husnâ. Yusebbihu lehû mâ fis semâvâti vel ard. Ve huvel azîzul hakîm.',
+  ]
+  for (const [i, verse] of expected.entries()) assert.equal(readings['59'][20 + i], verse)
 })
