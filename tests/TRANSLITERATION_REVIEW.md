@@ -30,3 +30,7 @@ Fâtiha dışındaki 284 ayette Arapça ق sayısı, parantezler dışındaki q 
 ## Vâkıa okunuşunun güncellenmesi
 
 Vâkıa 1–96, kullanıcının sağladığı metinle değiştirildi; önceki q/k ayrımı korundu. Parantez dışı durak, içi devam seçeneğidir. Yeni metin sesli olarak veya tümüyle uzman tarafından doğrulanmadı.
+
+## Fâtiha okunuşunun güncellenmesi
+
+Fâtiha Latin okunuşu kullanıcı tarafından sağlanan metinle değiştirildi; ق için q gösterimi korundu. Sesli uzman doğrulaması yapılmadı.
