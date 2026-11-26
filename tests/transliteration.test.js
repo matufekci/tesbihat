@@ -34,23 +34,23 @@ test('selected verse boundaries and the Vâkıa prayer point are retained', () =
 })
 
 
-test('Namaz Zamanı readings retain representative verse boundaries', () => {
+test('Readings retain representative verse boundaries', () => {
   assert.equal(readings['36']['1'], 'Yâ sîn.')
   assert.equal(readings['36']['83'], 'Fe subhânellezî bi yedihî melekûtu kulli şey’in ve ileyhi turceûn(turceûne).')
-  assert.equal(readings['56']['1'], 'İzâ ve qaatil vâqıah(vâqıatu).')
-  assert.equal(readings['56']['76'], 'Ve innehu le qasemun lev ta’lemûne azîm(azîmun).')
-  assert.equal(readings['56']['96'], 'Fe sebbih bismi rabbikel azîm(azîmi).')
+  assert.equal(readings['56']['1'], 'İzâ veqa’atil vâqıah (vâqıatu).')
+  assert.equal(readings['56']['76'], 'Ve innehû leqasemun lev ta’lemûne azîm (azîmun).')
+  assert.equal(readings['56']['96'], 'Fesebbih bismi rabbikel azîm (azîmi).')
 })
 
 
 test('selected Quran reading corrections preserve Arabic word boundaries', () => {
-  assert.match(readings['56']['6'], /munbessâ\(munbessen\)/)
-  assert.match(readings['56']['83'], /hulqûm\(hulqûme\)/)
+  assert.match(readings['56']['6'], /munbessâ\s*\(munbessen\)/)
+  assert.match(readings['56']['83'], /hulqûm\s*\(hulqûme\)/)
   assert.match(readings['36']['13'], /câehâl murselûn/)
   assert.match(readings['36']['80'], /ahdari nâren/)
   assert.match(readings['56']['47'], /ve ızâmen e innâ/)
   assert.match(readings['56']['60'], /mesbûqîn/)
-  assert.match(readings['56']['64'], /tezreûnehû/)
+  assert.match(readings['56']['64'], /tezre’ûnehû/)
   assert.match(readings['67']['30'], /bi mâin maîn/)
 })
 
@@ -87,7 +87,7 @@ test('q groups match the number of Arabic qaf letters per verse', () => {
 test('selected qaf and kaf distinctions are retained in the same verse', () => {
   assert.match(readings['2']['285'], /kullun.*nuferriqu.*qâlû/)
   assert.match(readings['36']['7'], /Leqad haqqal qavlu.*ekserihim/)
-  assert.match(readings['56']['16'], /Muttekiîne.*muteqâbilîn\(muteqâbilîne\)/)
+  assert.match(readings['56']['16'], /Muttekiîne.*muteqâbilîn\s*\(muteqâbilîne\)/)
   assert.match(readings['59']['23'], /elmelikul quddûsus.*mutekebbir/)
   assert.match(readings['67']['21'], /yerzuqukum in emseke rızqah\(rızqahu\)/)
   assert.match(readings['71']['14'], /qad halaqakum/)
@@ -96,7 +96,7 @@ test('selected qaf and kaf distinctions are retained in the same verse', () => {
 
 test('q is consistent between the base word and its parenthesized reading', () => {
   for (const [sura, verses] of Object.entries(readings)) for (const [n, reading] of Object.entries(verses)) {
-    for (const match of reading.matchAll(/([^\s(),]+)\(([^()]*)\)/g)) {
+    for (const match of reading.matchAll(/([^\s(),]+)\s*\(([^()]*)\)/g)) {
       const count = value => (value.match(/q+/gi) || []).length
       assert.equal(count(match[1]), count(match[2]), `${sura}:${n} ${match[0]}`)
     }
