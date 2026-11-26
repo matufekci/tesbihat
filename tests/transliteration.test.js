@@ -52,3 +52,21 @@ test('selected Quran reading corrections preserve Arabic word boundaries', () =>
   assert.match(readings['56']['64'], /tezreûnehû/)
   assert.match(readings['67']['30'], /bi mâin maîn/)
 })
+
+test('Nebe q/k pilot distinguishes selected ق and ك in both reading variants', () => {
+  const rows = readings['78']
+  assert.match(rows['8'], /halaqnâkum/)
+  assert.match(rows['12'], /fevqakum/)
+  assert.match(rows['17'], /kâne mîqâtâ\(mîqâten\)/)
+  assert.match(rows['23'], /ahqâbâ\(ahqâben\)/)
+  assert.match(rows['24'], /yezûqûne/)
+  assert.match(rows['25'], /gassâqâ\(gassâqan\)/)
+  assert.match(rows['26'], /vifâqâ\(vifâqan\)/)
+  assert.match(rows['30'], /zûqû felen nezîdekum/)
+  assert.match(rows['31'], /mutteqîne/)
+  assert.match(rows['32'], /Hadâiqa/)
+  assert.match(rows['34'], /dihâqâ\(dihâqan\)/)
+  assert.match(rows['38'], /yeqûmur.*melâiketu.*yetekellemûne.*qâle/)
+  assert.match(rows['39'], /haqq\(haqqu\)/)
+  assert.match(rows['40'], /enzernâkum.*qarîbâ\(qarîben\).*qaddemet.*yeqûlul kâfiru/)
+})
