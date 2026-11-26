@@ -85,7 +85,7 @@ test('q groups match the number of Arabic qaf letters per verse', () => {
 })
 
 test('selected qaf and kaf distinctions are retained in the same verse', () => {
-  assert.match(readings['2']['285'], /kullun.*nuferriqu.*qâlû/)
+  assert.match(readings['2']['285'], /Kullun.*nuferriqu.*qâlû/)
   assert.match(readings['36']['7'], /Leqad haqqal qavlu.*ekserihim/)
   assert.match(readings['56']['16'], /Muttekiîne.*muteqâbilîn\s*\(muteqâbilîne\)/)
   assert.match(readings['59']['23'], /elmelikul quddûsus.*mutekebbir/)
@@ -106,4 +106,10 @@ test('q is consistent between the base word and its parenthesized reading', () =
 test('Mülk 4 and 9 use the user-provided readings with q/k distinction', () => {
   assert.equal(readings['67']['4'], 'Sümme’rci’il-basara kerrateyni yenqalib ileyke’l-basaru hâsien ve hüve hasîr.')
   assert.equal(readings['67']['9'], 'Qâlû belâ qad câenâ nezîrun fe kezzebnâ ve qulnâ mâ nezzela’llâhu min şey’in in entüm illâ fî dalâlin kebîr.')
+})
+
+
+test('Bakara 285 and 286 use the readings supplied by the user', () => {
+  assert.equal(readings['2']['285'], 'Âmenerrasûlu bimâ unzile ileyhi min rabbihî vel mu’minûn. Kullun âmene billâhi ve melâiketihî ve kutubihî ve rusulih. Lâ nuferriqu beyne ehadin min rusulih. Ve qâlû semi’nâ ve ata’nâ ğufrâneke rabbenâ ve ileykel masîr.')
+  assert.equal(readings['2']['286'], 'Lâ yukellifullâhu nefsen illâ vus’ahâ. Lehâ mâ kesebet ve aleyhâ mektesebet. Rabbenâ lâ tuâhıznâ in nesînâ ev ahta’nâ. Rabbenâ ve lâ tahmil aleynâ ısran kemâ hameltehû alellezîne min qablinâ. Rabbenâ ve lâ tuhammilnâ mâ lâ tâqate lenâ bih. Va’fu annâ, vağfir lenâ, verhamnâ. Ente mevlânâ fensurnâ alel qavmil kâfirîn.')
 })

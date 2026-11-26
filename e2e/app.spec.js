@@ -899,6 +899,10 @@ for (const [prayer, title, first, last, total] of [
       await expect(reading).toContainText('Kullanıcı tarafından paylaşılan okunuş')
       await expect(reading).toContainText('Parantez dışı durak')
       await expect(reading.locator('li[value="36"]')).toContainText('ebkârâ (ebkâren)')
+    } else if (title === 'Âmenerrasûlü') {
+      await expect(reading).toContainText('Kullanıcı tarafından paylaşılan okunuş')
+      await expect(reading.locator('li[value="285"]')).toContainText('nuferriqu')
+      await expect(reading.locator('li[value="286"]')).toContainText('qavmil kâfirîn')
     } else await expect(reading.getByRole('link', { name: 'Namaz Zamanı' })).toHaveAttribute('href', /^https:\/\/www\.namazzamani\.net\/kuranmeali\//)
     if (first > 1) await expect(reading.locator('.quran-reading-basmala')).toHaveCount(0)
     else await expect(reading.locator('.quran-reading-basmala')).toBeVisible()

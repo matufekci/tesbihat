@@ -34,3 +34,7 @@ Vâkıa 1–96, kullanıcının sağladığı metinle değiştirildi; önceki q/
 ## Fâtiha okunuşunun güncellenmesi
 
 Fâtiha Latin okunuşu kullanıcı tarafından sağlanan metinle değiştirildi; ق için q gösterimi korundu. Sesli uzman doğrulaması yapılmadı.
+
+## Bakara 285–286 okunuşunun güncellenmesi
+
+İki ayetin okunuşu kullanıcının sağladığı metinle değiştirildi; q/k gösterimi korundu. Sesli uzman doğrulaması yapılmadı.
