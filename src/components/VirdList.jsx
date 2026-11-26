@@ -521,6 +521,7 @@ function VirdFlow({ vakit, initialProgress, initialTarget, dayKey, settings, onC
         {step.latin && (Array.isArray(step.latin)
           ? step.latin.map((l, i) => <p key={i} className="latin">{l}</p>)
           : <p className="latin">{step.id === 'salavat' ? highlightSalavat(step.latin, SALAVAT_LATIN_WORDS) : step.latin}</p>)}
+        {step.id === 'fatiha-ruh' && <p className="quran-reading-note">{t('latinReadingNote')} <a href="https://www.namazzamani.net/kuranmeali/fatiha-suresi.htm" target="_blank" rel="noreferrer">Namaz Zamanı</a></p>}
         {step.quran
           ? (step.quran.sura !== 36 && step.quran.sura !== 56 && (
               <MeaningDisclosure label={t('meaningToggle')}>

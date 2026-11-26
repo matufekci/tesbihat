@@ -3,6 +3,7 @@ import { QURAN, BASMALA } from '../data/quran.js'
 import transliterations from '../data/quran-transliteration.json'
 import { useLang } from '../lib/i18n.js'
 
+const READING_SOURCES = { 2: 'bakara', 36: 'yasin', 56: 'vakia', 59: 'hasr', 67: 'mulk', 71: 'nuh', 78: 'nebe' }
 const AR_DIGITS = '٠١٢٣٤٥٦٧٨٩'
 const arDigits = (n) => String(n).replace(/\d/g, (d) => AR_DIGITS[+d])
 
@@ -50,7 +51,7 @@ export default function QuranBlock({ sura, from = 1, to, hotAyat, hotLabel, high
       {latin && (
         <section className="quran-reading" aria-label={t('latinReading')}>
           <h3>{t('latinReading')}</h3>
-          <p className="quran-reading-note">{t('latinReadingNote')} <a href="https://acikkuran.com" target="_blank" rel="noreferrer">Açık Kuran</a> · <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noreferrer">CC BY-NC-SA 4.0</a></p>
+          <p className="quran-reading-note">{t('latinReadingNote')} <a href={`https://www.namazzamani.net/kuranmeali/${READING_SOURCES[sura]}-suresi.htm`} target="_blank" rel="noreferrer">Namaz Zamanı</a></p>
           {isFullSurah && <p className="quran-reading-basmala" lang="tr" dir="ltr">Bismillâhirrahmânirrahîm.</p>}
           <ol className="quran-reading-verses" lang="tr" dir="ltr">
             {ayats.map(([n]) => (

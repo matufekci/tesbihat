@@ -249,7 +249,7 @@ export const CLOSING_STEP = {
   id: 'fatiha-ruh', title: 'Fâtiha-i Şerîfe', type: 'read',
   quran: { sura: 1 },
   // Fâtiha okunuşu: Diyanet ilçe müftülükleri namaz sureleri materyali; kaynak ve yazım notları tests/QURAN_SOURCES.md.
-  latin: 'Bismillâhirrahmânirrahîm. Elhamdülillâhi rabbi’l-âlemîn. Errahmânirrahîm. Mâliki yevmiddîn. İyyâke na‘büdü ve iyyâke neste‘în. İhdinessırâtel müstakîm. Sırâtallezîne en‘amte aleyhim, gayril mağdûbi aleyhim ve leddâllîn.',
+  latin: 'Bismillâhir rahmânir rahîm. El hamdu lillâhi rabbil âlemîn(âlemîne). Er rahmânir rahîm(rahîmi). Mâliki yevmid dîn(dîne). İyyâke na’budu ve iyyâke nestaîn(nestaînu). İhdinas sırâtel mustakîm(mustakîme). Sırâtallezîne en’amte aleyhim gayril magdûbi aleyhim ve lâd dâllîn(dâllîne).',
   note: 'Efendimiz ﷺ’in ruhuna, Ehl-i Beyt’e, Sahabe’ye, Kadiri silsilesine, Şeyh Abdülkadir Geylânî (k.s.) Hz.’nin ve tüm mümin ve müminatın ruhlarına okunur.',
 }
 

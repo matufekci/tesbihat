@@ -24,10 +24,19 @@ test('each required Quran passage has one nonempty numbered reading per Arabic v
 })
 
 test('selected verse boundaries and the Vâkıa prayer point are retained', () => {
-  assert.match(readings['36']['58'], /^Selamun/i)
+  assert.match(readings['36']['58'], /^Selâmun/i)
   assert.match(readings['56']['74'], /sebbih/i)
   assert.match(readings['56']['76'], /kasem/i)
-  assert.match(readings['59']['20'], /^La yestevi/i)
-  assert.match(readings['2']['285'], /^Amener/i)
-  assert.match(readings['2']['286'], /^La yukellif/i)
+  assert.match(readings['59']['20'], /^Lâ yestevî/i)
+  assert.match(readings['2']['285'], /^Âmener/i)
+  assert.match(readings['2']['286'], /^Lâ yukellif/i)
+})
+
+
+test('Namaz Zamanı readings retain representative verse boundaries', () => {
+  assert.equal(readings['36']['1'], 'Yâ sîn.')
+  assert.equal(readings['36']['83'], 'Fe subhânellezî bi yedihî melekûtu kulli şey’in ve ileyhi turceûn(turceûne).')
+  assert.equal(readings['56']['1'], 'İzâ ve kaatil vâkıah(vâkıatu).')
+  assert.equal(readings['56']['76'], 'Ve innehu le kasemun lev ta’lemûne azîm(azîmun).')
+  assert.equal(readings['56']['96'], 'Fe sebbih bismi rabbikel azîm(azîmi).')
 })
