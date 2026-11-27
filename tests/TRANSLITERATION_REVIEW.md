@@ -12,7 +12,7 @@ Bu bir **yazılı metin karşılaştırmasıdır**, sesli kıraat veya tecvid on
 
 ## Kullanıcı / yetkin okuyucu araştırması için açık sorular
 
-1. **Mülk 4 ve 9:** Kullanıcının paylaştığı okunuşlar, mevcut q/k ayrımına uyarlanarak kullanıldı. Önceki akademik işaretler kaldırıldı; duruş/devam ve sesli telaffuz uzman doğrulaması bekliyor.
+1. **Mülk 4 ve 9:** Kullanıcının son paylaştığı sure metnindeki okunuşlar, önceki 4 ve 9 yazımlarının yerine q/k ayrımına uyarlanarak kullanıldı. Önceki akademik işaretler kaldırıldı; duruş/devam ve sesli telaffuz uzman doğrulaması bekliyor.
 2. **Vâkıa 36:** Kullanıcının paylaştığı `ebkârâ (ebkâren)` biçimi uygulandı; duruş/devam telaffuzu sesli uzman kontrolü bekliyor.
 3. **Yâsîn 40:** `Leş şemsu` ve `lel leylu` şeklinde geleneksel bitişik okunuşlar, diğer yazım sistemlerinde farklı gösterilebiliyor; uzunluk/bağlantı uzman tarafından dinlenerek kontrol edilmeli. [Arapça ve kelimeler](https://www.kuranmakaleleri.com/kuran-i-kerim/36-yasin-suresi-40-ayeti/).
 4. **Genel:** Parantezli duruş/devam gösterimi uygulamanın tamamında tutarlı ve kullanıcı için anlaşılır mı? Her ayetin sesli doğrulanması ayrıca gereklidir.
@@ -46,3 +46,7 @@ Yâsîn 1–83 kullanıcının paylaştığı metinle değiştirildi, q/k ayrım
 ## Haşr 20–24 okunuşunun güncellenmesi
 
 Beş ayetin Latin okunuşu kullanıcı tarafından sağlandı, q/k ayrımı korundu; sesli uzman doğrulaması yapılmadı.
+
+## Mülk okunuşunun güncellenmesi
+
+Mülk 1–30, 4 ve 9 dahil, kullanıcının son paylaştığı sure metninden q/k ayrımı korunarak güncellendi. Sesli uzman doğrulaması yapılmadı.

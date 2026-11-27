@@ -51,7 +51,7 @@ test('selected Quran reading corrections preserve Arabic word boundaries', () =>
   assert.match(readings['56']['47'], /ve ızâmen e innâ/)
   assert.match(readings['56']['60'], /mesbûqîn/)
   assert.match(readings['56']['64'], /tezre’ûnehû/)
-  assert.match(readings['67']['30'], /bi mâin maîn/)
+  assert.match(readings['67']['30'], /bimâin maîn/)
 })
 
 test('Nebe q/k pilot distinguishes selected ق and ك in both reading variants', () => {
@@ -89,7 +89,7 @@ test('selected qaf and kaf distinctions are retained in the same verse', () => {
   assert.match(readings['36']['7'], /Leqad haqqal qavlu.*ekserihim/)
   assert.match(readings['56']['16'], /Muttekiîne.*muteqâbilîn\s*\(muteqâbilîne\)/)
   assert.match(readings['59']['23'], /Elmelikul quddûsus.*mutekebbir/)
-  assert.match(readings['67']['21'], /yerzuqukum in emseke rızqah\(rızqahu\)/)
+  assert.match(readings['67']['21'], /yerzuqukum in emseke rızqah/)
   assert.match(readings['71']['14'], /qad halaqakum/)
 })
 
@@ -102,12 +102,6 @@ test('q is consistent between the base word and its parenthesized reading', () =
     }
   }
 })
-
-test('Mülk 4 and 9 use the user-provided readings with q/k distinction', () => {
-  assert.equal(readings['67']['4'], 'Sümme’rci’il-basara kerrateyni yenqalib ileyke’l-basaru hâsien ve hüve hasîr.')
-  assert.equal(readings['67']['9'], 'Qâlû belâ qad câenâ nezîrun fe kezzebnâ ve qulnâ mâ nezzela’llâhu min şey’in in entüm illâ fî dalâlin kebîr.')
-})
-
 
 test('Bakara 285 and 286 use the readings supplied by the user', () => {
   assert.equal(readings['2']['285'], 'Âmenerrasûlu bimâ unzile ileyhi min rabbihî vel mu’minûn. Kullun âmene billâhi ve melâiketihî ve kutubihî ve rusulih. Lâ nuferriqu beyne ehadin min rusulih. Ve qâlû semi’nâ ve ata’nâ ğufrâneke rabbenâ ve ileykel masîr.')
@@ -133,4 +127,13 @@ test('Haşr 20–24 use the readings supplied by the user with q/k notation', ()
     'Huvallâhul hâliqul bâriul musavviru lehul esmâul husnâ. Yusebbihu lehû mâ fis semâvâti vel ard. Ve huvel azîzul hakîm.',
   ]
   for (const [i, verse] of expected.entries()) assert.equal(readings['59'][20 + i], verse)
+})
+
+
+test('all Mülk readings retain the user-supplied text except for q/k notation', () => {
+  const supplied = readFileSync(new URL('./fixtures/mulk-user-reading.txt', import.meta.url), 'utf8').trim().split('\n')
+  assert.equal(supplied.length, 30)
+  for (const [index, expected] of supplied.entries()) {
+    assert.equal(readings['67'][index + 1].replace(/q/g, 'k').replace(/Q/g, 'K'), expected, `67:${index + 1}`)
+  }
 })
