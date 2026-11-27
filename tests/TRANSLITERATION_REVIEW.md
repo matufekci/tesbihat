@@ -54,3 +54,7 @@ Mülk 1–30, 4 ve 9 dahil, kullanıcının son paylaştığı sure metninden q/
 ## Nûh okunuşunun güncellenmesi
 
 Nûh 1–28, kullanıcının sağladığı metinden q/k ayrımı korunarak güncellendi. Sesli uzman doğrulaması yapılmadı.
+
+## Nebe okunuşunun güncellenmesi
+
+Nebe 1–40, kullanıcının sağladığı metinden q/k ayrımı korunarak güncellendi. Sesli uzman doğrulaması yapılmadı.

@@ -23,7 +23,9 @@
 - Veri seti ayet başına kaynakta verilen duruş/okuyuş biçimini korur; yazımda uzunluk işaretleri tutarlı değildir. Latin yazı Arapça harf ve tecvidi tam karşılamaz. Yetkin bir Kur'an okuyucusunun sesli tashihi yapılmamıştır.
 - Hafız Defteri kaynak dosyaları SHA-256: `002` 9cef8d89745cfeb21111a87ab1a625a01521ea67d95feede2b9aa8551e8a28f5; `036` b9500aa7c9ebc1bc81c3221048f7eb892c27708153e064cde9c8f5dd7838aae1; `056` 3db1f8e02709eb38fb4ea78750f86761a8a7fd2378037f32c336b1baa16e184a; `059` c27a45c7d04842e7343c7aeb9262a37ccd3bf5fc47445050d97b03d5909614fe; `067` f1c7fb5fc1074cc7cffbbd9ee4fcaff9486f697729cc3005c4d5d2968693d9bf; `071` 1e0ca2777a41090ce73146afb6d63e76f46e7a93c17176b7573ec8dbfa23bbd5; `078` d579bd0a0782b22b8710b2148f3ec4d7a761edbdd31aedfc8ce008bbb4ac5668.
 
-- Nebe 1–40 Latin okunuşları [Namaz Zamanı](https://www.namazzamani.net/kuranmeali/) sayfalarından alınmıştır. Kullanıcının paylaştığı e-posta yanıtında Namaz Zamanı, Türkçe okunuşların uygulamada kullanılmasına izin vermiştir. Bu izin Açık Kuran lisansı değildir; siteye ait [kullanım koşulları](https://www.namazzamani.net/turkce/kullanim-kosullari.htm) ayrıca geçerlidir.
+- Önceki Nebe 1–40 Latin okunuşları [Namaz Zamanı](https://www.namazzamani.net/kuranmeali/) sayfalarından alınmıştır. Kullanıcının paylaştığı e-posta yanıtında Namaz Zamanı, Türkçe okunuşların uygulamada kullanılmasına izin vermiştir. Bu izin Açık Kuran lisansı değildir; siteye ait [kullanım koşulları](https://www.namazzamani.net/turkce/kullanim-kosullari.htm) ayrıca geçerlidir.
+
+- Nebe 1–40 Latin okunuşu, kullanıcı tarafından sağlanan metinden q/k ayrımına uyarlandı. Sesli uzman doğrulaması yapılmadı.
 
 - Nûh 1–28 Latin okunuşu, kullanıcı tarafından sağlanan metinden q/k ayrımına uyarlandı. Sesli uzman doğrulaması yapılmadı.
 

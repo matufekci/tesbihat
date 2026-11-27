@@ -63,7 +63,7 @@ test('Nebe q/k pilot distinguishes selected ق and ك in both reading variants',
   assert.match(rows['24'], /yezûqûne/)
   assert.match(rows['25'], /gassâqâ\(gassâqan\)/)
   assert.match(rows['26'], /vifâqâ\(vifâqan\)/)
-  assert.match(rows['30'], /zûqû felen nezîdekum/)
+  assert.match(rows['30'], /zûqû fe len nezîdekum/)
   assert.match(rows['31'], /mutteqîne/)
   assert.match(rows['32'], /Hadâiqa/)
   assert.match(rows['34'], /dihâqâ\(dihâqan\)/)
@@ -144,5 +144,14 @@ test('all Nûh readings retain the user-supplied text except for q/k notation', 
   assert.equal(supplied.length, 28)
   for (const [index, expected] of supplied.entries()) {
     assert.equal(readings['71'][index + 1].replace(/q/g, 'k').replace(/Q/g, 'K'), expected, `71:${index + 1}`)
+  }
+})
+
+
+test('all Nebe readings retain the user-supplied text except for q/k notation', () => {
+  const supplied = readFileSync(new URL('./fixtures/nebe-user-reading.txt', import.meta.url), 'utf8').trim().split('\n')
+  assert.equal(supplied.length, 40)
+  for (const [index, expected] of supplied.entries()) {
+    assert.equal(readings['78'][index + 1].replace(/q/g, 'k').replace(/Q/g, 'K'), expected, `78:${index + 1}`)
   }
 })
