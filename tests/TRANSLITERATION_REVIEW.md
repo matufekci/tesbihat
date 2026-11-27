@@ -50,3 +50,7 @@ Beş ayetin Latin okunuşu kullanıcı tarafından sağlandı, q/k ayrımı koru
 ## Mülk okunuşunun güncellenmesi
 
 Mülk 1–30, 4 ve 9 dahil, kullanıcının son paylaştığı sure metninden q/k ayrımı korunarak güncellendi. Sesli uzman doğrulaması yapılmadı.
+
+## Nûh okunuşunun güncellenmesi
+
+Nûh 1–28, kullanıcının sağladığı metinden q/k ayrımı korunarak güncellendi. Sesli uzman doğrulaması yapılmadı.

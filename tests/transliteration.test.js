@@ -90,7 +90,7 @@ test('selected qaf and kaf distinctions are retained in the same verse', () => {
   assert.match(readings['56']['16'], /Muttekiîne.*muteqâbilîn\s*\(muteqâbilîne\)/)
   assert.match(readings['59']['23'], /Elmelikul quddûsus.*mutekebbir/)
   assert.match(readings['67']['21'], /yerzuqukum in emseke rızqah/)
-  assert.match(readings['71']['14'], /qad halaqakum/)
+  assert.match(readings['71']['14'], /qad haleqakum/)
 })
 
 
@@ -135,5 +135,14 @@ test('all Mülk readings retain the user-supplied text except for q/k notation',
   assert.equal(supplied.length, 30)
   for (const [index, expected] of supplied.entries()) {
     assert.equal(readings['67'][index + 1].replace(/q/g, 'k').replace(/Q/g, 'K'), expected, `67:${index + 1}`)
+  }
+})
+
+
+test('all Nûh readings retain the user-supplied text except for q/k notation', () => {
+  const supplied = readFileSync(new URL('./fixtures/nuh-user-reading.txt', import.meta.url), 'utf8').trim().split('\n')
+  assert.equal(supplied.length, 28)
+  for (const [index, expected] of supplied.entries()) {
+    assert.equal(readings['71'][index + 1].replace(/q/g, 'k').replace(/Q/g, 'K'), expected, `71:${index + 1}`)
   }
 })
