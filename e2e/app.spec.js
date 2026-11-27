@@ -97,6 +97,24 @@ test('counter keeps its value and disabled vibration is respected', async ({ pag
   await expect(page.getByRole('button', { name: 'Say', exact: true })).toContainText('1', { timeout: 15000 })
 })
 
+test('counter pulses increase on the last three taps and advance normally', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.vibrationPatterns = []
+    Object.defineProperty(navigator, 'vibrate', { configurable: true, value: (pattern) => { window.vibrationPatterns.push(pattern); return true } })
+  })
+  await ready(page)
+  await page.getByRole('button', { name: 'Tesbihata Başla' }).click()
+  await page.getByRole('button', { name: 'Adım listesini aç' }).click()
+  await page.getByRole('dialog', { name: 'Adım Listesi' }).getByRole('button', { name: /İstiğfar/ }).click()
+  const counter = page.getByRole('button', { name: 'Say', exact: true })
+  await expect(counter).toContainText('/ 3')
+  await counter.click()
+  await counter.click()
+  await counter.click()
+  await expect(page.getByRole('button', { name: 'Adım listesini aç' })).toContainText('2/')
+  expect(await page.evaluate(() => window.vibrationPatterns)).toEqual([20, 45, 90])
+})
+
 test('first launch works on a compact screen and language switches to RTL', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 640 })
   await prepareOnboarding(page)

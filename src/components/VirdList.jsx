@@ -10,6 +10,7 @@ import { QURAN, diyanetAyah } from '../data/quran.js'
 import { CITIES } from '../data/cities.js'
 import { useLang } from '../lib/i18n.js'
 import { mealsOf } from '../data/meals.js'
+import { counterVibration } from '../lib/counter-vibration.js'
 
 function ayahText(sura, n) {
   return (QURAN[String(sura)] ?? []).find(([m]) => m === n)?.[1] ?? ''
@@ -434,8 +435,8 @@ function VirdFlow({ vakit, initialProgress, initialTarget, dayKey, settings, onC
 
   const tapCounter = () => {
     if (!isCounter) return
-    vibrate(10, vibrationOn)
-    if (count + 1 >= target) { chime(soundOn); vibrate([25, 45, 25], vibrationOn) }
+    vibrate(counterVibration(count, target), vibrationOn)
+    if (count + 1 >= target) chime(soundOn)
     setState((s) => {
       const c = (s.counts?.[step.id] ?? 0) + 1
       const reached = c >= target
