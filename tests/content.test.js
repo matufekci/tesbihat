@@ -1,0 +1,43 @@
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import { NAMAZ_IDS, getStepsFor } from '../src/data/vird.js'
+import { QURAN } from '../src/data/quran.js'
+
+test('all prayer flows and languages have consistent unique steps and available verses', () => {
+  for (const prayer of NAMAZ_IDS) {
+    const baseIds = getStepsFor(prayer, 'tr').map((step) => step.id)
+    assert.ok(baseIds.length > 0)
+    assert.equal(new Set(baseIds).size, baseIds.length, prayer)
+    for (const lang of ['tr', 'en', 'de', 'fr', 'ar']) {
+      const steps = getStepsFor(prayer, lang)
+      assert.deepEqual(steps.map((step) => step.id), baseIds, `${prayer}/${lang}`)
+      for (const step of steps) {
+        assert.ok(step.title, `${prayer}/${lang}/${step.id}`)
+        if (step.type === 'counter') assert.ok(Number.isFinite(step.target) && step.target > 0, step.id)
+        if (step.quran) {
+          const verses = QURAN[String(step.quran.sura)] || []
+          assert.ok(verses.some(([n]) => n >= (step.quran.from ?? 1) && n <= (step.quran.to ?? Infinity)), step.id)
+        }
+      }
+    }
+  }
+})
+
+
+test('tahlil uses a read confirmation rather than a counter in every prayer and language', () => {
+  for (const prayer of NAMAZ_IDS) {
+    for (const lang of ['tr', 'en', 'de', 'fr', 'ar']) {
+      const step = getStepsFor(prayer, lang).find((item) => item.id === 'tahlil')
+      assert.equal(step?.type, 'read', `${prayer}/${lang}`)
+      assert.equal(step.target, undefined, `${prayer}/${lang}`)
+    }
+  }
+})
+
+
+test('closing Fatiha includes its Latin reading for every prayer and language', () => {
+  for (const prayer of NAMAZ_IDS) for (const lang of ['tr', 'en', 'de', 'fr', 'ar']) {
+    const step = getStepsFor(prayer, lang).find((item) => item.id === 'fatiha-ruh')
+    assert.equal(step.latin, 'Bismillâhirrahmânirrahîm. Elhamdu lillâhi rabbil âlemîn. Errahmânirrahîm. Mâliki yevmiddîn. İyyâke na’budu ve iyyâke neste’în. İhdinas sırâtal musteqîm. Sırâtallezîne en’amte aleyhim ğayril mağdûbi aleyhim ve leddâllîn.')
+  }
+})

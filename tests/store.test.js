@@ -1,0 +1,124 @@
+import test, { beforeEach } from 'node:test'
+import assert from 'node:assert/strict'
+import { DEFAULT_SETTINGS, loadSettings, saveSettings, loadVakitProgress, saveVakitProgress, resetVakitProgress, todayKey, loadActiveVakit, saveActiveVakit, clearActiveVakit } from '../src/lib/store.js'
+
+class MemoryStorage {
+  values = new Map()
+  failWrites = false
+  getItem(key) { return this.values.get(key) ?? null }
+  setItem(key, value) {
+    if (this.failWrites) throw new Error('quota exceeded')
+    this.values.set(key, String(value))
+  }
+  removeItem(key) { this.values.delete(key) }
+}
+
+beforeEach(() => { globalThis.localStorage = new MemoryStorage() })
+
+test('settings use safe defaults for missing and malformed stored data', () => {
+  assert.deepEqual(loadSettings(), { ...DEFAULT_SETTINGS })
+  localStorage.setItem('tesbihat.settings', '{not-json')
+  assert.deepEqual(loadSettings(), { ...DEFAULT_SETTINGS })
+})
+
+test('settings discard invalid fields and validate custom coordinates', () => {
+  localStorage.setItem('tesbihat.settings', JSON.stringify({
+    cityId: 'not-a-city', theme: 'neon', notifEnabled: 'yes', reminderMin: 999,
+    onboarded: true, permissionsSetup: true, custom: { id: 'custom', name: 'X', lat: 999, lng: 1 },
+    laIlaheTarget: 200,
+  }))
+  assert.deepEqual(loadSettings(), {
+    ...DEFAULT_SETTINGS,
+    onboarded: true,
+    permissionsSetup: true,
+  })
+})
+
+test('system theme preference is accepted and persisted', () => {
+  assert.equal(saveSettings({ ...DEFAULT_SETTINGS, theme: 'system' }), true)
+  assert.equal(loadSettings().theme, 'system')
+})
+
+test('valid settings round-trip without preserving obsolete fields', () => {
+  const settings = { ...DEFAULT_SETTINGS, cityId: 'diyarbakir', theme: 'amoled', reminderMin: 30, custom: { id: 'custom', name: 'Konum', lat: 37.91, lng: 40.24 }, laIlaheTarget: 200 }
+  assert.equal(saveSettings(settings), true)
+  assert.deepEqual(loadSettings(), { ...DEFAULT_SETTINGS, theme: 'amoled', reminderMin: 30, custom: { id: 'custom', name: 'Konum', lat: 37.91, lng: 40.24 } })
+})
+
+test('daily progress round-trips, resets one prayer, and rejects invalid prayer ids', () => {
+  assert.equal(saveVakitProgress('sabah', { idx: 3, counts: { tesbih: 17 }, done: false }), true)
+  assert.deepEqual(loadVakitProgress('sabah'), { idx: 3, counts: { tesbih: 17 }, done: false })
+  assert.equal(saveVakitProgress('unknown', { idx: 1 }), false)
+  assert.deepEqual(loadVakitProgress('unknown'), { idx: 0, counts: {}, done: false })
+  assert.equal(resetVakitProgress('sabah'), true)
+  assert.deepEqual(loadVakitProgress('sabah'), { idx: 0, counts: {}, done: false })
+})
+
+test('corrupt progress is bounded and cannot produce invalid counters', () => {
+  localStorage.setItem('tesbihat.day', JSON.stringify({
+    date: todayKey(),
+    vakits: { sabah: { idx: -1, counts: { good: 4, bad: -2, huge: 999999999, __proto__: 2 }, done: 1 } },
+  }))
+  assert.deepEqual(loadVakitProgress('sabah'), { idx: 0, counts: { good: 4 }, done: false })
+  localStorage.setItem('tesbihat.day', JSON.stringify({ date: '2000-01-01', vakits: { sabah: { idx: 9, counts: {}, done: true } } }))
+  assert.deepEqual(loadVakitProgress('sabah'), { idx: 0, counts: {}, done: false })
+})
+
+test('storage quota failures do not crash the app', () => {
+  localStorage.failWrites = true
+  assert.equal(saveSettings(DEFAULT_SETTINGS), false)
+  assert.equal(saveVakitProgress('ogle', { idx: 1, counts: {}, done: false }), false)
+  assert.equal(resetVakitProgress('ogle'), false)
+})
+
+test('sound and vibration settings persist independently and old settings get defaults', () => {
+  localStorage.setItem('tesbihat.settings', JSON.stringify({ theme: 'light' }))
+  assert.equal(loadSettings().soundEnabled, true)
+  assert.equal(loadSettings().vibrationEnabled, true)
+  assert.equal(saveSettings({ ...loadSettings(), soundEnabled: false, vibrationEnabled: false }), true)
+  assert.equal(loadSettings().soundEnabled, false)
+  assert.equal(loadSettings().vibrationEnabled, false)
+  localStorage.setItem('tesbihat.settings', JSON.stringify({ soundEnabled: 'false', vibrationEnabled: null }))
+  assert.equal(loadSettings().soundEnabled, true)
+  assert.equal(loadSettings().vibrationEnabled, true)
+})
+
+test('dusty rose theme is accepted and persists', () => {
+  assert.equal(saveSettings({ ...DEFAULT_SETTINGS, theme: 'rose' }), true)
+  assert.equal(loadSettings().theme, 'rose')
+})
+
+
+test('active prayer session survives independently of daily progress until closed', () => {
+  assert.equal(loadActiveVakit(), null)
+  assert.equal(saveActiveVakit('yatsi', { idx: 3, counts: { tesbih: 17 }, done: false }, 100), true)
+  localStorage.setItem('tesbihat.day', JSON.stringify({ date: '2000-01-01', vakits: {} }))
+  assert.deepEqual(loadActiveVakit(), { vakit: 'yatsi', progress: { idx: 3, counts: { tesbih: 17 }, done: false }, laTarget: 100 })
+  assert.equal(clearActiveVakit(), true)
+  assert.equal(loadActiveVakit(), null)
+})
+
+test('active prayer session rejects malformed data and bounds values', () => {
+  localStorage.setItem('tesbihat.activeVakit', '{')
+  assert.equal(loadActiveVakit(), null)
+  localStorage.setItem('tesbihat.activeVakit', JSON.stringify({ vakit: 'invalid', progress: {} }))
+  assert.equal(loadActiveVakit(), null)
+  assert.equal(saveActiveVakit('invalid', {}), false)
+  localStorage.setItem('tesbihat.activeVakit', JSON.stringify({ vakit: 'ogle', laTarget: 999, progress: { idx: -5, counts: { x: -4, valid: 2 }, done: 1 } }))
+  assert.deepEqual(loadActiveVakit(), { vakit: 'ogle', laTarget: 20, progress: { idx: 0, counts: { valid: 2 }, done: false } })
+})
+
+test('legacy global reminder delay migrates safely to each prayer and custom preferences persist', async () => {
+  const { reminderSettings } = await import('../src/lib/store.js')
+  localStorage.setItem('tesbihat.settings', JSON.stringify({ reminderMin: 30 }))
+  const old = loadSettings()
+  for (const preference of Object.values(reminderSettings(old))) assert.deepEqual(preference, { enabled: true, delay: 30 })
+  const reminders = { ...reminderSettings(old), sabah: { enabled: false, delay: 5 }, aksam: { enabled: true, delay: 60 } }
+  saveSettings({ ...old, reminders, offlineOnly: true })
+  const restored = loadSettings()
+  assert.deepEqual(restored.reminders.sabah, { enabled: false, delay: 5 })
+  assert.deepEqual(restored.reminders.aksam, { enabled: true, delay: 60 })
+  assert.equal(restored.offlineOnly, true)
+  localStorage.setItem('tesbihat.settings', JSON.stringify({ reminders: { sabah: { enabled: 'false', delay: 123 } } }))
+  assert.deepEqual(loadSettings().reminders.sabah, { enabled: true, delay: 15 })
+})

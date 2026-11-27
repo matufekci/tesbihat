@@ -1,0 +1,32 @@
+name: Quality checks
+on:
+  push:
+    branches: [main, arena/956bc0c6-tesbihat]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - name: Browser regression tests
+        shell: bash
+        run: |
+          set +e
+          npm run test:e2e 2>&1 | tee /tmp/e2e-output.log
+          result=${PIPESTATUS[0]}
+          if [ "$result" -ne 0 ]; then
+            node -e 'const s=require("fs").readFileSync("/tmp/e2e-output.log","utf8"); const i=s.lastIndexOf("  1)"); const text=(i < 0 ? s.slice(-12000) : s.slice(i, i + 12000)).replaceAll("%","%25").replaceAll("\r","%0D").replaceAll("\n","%0A"); console.log("::error title=Playwright failure::" + text)'
+            node -e 'const fs=require("fs"); for (const d of fs.readdirSync("test-results")) { const p="test-results/"+d+"/error-context.md"; if (fs.existsSync(p)) {const text=fs.readFileSync(p,"utf8").slice(0,10000).replaceAll("%","%25").replaceAll("\r","%0D").replaceAll("\n","%0A"); console.log("::error title=Playwright context::"+text)} }'
+          fi
+          exit "$result"
